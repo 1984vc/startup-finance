@@ -10,5 +10,8 @@
       "fileMatch": [".clasp.json"],
       "url": "https://json.schemastore.org/clasp.json"
     }
-  ]
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
