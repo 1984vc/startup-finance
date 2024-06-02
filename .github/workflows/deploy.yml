@@ -1,8 +1,9 @@
 name: Run Deploy
 
 on:
-  tags:
-    - "v*"
+  create:
+    tags:
+      - v*
 
 jobs:
   build_lint:
