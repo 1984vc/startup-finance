@@ -2,26 +2,6 @@
 // import local files or external dependencies:
 import { ISafeInvestment, RoundingStrategy, fitConversion } from "./safe_conversion";
 
-// Simple Triggers: These five export functions are reserved export function names that are
-// called by Google Apps when the corresponding event occurs. You can safely
-// delete them if you won't be using them, but don't use the same export function names
-// for anything else.
-// See: https://developers.google.com/apps-script/guides/triggers
-
-// NOTE: only `export {...}` syntax will work. You cannot define and export a trigger in
-// the same line.
-
-/**
- * Converts a SAFE to priced round investment
- * @param {number} preMoney Premoney valuation
- * @param {number} commonShares Existing shareholder amounts
- * @param {[investment: number, cap: number, discount: number, type: "pre" | "post"][]} safeRanges A range of SAFE Notes
- * @param {number} unusedOptions Amount of unused options
- * @param {number} targetOptionsPct Target for options pool percent after the conversion
- * @param {number} seriesInvestment Amount being invested in the priced round
- * @return The input multiplied by 2.
- * @customfunction
-*/
 function SAFE_CONVERSION(
   preMoney: number,
   commonShares: number,
@@ -32,14 +12,14 @@ function SAFE_CONVERSION(
   roundDownShares: boolean = true,
   roundPPS: boolean = false,
   roundPPSPlaces: number = 12,
-) {
+): [string, number][] {
 
   const safes: ISafeInvestment[] = safeRanges.map((e) => {
     return {
       investment: e[0],
       cap: e[1],
       discount: e[2],
-      type: e[3].match(/pre/i) ? "pre" : "post"
+      type: e[3].match(/^pre/i) ? "pre" : "post"
     }
   })
   const roundingStrategy: RoundingStrategy = {
@@ -49,12 +29,17 @@ function SAFE_CONVERSION(
   }
   const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestment, roundingStrategy)
   return [
-    ["Calculated", ""],
-    ["PreMoney", fit.preMoneyShares],
-    ["PostMoney", fit.postMoneyShares],
-    ["TotalShares", fit.totalShares],
-    ["PPS", fit.pps]
+    ["Calculated At", Date.now() / 1000],
+    ["PreMoney", Number(fit.preMoneyShares)],
+    ["PostMoney", Number(fit.postMoneyShares)],
+    ["TotalShares", Number(fit.totalShares)],
+    ["PPS", Number(fit.pps)]
   ]
+}
+
+function VERSION() {
+  // Replaced via WebPack DefinePlugin with the package.json version
+  return process.env.VERSION
 }
 
 function onOpen(
@@ -83,4 +68,31 @@ function doPost(e: GoogleAppsScript.Events.DoPost): void {
   console.log(e);
 }
 
-export { onOpen, onEdit, onInstall, doGet, doPost, SAFE_CONVERSION };
+export { onOpen, onEdit, onInstall, doGet, doPost, SAFE_CONVERSION, VERSION };
+
+// Hack to get in custom function JSDOCS
+declare const global: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+};
+
+/**
+ * Finds the best fit for the conversion of SAFEs to priced rounds
+ * 
+ * @param { number }  preMoney Premoney valuation
+ * @param { Array }   safeRanges  Range of cells containing the SAFE data [investment, cap, discount, type]
+ * @param { number }  unusedOptions  Unused options
+ * @param { number }  targetOptionsPct  Target options pool percentage
+ * @param { number }  seriesInvestment  Total amount of a priced investment round
+ * @return An array of key value pairs
+ * @customfunction
+*/
+global.SAFE_CONVERSION = SAFE_CONVERSION;
+
+/**
+ * Returns the version of the script
+ *
+ * @return The sematic version of this script
+ * @customfunction
+ */
+global.VERSION = VERSION;

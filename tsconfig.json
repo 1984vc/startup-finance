@@ -4,22 +4,15 @@
     "module": "ESNext",
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "outDir": "build",
-    "lib": [
-      "ESNext"
-    ],
-    "types": [
-      "google-apps-script"
-    ]
+    "lib": ["ESNext"],
+    "types": ["google-apps-script"]
   },
-  "include": [
-    "src"
-  ],
-  "files": [
-    "src/index.ts"
-  ]
+  "include": ["src"],
+  "files": ["src/index.ts"]
 }
