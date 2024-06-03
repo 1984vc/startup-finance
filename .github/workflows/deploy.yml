@@ -1,14 +1,14 @@
 name: Run Deploy
 
 on:
-  create:
+  push:
     tags:
       - v*
 
 jobs:
-  build_lint:
+  deploy:
     runs-on: ubuntu-latest
-    name: Build & Lint
+    name: Build, Lint, Test and Deploy
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v1
