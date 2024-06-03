@@ -1,6 +1,6 @@
 {
   "name": "1984-startup-finance",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "build": "rm -rf build && tsc && webpack",
     "push": "npm run build && clasp push -f",
