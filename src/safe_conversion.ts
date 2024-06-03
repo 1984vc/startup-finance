@@ -5,20 +5,6 @@ export interface ISafeInvestment {
   type: "post" | "pre"
 }
 
-export interface ICommonShares {
-  name: string
-  amount: number
-}
-
-export interface ISeriesInvestors {
-  name: string
-  investment: number
-}
-
-export interface INewSafeShares {
-  price: number
-}
-
 type BestFit = {
   pps: number
   ppss: number[]
