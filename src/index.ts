@@ -2,39 +2,83 @@
 // import local files or external dependencies:
 import { ISafeInvestment, RoundingStrategy, fitConversion } from "./safe_conversion";
 
+type SAFE_CONVERSION_RESULT = [
+  ["Result", string],
+  ["Calculated At", string],
+  ["PreMoney", number],
+  ["PostMoney", number],
+  ["TotalShares", number],
+  ["PPS", number]
+]
+
 function SAFE_CONVERSION(
-  preMoney: number,
-  commonShares: number,
+  preMoney: number | string,
+  commonShares: number | string,
   safeRanges: [investment: number, cap: number, discount: number, type: string][],
-  unusedOptions: number,
-  targetOptionsPct: number,
-  seriesInvestment: number,
+  unusedOptions: number | string,
+  targetOptionsPct: number | string,
+  seriesInvestment: number | string,
   roundDownShares: boolean = true,
   roundPPS: boolean = false,
   roundPPSPlaces: number = 12,
-): [string, number][] {
+): SAFE_CONVERSION_RESULT {
 
-  const safes: ISafeInvestment[] = safeRanges.map((e) => {
-    return {
-      investment: e[0],
-      cap: e[1],
-      discount: e[2],
-      type: e[3].match(/^pre/i) ? "pre" : "post"
+  try {
+    const safes: ISafeInvestment[] = safeRanges.map((e) => {
+      // Check each element of the array to see if it's a number, if not throw an Error
+      if ([e[0], e[1], e[2]].some((el) => typeof el !== "number")) {
+        throw new Error(`SAFE_CONVERSION: Invalid input for SAFE, expected numbers, got ${e[0]}, ${e[1]}, ${e[2]}`)
+      }
+      return {
+        investment: e[0],
+        cap: e[1],
+        discount: e[2],
+        type: e[3].match(/^pre/i) ? "pre" : "post"
+      }
+    })
+
+    if (typeof preMoney !== "number") {
+      throw new Error(`SAFE_CONVERSION: Invalid input for premoney, expected number, got ${preMoney}}`)
     }
-  })
-  const roundingStrategy: RoundingStrategy = {
-    roundDownShares,
-    roundPPS,
-    roundPPSPlaces,
+    if (typeof commonShares !== "number") {
+      throw new Error(`SAFE_CONVERSION: Invalid input for commonShares, expected number, got ${commonShares}}`)
+    }
+    if (typeof unusedOptions !== "number") {
+      throw new Error(`SAFE_CONVERSION: Invalid input for unusedOptions, expected number, got ${unusedOptions}}`)
+    }
+    if (typeof targetOptionsPct !== "number") {
+      throw new Error(`SAFE_CONVERSION: Invalid input for targetOptionsPct, expected number, got ${targetOptionsPct}}`)
+    }
+    if (typeof seriesInvestment !== "number") {
+      throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestment, expected a number, got ${seriesInvestment}`)
+    }
+
+    const roundingStrategy: RoundingStrategy = {
+      roundDownShares,
+      roundPPS,
+      roundPPSPlaces,
+    }
+    const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestment, roundingStrategy)
+    return [
+      ["Result", "Success"],
+      ["Calculated At", new Date().toISOString()],
+      ["PreMoney", Number(fit.preMoneyShares)],
+      ["PostMoney", Number(fit.postMoneyShares)],
+      ["TotalShares", Number(fit.totalShares)],
+      ["PPS", Number(fit.pps)]
+    ]
+
+  } catch (e: Error | unknown) {
+    const message = (e as Error).message || "Unknown Error"
+    return [
+      ["Result", "Error: " + message],
+      ["Calculated At", new Date().toISOString()],
+      ["PreMoney", 0],
+      ["PostMoney", 0],
+      ["TotalShares", 0],
+      ["PPS", 0]
+    ]
   }
-  const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestment, roundingStrategy)
-  return [
-    ["Calculated At", Date.now() / 1000],
-    ["PreMoney", Number(fit.preMoneyShares)],
-    ["PostMoney", Number(fit.postMoneyShares)],
-    ["TotalShares", Number(fit.totalShares)],
-    ["PPS", Number(fit.pps)]
-  ]
 }
 
 function VERSION() {
