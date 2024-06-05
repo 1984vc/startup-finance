@@ -120,6 +120,8 @@ declare const global: {
   [key: string]: any;
 };
 
+// The below function proxy is needed to make Google see the number of parameters
+
 /**
  * Finds the best fit for the conversion of SAFEs to priced rounds
  * 
@@ -128,10 +130,25 @@ declare const global: {
  * @param { number }  unusedOptions  Unused options
  * @param { number }  targetOptionsPct  Target options pool percentage
  * @param { number }  seriesInvestment  Total amount of a priced investment round
+ * @param { boolean }  [roundDownShares=true]  Round down the shares
+ * @param { boolean }  [roundPPS=true]  Round the PPS
+ * @param { number }   [roundPPSPlaces=5]  Round the PPS to this many decimal places
  * @return An array of key value pairs
  * @customfunction
 */
-global.SAFE_CONVERSION = SAFE_CONVERSION;
+global.SAFE_CONVERSION = (
+  preMoney: number | string,
+  commonShares: number | string,
+  safeRanges: [investment: number, cap: number, discount: number, type: string][],
+  unusedOptions: number | string,
+  targetOptionsPct: number | string,
+  seriesInvestment: number | string,
+  roundDownShares: boolean = true,
+  roundPPS: boolean = false,
+  roundPPSPlaces: number = 5,
+) => {
+  return SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targetOptionsPct, seriesInvestment, roundDownShares, roundPPS, roundPPSPlaces);
+}
 
 /**
  * Returns the version of the script
