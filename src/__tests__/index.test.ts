@@ -18,7 +18,7 @@ describe('converting safe investments with existing common stock', () => {
     const expectedValuation = 20_700_000
     const exptectedTotalShares = 20_606_916
     // const exptectedTotalOptions = 2_060_692
-    const fit = SAFE_CONVERSION(preMoneyValuation, common, safes, unusedOptions, 0.10, seriesInvestment, false)
+    const fit = SAFE_CONVERSION(preMoneyValuation, common, safes, unusedOptions, 0.10, seriesInvestment, false, -1)
     console.log(fit)
     const pps = fit[5] && fit[5][1]
     const totalShares = fit[4] && fit[4][1]
@@ -43,7 +43,7 @@ describe('converting safe investments with existing common stock', () => {
     const seriesInvestment = "foo"
 
     // const exptectedTotalOptions = 2_060_692
-    const fit = SAFE_CONVERSION(preMoneyValuation, common, safes, unusedOptions, 0.10, seriesInvestment, false)
+    const fit = SAFE_CONVERSION(preMoneyValuation, common, safes, unusedOptions, 0.10, seriesInvestment, false, -1)
     console.log(fit)
     expect(fit[0][1]).toMatch("Error")
   });

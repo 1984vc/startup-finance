@@ -17,13 +17,12 @@ type BestFit = {
 
 export type RoundingStrategy = {
   roundDownShares: boolean,
-  roundPPS: boolean,
-  roundPPSPlaces?: number,
+  // If no rounding, set to -1
+  roundPPSPlaces: number,
 }
 
-const DEFAULT_ROUNDING_STRATEGY: RoundingStrategy = {
+export const DEFAULT_ROUNDING_STRATEGY: RoundingStrategy = {
   roundDownShares: true,
-  roundPPS: true,
   roundPPSPlaces: 5
 }
 
@@ -58,7 +57,7 @@ const attemptFit = (preMoneyValuation: number, commonShares: number, unusedOptio
 
   // First calculate the PPS based on what we know
   const ppsPrecise = preMoneyValuation / (newPostMoneyShares + increaseInOptionsPool)
-  const pps = roundingStrategy.roundPPS ? roundToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
+  const pps = roundingStrategy.roundPPSPlaces >= 0 ? roundToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
 
   // Convert the SAFE's at the current PPS
   const ppss: number[] = Array(safes.length).fill(pps)
@@ -137,7 +136,7 @@ export const fitConversion = (
   const increaseInOptionsPool = preMoneyShares - commonShares - unusedOptions
 
   const ppsPrecise = preMoneyValuation / (postMoneyShares + increaseInOptionsPool)
-  const pps = roundingStrategy.roundPPS ? roundToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
+  const pps = roundingStrategy.roundPPSPlaces >= 0 ? roundToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
 
   // Get a list of the PPS's for each SAFE
   const ppss: number[] = Array(safes.length).fill(pps)

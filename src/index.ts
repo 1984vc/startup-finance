@@ -1,6 +1,6 @@
 // You can access any of the global GAS objects in this file. You can also
 // import local files or external dependencies:
-import { ISafeInvestment, RoundingStrategy, fitConversion } from "./safe_conversion";
+import { DEFAULT_ROUNDING_STRATEGY, ISafeInvestment, RoundingStrategy, fitConversion } from "./safe_conversion";
 
 type SAFE_CONVERSION_RESULT = [
   ["Result", string],
@@ -11,6 +11,8 @@ type SAFE_CONVERSION_RESULT = [
   ["PPS", number]
 ]
 
+const defaultRounding = DEFAULT_ROUNDING_STRATEGY
+
 function SAFE_CONVERSION(
   preMoney: number | string,
   commonShares: number | string,
@@ -18,9 +20,8 @@ function SAFE_CONVERSION(
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestment: number | string,
-  roundDownShares: boolean = true,
-  roundPPS: boolean = false,
-  roundPPSPlaces: number = 12,
+  roundDownShares: boolean = defaultRounding.roundDownShares,
+  roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
 
   try {
@@ -53,11 +54,15 @@ function SAFE_CONVERSION(
       throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestment, expected a number, got ${seriesInvestment}`)
     }
 
+    if (roundPPSPlaces !== undefined && typeof roundPPSPlaces !== "number") {
+      throw new Error(`SAFE_CONVERSION: Invalid input for roundPPSPlaces, expected a number, got ${seriesInvestment}`)
+    }
+
     const roundingStrategy: RoundingStrategy = {
       roundDownShares,
-      roundPPS,
       roundPPSPlaces,
     }
+
     const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestment, roundingStrategy)
     return [
       ["Result", "Success"],
@@ -143,11 +148,10 @@ global.SAFE_CONVERSION = (
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestment: number | string,
-  roundDownShares: boolean = true,
-  roundPPS: boolean = false,
-  roundPPSPlaces: number = 5,
+  roundDownShares: boolean = defaultRounding.roundDownShares,
+  roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ) => {
-  return SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targetOptionsPct, seriesInvestment, roundDownShares, roundPPS, roundPPSPlaces);
+  return SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targetOptionsPct, seriesInvestment, roundDownShares, roundPPSPlaces);
 }
 
 /**

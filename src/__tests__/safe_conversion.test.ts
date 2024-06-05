@@ -19,7 +19,7 @@ describe('converting safe investments with existing common stock', () => {
         const expectedValuation = 20_700_000
         const exptectedTotalShares = 20_606_916
         const exptectedTotalOptions = 2_060_692
-        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions.amount, 0.10, seriesInvestment, { roundDownShares: false, roundPPS: false })
+        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions.amount, 0.10, seriesInvestment, { roundDownShares: false, roundPPSPlaces: -1 })
         console.log(fit)
 
         console.log("Shares:", fit.totalShares, "Valuation:", fit.totalShares * fit.pps)
