@@ -28,9 +28,10 @@ export const DEFAULT_ROUNDING_STRATEGY: RoundingStrategy = {
 
 const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b)
 
-const roundToPlaces = (num: number, places: number): number => {
+// PPS is actually rounded up vs shares which are rounded down
+const roundPPSToPlaces = (num: number, places: number): number => {
   const factor = Math.pow(10, places)
-  return Math.round(num * factor) / factor
+  return Math.ceil(num * factor) / factor
 }
 
 // Returns the PPS of a conversion given the amount of shares and the price of the shares
@@ -57,7 +58,8 @@ const attemptFit = (preMoneyValuation: number, commonShares: number, unusedOptio
 
   // First calculate the PPS based on what we know
   const ppsPrecise = preMoneyValuation / (newPostMoneyShares + increaseInOptionsPool)
-  const pps = roundingStrategy.roundPPSPlaces >= 0 ? roundToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
+  const pps = roundingStrategy.roundPPSPlaces >= 0 ? roundPPSToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
+  // const pps = ppsPrecise
 
   // Convert the SAFE's at the current PPS
   const ppss: number[] = Array(safes.length).fill(pps)
@@ -124,6 +126,7 @@ export const fitConversion = (
       seriesInvestment,
       preMoneyShares,
       postMoneyShares, roundingStrategy)
+
     if (pre == preMoneyShares && post == postMoneyShares) {
       // Once the figure stops changing, we've solved the conversion
       break
@@ -136,12 +139,12 @@ export const fitConversion = (
   const increaseInOptionsPool = preMoneyShares - commonShares - unusedOptions
 
   const ppsPrecise = preMoneyValuation / (postMoneyShares + increaseInOptionsPool)
-  const pps = roundingStrategy.roundPPSPlaces >= 0 ? roundToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
+  const pps = roundingStrategy.roundPPSPlaces >= 0 ? roundPPSToPlaces(ppsPrecise, roundingStrategy.roundPPSPlaces ?? 5) : ppsPrecise
 
   // Get a list of the PPS's for each SAFE
   const ppss: number[] = Array(safes.length).fill(pps)
   for (const [idx, safe] of safes.entries()) {
-    ppss[idx] = safeConvert(safe, preMoneyShares, postMoneyShares, pps)
+    ppss[idx] = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), 5)
   }
 
   const seriesShares = roundingStrategy.roundDownShares ?
