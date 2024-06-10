@@ -63,7 +63,7 @@ function SAFE_CONVERSION(
       roundPPSPlaces,
     }
 
-    const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestment, roundingStrategy)
+    const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, [seriesInvestment], roundingStrategy)
     return [
       ["Result", "Success"],
       ["Calculated At", new Date().toISOString()],
@@ -135,9 +135,8 @@ declare const global: {
  * @param { number }  unusedOptions  Unused options
  * @param { number }  targetOptionsPct  Target options pool percentage
  * @param { number }  seriesInvestment  Total amount of a priced investment round
- * @param { boolean }  [roundDownShares=true]  Round down the shares
- * @param { boolean }  [roundPPS=true]  Round the PPS
- * @param { number }   [roundPPSPlaces=5]  Round the PPS to this many decimal places
+ * @param { boolean }  [roundDownShares=true]  Round down the shares (default true)
+ * @param { number }   [roundPPSPlaces=5]  Optional: Round the PPS to this many decimal places (default 5) Use -1 to not round
  * @return An array of key value pairs
  * @customfunction
 */

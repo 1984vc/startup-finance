@@ -14,12 +14,14 @@ describe('converting safe investments with existing common stock', () => {
             { investment: 28_500, discount: 0, cap: 13_000_000, type: "post" },
             { investment: 2_997_500, discount: 0, cap: 30_000_000, type: "post" },
         ]
-        const seriesInvestment = 4_000_000
+        const seriesInvestments = [
+            4_000_000
+        ]
 
         const expectedValuation = 20_700_000
         const exptectedTotalShares = 20_606_916
         const exptectedTotalOptions = 2_060_692
-        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions.amount, 0.10, seriesInvestment, { roundDownShares: false, roundPPSPlaces: -1 })
+        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions.amount, 0.10, seriesInvestments, { roundDownShares: false, roundPPSPlaces: -1 })
         console.log(fit)
 
         console.log("Shares:", fit.totalShares, "Valuation:", fit.totalShares * fit.pps)
@@ -32,15 +34,25 @@ describe('converting safe investments with existing common stock', () => {
         const common = 10_000_000 + 1_694_118
         const unusedOptions = 0
         const safes: ISafeInvestment[] = [
-            { investment: 1_450_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 616_147.80, discount: 0, cap: 20_000_000, type: "post" },
+            { investment: 50_000, discount: 0, cap: 10_000_000, type: "post" },
+            { investment: 1_000_000, discount: 0, cap: 10_000_000, type: "post" },
+            { investment: 25_000, discount: 0, cap: 10_000_000, type: "post" },
+            { investment: 175_000, discount: 0, cap: 10_000_000, type: "post" },
+            { investment: 150_000, discount: 0, cap: 10_000_000, type: "post" },
+            { investment: 50_000, discount: 0, cap: 10_000_000, type: "post" },
+            { investment: 5_000, discount: 0, cap: 20_000_000, type: "post" },
+            { investment: 50_000, discount: 0, cap: 20_000_000, type: "post" },
+            { investment: 311_147.80, discount: 0, cap: 20_000_000, type: "post" },
+            { investment: 250_000, discount: 0, cap: 20_000_000, type: "post" },
         ]
-        const seriesInvestment = 10_200_000
+        const seriesInvestments = [
+            10_199_995.29
+        ]
 
-        const expectedValuation = 60_000_000
+        const expectedValuation = 60_000_046
         const exptectedTotalShares = 19_436_361
         const exptectedTotalOptions = 1_943_636
-        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions, 0.10, seriesInvestment, { roundDownShares: true, roundPPSPlaces: 5 })
+        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions, 0.10, seriesInvestments, { roundDownShares: true, roundPPSPlaces: 5 })
         console.log(fit)
 
         console.log("Shares:", fit.totalShares, "Valuation:", fit.totalShares * fit.pps)
