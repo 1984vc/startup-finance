@@ -157,6 +157,7 @@ declare const global: {
  * Finds the best fit for the conversion of SAFEs to priced rounds
  * 
  * @param { number }  preMoney Premoney valuation
+ * @param { number }  commonShares Current total common shares
  * @param { Array }   safeRanges  Range of cells containing the SAFE data [[investment, cap, discount, type]...]
  * @param { number }  unusedOptions  Unused options
  * @param { number }  targetOptionsPct  Target options pool percentage
