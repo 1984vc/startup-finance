@@ -161,8 +161,8 @@ declare const global: {
  * @param { number }  unusedOptions  Unused options
  * @param { number }  targetOptionsPct  Target options pool percentage
  * @param { number }  seriesInvestmentRanges  Range of cells containing the series investments. eg [[investment]]
- * @param { boolean }  [roundDownShares=true]  Round down the shares (default true)
- * @param { number }   [roundPPSPlaces=5]  Optional: Round the PPS to this many decimal places (default 5) Use -1 to not round
+ * @param { boolean }  roundDownShares Optional: Round down the shares (default true)
+ * @param { number }   roundPPSPlaces  Optional: Round the PPS to this many decimal places (default 5) Use -1 to not round
  * @return An array of key value pairs
  * @customfunction
 */
