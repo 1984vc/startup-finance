@@ -38,7 +38,7 @@ jobs:
           refreshToken: ${{ secrets.REFRESH_TOKEN }}
           clientId: ${{ secrets.CLIENT_ID }}
           clientSecret: ${{ secrets.CLIENT_SECRET }}
-          scriptId: ${{ secrets.SCRIPT_ID }}
+          scriptId: ${{ vars.SCRIPT_ID }}
           command: "push"
       - name: Link to deployment
-        run: echo "Deployed to https://docs.google.com/spreadsheets/d/${{ secrets.SCRIPT_ID }}"
+        run: echo "Deployed to https://docs.google.com/spreadsheets/d/${{ vars.SCRIPT_ID }}"
