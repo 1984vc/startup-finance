@@ -41,4 +41,6 @@ jobs:
           scriptId: ${{ vars.SCRIPT_ID }}
           command: "push"
       - name: Link to deployment
-        run: echo "Deployed to https://docs.google.com/spreadsheets/d/${{ vars.SCRIPT_ID }}"
+        run:
+          echo "Deployed to Staging
+          https://docs.google.com/spreadsheets/d/1d34sADQwY_wv0qw01KDclKl2i0IRLG1hC1SvCb5EpHg"
