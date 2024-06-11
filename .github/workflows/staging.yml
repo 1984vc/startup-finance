@@ -1,15 +1,15 @@
-name: Run Deploy
+name: Run Deploy Staging
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - staging
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Build, Lint, Test and Deploy
-    environment: production
+    name: Build, Lint, Test and Deploy to Staging
+    environment: staging
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v1

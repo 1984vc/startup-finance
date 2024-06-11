@@ -13,13 +13,22 @@ type SAFE_CONVERSION_RESULT = [
 
 const defaultRounding = DEFAULT_ROUNDING_STRATEGY
 
+function toNumber(i: string | number): number {
+  if (typeof i === 'number') return i
+  const num = parseFloat(i)
+  if (isNaN(num)) {
+    throw new Error(`Error: expected a number but got ${i}`)
+  }
+  return num
+}
+
 function SAFE_CONVERSION(
   preMoney: number | string,
   commonShares: number | string,
   safeRanges: [investment: number, cap: number, discount: number, type: string][],
   unusedOptions: number | string,
   targetOptionsPct: number | string,
-  seriesInvestment: number | string,
+  seriesInvestmentRanges: number[][] | string[][] | number | string,
   roundDownShares: boolean = defaultRounding.roundDownShares,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
@@ -38,6 +47,26 @@ function SAFE_CONVERSION(
       }
     })
 
+    // We need to handle when the seriesInvestment is just one cell, or when it's a series of cells as investments
+    let seriesInvestments: number[] = []
+    if (Array.isArray(seriesInvestmentRanges)) {
+      seriesInvestments = seriesInvestmentRanges.map((e) => {
+        try {
+          const num = toNumber(e[0])
+          return num
+        } catch (err) {
+          throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`)
+        }
+        // Check each element of the array to see if it's a number, if not throw an Error
+      })
+    } else {
+      try {
+        seriesInvestments = [toNumber(seriesInvestmentRanges)]
+      } catch (err) {
+        throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`)
+      }
+    }
+
     if (typeof preMoney !== "number") {
       throw new Error(`SAFE_CONVERSION: Invalid input for premoney, expected number, got ${preMoney}}`)
     }
@@ -50,12 +79,9 @@ function SAFE_CONVERSION(
     if (typeof targetOptionsPct !== "number") {
       throw new Error(`SAFE_CONVERSION: Invalid input for targetOptionsPct, expected number, got ${targetOptionsPct}}`)
     }
-    if (typeof seriesInvestment !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestment, expected a number, got ${seriesInvestment}`)
-    }
 
     if (roundPPSPlaces !== undefined && typeof roundPPSPlaces !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for roundPPSPlaces, expected a number, got ${seriesInvestment}`)
+      throw new Error(`SAFE_CONVERSION: Invalid input for roundPPSPlaces, expected a number, got ${seriesInvestmentRanges}`)
     }
 
     const roundingStrategy: RoundingStrategy = {
@@ -63,7 +89,7 @@ function SAFE_CONVERSION(
       roundPPSPlaces,
     }
 
-    const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, [seriesInvestment], roundingStrategy)
+    const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestments, roundingStrategy)
     return [
       ["Result", "Success"],
       ["Calculated At", new Date().toISOString()],
@@ -131,10 +157,10 @@ declare const global: {
  * Finds the best fit for the conversion of SAFEs to priced rounds
  * 
  * @param { number }  preMoney Premoney valuation
- * @param { Array }   safeRanges  Range of cells containing the SAFE data [investment, cap, discount, type]
+ * @param { Array }   safeRanges  Range of cells containing the SAFE data [[investment, cap, discount, type]...]
  * @param { number }  unusedOptions  Unused options
  * @param { number }  targetOptionsPct  Target options pool percentage
- * @param { number }  seriesInvestment  Total amount of a priced investment round
+ * @param { number }  seriesInvestmentRanges  Range of cells containing the series investments. eg [[investment]]
  * @param { boolean }  [roundDownShares=true]  Round down the shares (default true)
  * @param { number }   [roundPPSPlaces=5]  Optional: Round the PPS to this many decimal places (default 5) Use -1 to not round
  * @return An array of key value pairs
@@ -146,11 +172,11 @@ global.SAFE_CONVERSION = (
   safeRanges: [investment: number, cap: number, discount: number, type: string][],
   unusedOptions: number | string,
   targetOptionsPct: number | string,
-  seriesInvestment: number | string,
+  seriesInvestmentRanges: number[][] | string[][] | number | string,
   roundDownShares: boolean = defaultRounding.roundDownShares,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ) => {
-  return SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targetOptionsPct, seriesInvestment, roundDownShares, roundPPSPlaces);
+  return SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targetOptionsPct, seriesInvestmentRanges, roundDownShares, roundPPSPlaces);
 }
 
 /**
