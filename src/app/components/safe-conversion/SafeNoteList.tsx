@@ -70,13 +70,19 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         prefix="$"
         decimalScale={2}
       />
-      <input
+      <CurrencyInput
         type="text"
         name="discount"
         value={data.discount}
-        onChange={handleInputChange}
+        onValueChange={onValueChange}
         placeholder="Discount %"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        prefix=""
+        suffix="%"
+        decimalScale={0}
+        max={99}
+        maxLength={2}
+        allowDecimals={false}
       />
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
       <select

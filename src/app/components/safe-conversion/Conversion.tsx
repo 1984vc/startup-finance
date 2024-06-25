@@ -126,7 +126,16 @@ const Conversion: React.FC = () => {
   const pps = fitConversion(
     stringToNumber(state.preMoney),
     totalShares,
-    state.rowData.filter((row) => row.type === "safe") as SAFEInputData[],
+    (state.rowData.filter((row) => row.type === "safe") as SAFEInputData[]).map(
+      (row) => {
+        return {
+          investment: stringToNumber(row.investment),
+          cap: stringToNumber(row.cap),
+          discount: stringToNumber(row.discount) / 100,
+          conversionType: row.conversionType,
+        };
+      }
+    ),
     stringToNumber(state.unusedOptions),
     stringToNumber(state.targetOptionsPool) / 100,
     (
