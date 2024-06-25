@@ -23,10 +23,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install Dependencies
-        run: npm ci
+        run: yarn install
       - name: Lint
-        run: npm run lint
+        run: yarn run lint
       - name: Test
-        run: npm test
+        run: yarn test
       - name: Build
-        run: npm run build
+        run: yarn run build
