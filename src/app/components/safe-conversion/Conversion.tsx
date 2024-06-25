@@ -175,6 +175,39 @@ const Conversion: React.FC = () => {
           />
         </div>
       </div>
+      <div className="flex space-x-4">
+        <div className="flex-1">
+          <h1>Unused Options</h1>
+          <CurrencyInput
+            type="text"
+            name="unusedOptions"
+            value={state.unusedOptions}
+            onValueChange={onValueChange}
+            placeholder="Unused Options"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            prefix=""
+            decimalScale={0}
+            allowDecimals={false}
+          />
+        </div>
+        <div className="flex-1">
+          <h1>Target Options Pool</h1>
+          <CurrencyInput
+            type="text"
+            name="targetOptionsPool"
+            value={state.targetOptionsPool}
+            onValueChange={onValueChange}
+            placeholder="Target Options Pool %"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            prefix=""
+            suffix="%"
+            decimalScale={0}
+            max={99}
+            maxLength={2}
+            allowDecimals={false}
+          />
+        </div>
+      </div>
       <h1>Common Stock</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <CommonStockList
@@ -187,41 +220,6 @@ const Conversion: React.FC = () => {
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
         />
-      </div>
-      <div>
-        <h1>Unused Options</h1>
-        <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <CurrencyInput
-            type="text"
-            name="unusedOptions"
-            value={state.unusedOptions}
-            onValueChange={onValueChange}
-            placeholder="Unused Optionss"
-            className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            prefix=""
-            decimalScale={0}
-            allowDecimals={false}
-          />
-        </div>
-      </div>
-      <div>
-        <h1>Target Options Pool</h1>
-        <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <CurrencyInput
-            type="text"
-            name="targetOptionsPool"
-            value={state.targetOptionsPool}
-            onValueChange={onValueChange}
-            placeholder="Target Options Pool %"
-            className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            prefix=""
-            suffix="%"
-            decimalScale={0}
-            max={99}
-            maxLength={2}
-            allowDecimals={false}
-          />
-        </div>
       </div>
       <h1>SAFE Notes</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">

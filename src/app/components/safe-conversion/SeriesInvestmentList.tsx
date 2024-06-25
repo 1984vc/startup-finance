@@ -51,7 +51,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       />
       <CurrencyInput
         type="text"
-        name="shares"
+        name="investment"
         value={data.investment}
         onValueChange={onValueChange}
         placeholder="Investment"
