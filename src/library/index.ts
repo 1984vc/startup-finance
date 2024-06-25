@@ -25,7 +25,7 @@ function toNumber(i: string | number): number {
 function SAFE_CONVERSION(
   preMoney: number | string,
   commonShares: number | string,
-  safeRanges: [investment: number, cap: number, discount: number, type: string][],
+  safeRanges: [investment: number, cap: number, discount: number, conversionType: string][],
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
@@ -43,7 +43,7 @@ function SAFE_CONVERSION(
         investment: e[0],
         cap: e[1],
         discount: e[2],
-        type: e[3].match(/^pre/i) ? "pre" : "post"
+        conversionType: e[3].match(/^pre/i) ? "pre" : "post"
       }
     })
 
@@ -170,7 +170,7 @@ declare const global: {
 global.SAFE_CONVERSION = (
   preMoney: number | string,
   commonShares: number | string,
-  safeRanges: [investment: number, cap: number, discount: number, type: string][],
+  safeRanges: [investment: number, cap: number, discount: number, conversionType: string][],
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,

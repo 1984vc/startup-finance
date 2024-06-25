@@ -1,12 +1,14 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
+import { formatUSDWithCommas } from "@/app/utils/numberFormatting";
+import CurrencyInput from "react-currency-input-field";
 
 export interface SAFEInputData {
   id: string;
   type: "safe";
   name: string;
   investment: number;
-  valuationCap: number;
+  cap: number;
   discount: number;
   conversionType: "post" | "pre";
 }
@@ -17,14 +19,25 @@ interface SAFEInputRowProps {
   onUpdate: (data: SAFEInputData) => void;
 }
 
-const SAFEInputRow: React.FC<SAFEInputRowProps> = ({ data, onDelete, onUpdate }) => {
-  const formatUSDWithCommas = (value: number) => {
-    return value.toLocaleString("en-US", { style: "currency", currency: "USD" });
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
+  data,
+  onDelete,
+  onUpdate,
+}) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     onUpdate({ ...data, [name]: value });
+  };
+
+  const onValueChange = (
+    value: string | undefined,
+    name: string | undefined
+  ) => {
+    if (name) {
+      onUpdate({ ...data, [name]: value });
+    }
   };
 
   return (
@@ -37,28 +50,32 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({ data, onDelete, onUpdate })
         placeholder="Name"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <input
+      <CurrencyInput
         type="text"
         name="investment"
-        value={formatUSDWithCommas(data.investment)}
-        onChange={handleInputChange}
+        value={data.investment}
+        onValueChange={onValueChange}
         placeholder="Investment"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        prefix="$"
+        decimalScale={2}
       />
-      <input
+      <CurrencyInput
         type="text"
-        name="valuationCap"
-        value={formatUSDWithCommas(data.valuationCap)}
-        onChange={handleInputChange}
+        name="cap"
+        value={data.cap}
+        onValueChange={onValueChange}
         placeholder="Valuation Cap"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        prefix="$"
+        decimalScale={2}
       />
       <input
         type="text"
         name="discount"
         value={data.discount}
         onChange={handleInputChange}
-        placeholder="Discount"
+        placeholder="Discount %"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
@@ -81,11 +98,21 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({ data, onDelete, onUpdate })
   );
 };
 
-const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({ rows, onDelete, onUpdate, onAddRow }) => {
+const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
+  rows,
+  onDelete,
+  onUpdate,
+  onAddRow,
+}) => {
   return (
     <div>
       {rows.map((note, idx) => (
-        <SAFEInputRow key={idx} data={note} onUpdate={onUpdate} onDelete={onDelete} />
+        <SAFEInputRow
+          key={idx}
+          data={note}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
       ))}
       <button onClick={onAddRow}>Add another SAFE note</button>
     </div>

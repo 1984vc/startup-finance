@@ -1,11 +1,41 @@
 {
-  "name": "1984-startup-finance-monorepo",
-  "version": "2.2.0",
-  "scripts": { },
-  "workspaces": [
-    "src/*"
-  ],
-  "license": "MIT",
-  "devDependencies": {},
-  "private": true
+  "name": "safe-conversion",
+  "version": "2.3.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "build-gas": "rm -rf build && tsc -p tsconfig.gas.json && webpack",
+    "deploy-gas": "npm run push && clasp deploy",
+    "format": "prettier . --write",
+    "gas-login": "clasp login",
+    "test": "jest"
+  },
+  "dependencies": {
+    "next": "14.2.4",
+    "react": "^18",
+    "react-currency-input-field": "^3.8.0",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@google/clasp": "^2.4.2",
+    "@jest/globals": "^29.7.0",
+    "@types/google-apps-script": "^1.0.83",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "eslint-plugin-googleappsscript": "^1.0.5",
+    "gas-webpack-plugin": "^2.6.0",
+    "jest": "^29.7.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.1.5",
+    "typescript": "^5",
+    "webpack": "^5.92.1",
+    "webpack-cli": "^5.1.4"
+  }
 }

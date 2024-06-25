@@ -13,6 +13,6 @@
     "lib": ["ESNext"],
     "types": ["google-apps-script"]
   },
-  "include": ["src"],
-  "files": ["src/index.ts"]
+  "include": ["src/library"],
+  "files": ["src/library/index.ts"]
 }

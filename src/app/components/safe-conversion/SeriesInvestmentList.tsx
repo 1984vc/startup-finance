@@ -1,5 +1,6 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
+import CurrencyInput from "react-currency-input-field";
 
 export interface SeriesInputData {
   id: string;
@@ -14,14 +15,29 @@ interface SeriesRowProps {
   onUpdate: (data: SeriesInputData) => void;
 }
 
-const SeriesInvestorRow: React.FC<SeriesRowProps> = ({ data, onDelete, onUpdate }) => {
+const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
+  data,
+  onDelete,
+  onUpdate,
+}) => {
   const formatShares = (value: number) => {
     return value.toLocaleString("en-US");
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     onUpdate({ ...data, [name]: value });
+  };
+
+  const onValueChange = (
+    value: string | undefined,
+    name: string | undefined
+  ) => {
+    if (name) {
+      onUpdate({ ...data, [name]: value });
+    }
   };
 
   return (
@@ -34,13 +50,15 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({ data, onDelete, onUpdate 
         placeholder="Series Investor Name"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <input
+      <CurrencyInput
         type="text"
         name="investment"
-        value={formatShares(data.investment)}
-        onChange={handleInputChange}
+        value={data.investment}
+        onValueChange={onValueChange}
         placeholder="Investment"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        prefix="$"
+        decimalScale={2}
       />
       <button
         onClick={() => onDelete(data.id)}
@@ -52,11 +70,21 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({ data, onDelete, onUpdate 
   );
 };
 
-const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({ rows, onDelete, onUpdate, onAddRow }) => {
+const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
+  rows,
+  onDelete,
+  onUpdate,
+  onAddRow,
+}) => {
   return (
     <div>
       {rows.map((note, idx) => (
-        <SeriesInvestorRow key={idx} data={note} onUpdate={onUpdate} onDelete={onDelete} />
+        <SeriesInvestorRow
+          key={idx}
+          data={note}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
       ))}
       <button onClick={onAddRow}>Add another Series investor</button>
     </div>

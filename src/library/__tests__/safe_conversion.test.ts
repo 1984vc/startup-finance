@@ -8,11 +8,11 @@ describe('converting safe investments with existing common stock', () => {
         const unusedOptions = { name: 'Unused options', amount: 609_272 }
         const safes: ISafeInvestment[] = [
             // YC 7% on $125k is $1,785,714.28571429 cap
-            { investment: 125_000, discount: 0, cap: 125_000 / 0.07, type: "post" },
-            { investment: 375_000, discount: 0, cap: 0, type: "post" },
-            { investment: 475_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 28_500, discount: 0, cap: 13_000_000, type: "post" },
-            { investment: 2_997_500, discount: 0, cap: 30_000_000, type: "post" },
+            { investment: 125_000, discount: 0, cap: 125_000 / 0.07, conversionType: "post" },
+            { investment: 375_000, discount: 0, cap: 0, conversionType: "post" },
+            { investment: 475_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 28_500, discount: 0, cap: 13_000_000, conversionType: "post" },
+            { investment: 2_997_500, discount: 0, cap: 30_000_000, conversionType: "post" },
         ]
         const seriesInvestments = [
             4_000_000
@@ -33,16 +33,16 @@ describe('converting safe investments with existing common stock', () => {
         const common = 10_000_000 + 1_694_118
         const unusedOptions = 0
         const safes: ISafeInvestment[] = [
-            { investment: 50_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 1_000_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 25_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 175_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 150_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 50_000, discount: 0, cap: 10_000_000, type: "post" },
-            { investment: 5_000, discount: 0, cap: 20_000_000, type: "post" },
-            { investment: 50_000, discount: 0, cap: 20_000_000, type: "post" },
-            { investment: 311_147.80, discount: 0, cap: 20_000_000, type: "post" },
-            { investment: 250_000, discount: 0, cap: 20_000_000, type: "post" },
+            { investment: 50_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 1_000_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 25_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 175_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 150_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 50_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 5_000, discount: 0, cap: 20_000_000, conversionType: "post" },
+            { investment: 50_000, discount: 0, cap: 20_000_000, conversionType: "post" },
+            { investment: 311_147.80, discount: 0, cap: 20_000_000, conversionType: "post" },
+            { investment: 250_000, discount: 0, cap: 20_000_000, conversionType: "post" },
         ]
         const seriesInvestments = [
             10_199_995.29

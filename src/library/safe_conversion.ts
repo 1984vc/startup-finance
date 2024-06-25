@@ -2,7 +2,7 @@ export interface ISafeInvestment {
   investment: number
   discount: number
   cap: number
-  type: "post" | "pre"
+  conversionType: "post" | "pre"
 }
 
 type BestFit = {
@@ -57,7 +57,7 @@ export const safeConvert = (safe: ISafeInvestment, preShares: number, postShares
   }
   const discountPPS = (1 - safe.discount) * pps
 
-  const shares = safe.type === "pre" ? preShares : postShares
+  const shares = safe.conversionType === "pre" ? preShares : postShares
   const capPPS = safe.cap / shares
   return Math.min(discountPPS, capPPS)
 }
@@ -150,7 +150,7 @@ export const fitConversion = (
 
   // Get a list of the PPS's for each SAFE
   const ppss: number[] = Array(safes.length).fill(pps)
-  for (const [idx, safe] of safes.entries()) {
+  for (const [idx, safe] of Array.from(safes.entries())) {
     ppss[idx] = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), 5)
   }
 
