@@ -5,7 +5,7 @@ export interface ISafeInvestment {
   conversionType: "post" | "pre"
 }
 
-type BestFit = {
+export type BestFit = {
   pps: number
   ppss: number[]
   convertedSafeShares: number

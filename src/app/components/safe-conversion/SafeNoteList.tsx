@@ -36,7 +36,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
     name: string | undefined
   ) => {
     if (name) {
-      onUpdate({ ...data, [name]: value });
+      onUpdate({ ...data, [name]: parseFloat(value ?? "0") });
     }
   };
 

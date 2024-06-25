@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import SafeNotes, { SAFEInputData } from "./SafeNoteList";
 import CommonStockList, { CommonStockInputData } from "./CommonStockList";
 import SeriesInvestorList, { SeriesInputData } from "./SeriesInvestmentList";
-import { topInternetEntrepreneurs } from "@/app/utils/techFounders";
-import { top100 } from "@/app/utils/vcs";
 import { fitConversion } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { initialState } from "./initialState";
+import Results from "./Results";
 
 export interface RowsProps<T> {
   rows: T[];
@@ -208,13 +207,19 @@ const Conversion: React.FC = () => {
       <div>
         <h1>Target Options Pool</h1>
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <input
+          <CurrencyInput
             type="text"
             name="targetOptionsPool"
-            onChange={handleInputChange}
             value={state.targetOptionsPool}
-            placeholder="Unused Options Shares"
+            onValueChange={onValueChange}
+            placeholder="Target Options Pool %"
             className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            prefix=""
+            suffix="%"
+            decimalScale={0}
+            max={99}
+            maxLength={2}
+            allowDecimals={false}
           />
         </div>
       </div>
@@ -245,7 +250,7 @@ const Conversion: React.FC = () => {
         />
       </div>
       <h1>Total Value</h1>
-      <div>{JSON.stringify(pps)}</div>
+      {pps !== null && <Results state={state} bestFit={pps} />}
     </div>
   );
 };

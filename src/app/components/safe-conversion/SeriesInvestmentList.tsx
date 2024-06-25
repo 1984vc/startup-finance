@@ -30,13 +30,12 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
     const { name, value } = e.target;
     onUpdate({ ...data, [name]: value });
   };
-
   const onValueChange = (
     value: string | undefined,
     name: string | undefined
   ) => {
     if (name) {
-      onUpdate({ ...data, [name]: value });
+      onUpdate({ ...data, [name]: parseFloat(value ?? "0") });
     }
   };
 
@@ -52,7 +51,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       />
       <CurrencyInput
         type="text"
-        name="investment"
+        name="shares"
         value={data.investment}
         onValueChange={onValueChange}
         placeholder="Investment"
