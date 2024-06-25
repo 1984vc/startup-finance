@@ -57,7 +57,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         placeholder="Investment"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
-        decimalScale={2}
+        decimalScale={0}
       />
       <button
         onClick={() => onDelete(data.id)}

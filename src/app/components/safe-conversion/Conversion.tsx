@@ -123,7 +123,7 @@ const Conversion: React.FC = () => {
     .map((row) => row.shares)
     .reduce((acc, val) => acc + val, 0);
   const totalShares = commonStock;
-  const pps = fitConversion(
+  const bestFit = fitConversion(
     stringToNumber(state.preMoney),
     totalShares,
     (state.rowData.filter((row) => row.type === "safe") as SAFEInputData[]).map(
@@ -142,16 +142,6 @@ const Conversion: React.FC = () => {
       state.rowData.filter((row) => row.type === "series") as SeriesInputData[]
     ).map((row) => row.investment),
     { roundDownShares: true, roundPPSPlaces: 5 }
-  );
-  console.log(
-    state.preMoney,
-    totalShares,
-    state.rowData.filter((row) => row.type === "safe") as SAFEInputData[],
-    state.unusedOptions,
-    state.targetOptionsPool,
-    (
-      state.rowData.filter((row) => row.type === "series") as SeriesInputData[]
-    ).map((row) => row.investment)
   );
 
   const onValueChange = (
@@ -257,7 +247,7 @@ const Conversion: React.FC = () => {
         />
       </div>
       <h1>Total Value</h1>
-      {pps !== null && <Results state={state} bestFit={pps} />}
+      {bestFit !== null && <Results state={state} bestFit={bestFit} />}
     </div>
   );
 };

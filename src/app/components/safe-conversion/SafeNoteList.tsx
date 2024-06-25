@@ -58,7 +58,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         placeholder="Investment"
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
-        decimalScale={2}
+        allowDecimals={false}
       />
       <CurrencyInput
         type="text"
@@ -66,17 +66,18 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.cap}
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex-1 w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
-        decimalScale={2}
+        decimalScale={0}
+        allowDecimals={true}
       />
       <CurrencyInput
         type="text"
         name="discount"
-        value={data.discount}
+        value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="flex-1 w-16 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix=""
         suffix="%"
         decimalScale={0}
