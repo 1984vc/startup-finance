@@ -147,7 +147,6 @@ export { onOpen, onEdit, onInstall, doGet, doPost, SAFE_CONVERSION, VERSION };
 
 // Hack to get in custom function JSDOCS
 declare const global: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 };
 
