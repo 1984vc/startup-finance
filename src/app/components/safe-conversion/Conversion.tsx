@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import SafeNotes, { SAFEInputData } from "./SafeNoteList";
 import CommonStockList, { CommonStockInputData } from "./CommonStockList";
 import SeriesInvestorList, { SeriesInputData } from "./SeriesInvestmentList";
-import { fitConversion } from "@/library/safe_conversion";
+import { BestFit, fitConversion } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { initialState } from "./initialState";
@@ -13,6 +13,7 @@ export interface RowsProps<T> {
   onDelete: (id: string) => void;
   onAddRow: () => void;
   onUpdate: (data: RowData) => void;
+  bestFit?: BestFit;
 }
 
 type RowData = SAFEInputData | CommonStockInputData | SeriesInputData;
@@ -122,6 +123,13 @@ const Conversion: React.FC = () => {
   )
     .map((row) => row.shares)
     .reduce((acc, val) => acc + val, 0);
+
+  const totalSeriesInvesment = (
+    state.rowData.filter((row) => row.type === "series") as SeriesInputData[]
+  )
+    .map((row) => row.investment)
+    .reduce((acc, val) => acc + val, 0);
+
   const totalShares = commonStock;
   const bestFit = fitConversion(
     stringToNumber(state.preMoney),
@@ -158,20 +166,37 @@ const Conversion: React.FC = () => {
 
   return (
     <div>
-      <div>
-        <h1>Premoney Valuation</h1>
-        <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <CurrencyInput
-            type="text"
-            name="preMoney"
-            value={state.preMoney}
-            onValueChange={onValueChange}
-            placeholder="Investment"
-            className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            prefix="$"
-            decimalScale={0}
-            allowDecimals={false}
-          />
+      <div className="flex space-x-4">
+        <div className="flex-1">
+          <h1>Premoney Valuation</h1>
+          <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+            <CurrencyInput
+              type="text"
+              name="preMoney"
+              value={state.preMoney}
+              onValueChange={onValueChange}
+              placeholder="Investment"
+              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              prefix="$"
+              decimalScale={0}
+              allowDecimals={false}
+            />
+          </div>
+        </div>
+        <div className="flex-1">
+          <h1>Post Money Valuation</h1>
+          <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+            <CurrencyInput
+              type="text"
+              name="totalSeriesInvestment"
+              value={state.preMoney + totalSeriesInvesment}
+              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              prefix="$"
+              decimalScale={0}
+              allowDecimals={false}
+              disabled={true}
+            />
+          </div>
         </div>
       </div>
       <div className="flex space-x-4">
@@ -206,6 +231,21 @@ const Conversion: React.FC = () => {
             allowDecimals={false}
           />
         </div>
+        <div className="flex-1">
+          <h1>Additional Options</h1>
+          <CurrencyInput
+            type="text"
+            name="additionalOptions"
+            value={bestFit.additionalOptions}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            prefix=""
+            decimalScale={0}
+            max={99}
+            maxLength={2}
+            allowDecimals={false}
+            disabled={true}
+          />
+        </div>
       </div>
       <h1>Common Stock</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -218,6 +258,7 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("common")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
+          bestFit={bestFit}
         />
       </div>
       <h1>SAFE Notes</h1>
@@ -231,6 +272,7 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
+          bestFit={bestFit}
         />
       </div>
       <h1>Series Investors</h1>
@@ -244,6 +286,7 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("series")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
+          bestFit={bestFit}
         />
       </div>
       <h1>Total Value</h1>

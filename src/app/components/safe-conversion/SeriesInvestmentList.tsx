@@ -13,12 +13,14 @@ interface SeriesRowProps {
   data: SeriesInputData;
   onDelete: (id: string) => void;
   onUpdate: (data: SeriesInputData) => void;
+  ownershipPct: number;
 }
 
 const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
   data,
   onDelete,
   onUpdate,
+  ownershipPct,
 }) => {
   const formatShares = (value: number) => {
     return value.toLocaleString("en-US");
@@ -65,6 +67,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       >
         Delete
       </button>
+      <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
@@ -74,7 +77,14 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
   onDelete,
   onUpdate,
   onAddRow,
+  bestFit,
 }) => {
+  const seriesOwnershipPct = rows.map((data, idx) => {
+    if (!bestFit) return 0;
+    const shares = Math.floor(data.investment / bestFit.pps);
+    return (shares / bestFit.totalShares) * 100;
+  });
+
   return (
     <div>
       {rows.map((note, idx) => (
@@ -83,6 +93,7 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
+          ownershipPct={seriesOwnershipPct[idx]}
         />
       ))}
       <button onClick={onAddRow}>Add another Series investor</button>

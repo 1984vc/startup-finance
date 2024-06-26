@@ -17,12 +17,14 @@ interface SAFEInputRowProps {
   data: SAFEInputData;
   onDelete: (id: string) => void;
   onUpdate: (data: SAFEInputData) => void;
+  ownershipPct: number;
 }
 
 const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   data,
   onDelete,
   onUpdate,
+  ownershipPct,
 }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -101,6 +103,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         Delete
       </button>
+      <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
@@ -110,7 +113,15 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
   onDelete,
   onUpdate,
   onAddRow,
+  bestFit,
 }) => {
+  const safeOwnershipPct = rows.map((data, idx) => {
+    if (!bestFit) return 0;
+    const pps = bestFit.ppss[idx];
+    const shares = Math.floor(data.investment / pps);
+    return (shares / bestFit.totalShares) * 100;
+  });
+
   return (
     <div>
       {rows.map((note, idx) => (
@@ -119,6 +130,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
+          ownershipPct={safeOwnershipPct[idx]}
         />
       ))}
       <button onClick={onAddRow}>Add another SAFE note</button>

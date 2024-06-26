@@ -1,6 +1,7 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
+import { BestFit } from "@/library/safe_conversion";
 
 export interface CommonStockInputData {
   id: string;
@@ -13,17 +14,15 @@ interface CommonStockRowProps {
   data: CommonStockInputData;
   onDelete: (id: string) => void;
   onUpdate: (data: CommonStockInputData) => void;
+  ownershipPct: number;
 }
 
 const CommonStockRow: React.FC<CommonStockRowProps> = ({
   data,
   onDelete,
   onUpdate,
+  ownershipPct,
 }) => {
-  const formatShares = (value: number) => {
-    return value.toLocaleString("en-US");
-  };
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -67,6 +66,7 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
       >
         Delete
       </button>
+      <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
@@ -76,7 +76,12 @@ const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
   onDelete,
   onUpdate,
   onAddRow,
+  bestFit,
 }) => {
+  const commonShareholdersPct = rows.map((data) => {
+    return 100 * (data.shares / (bestFit?.totalShares ?? data.shares));
+  });
+
   return (
     <div>
       {rows.map((note, idx) => (
@@ -85,6 +90,7 @@ const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
+          ownershipPct={commonShareholdersPct[idx]}
         />
       ))}
       <button onClick={onAddRow}>Add another Common Shareholder</button>
