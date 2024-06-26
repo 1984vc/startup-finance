@@ -15,6 +15,7 @@ interface CommonStockRowProps {
   onDelete: (id: string) => void;
   onUpdate: (data: CommonStockInputData) => void;
   ownershipPct: number;
+  allowDelete?: boolean;
 }
 
 const CommonStockRow: React.FC<CommonStockRowProps> = ({
@@ -22,6 +23,7 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
   onDelete,
   onUpdate,
   ownershipPct,
+  allowDelete,
 }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -62,7 +64,12 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
       />
       <button
         onClick={() => onDelete(data.id)}
-        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+        disabled={!allowDelete}
+        className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+          allowDelete
+            ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
       >
         Delete
       </button>
@@ -91,6 +98,7 @@ const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
           onUpdate={onUpdate}
           onDelete={onDelete}
           ownershipPct={commonShareholdersPct[idx]}
+          allowDelete={rows.length > 1}
         />
       ))}
       <button onClick={onAddRow}>Add another Common Shareholder</button>

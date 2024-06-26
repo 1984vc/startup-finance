@@ -100,14 +100,17 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
       </select>
-      {allowDelete && (
-        <button
-          onClick={() => onDelete(data.id)}
-          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-        >
-          Delete
-        </button>
-      )}
+      <button
+        onClick={() => onDelete(data.id)}
+        disabled={!allowDelete}
+        className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+          allowDelete
+            ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
+      >
+        Delete
+      </button>
       <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
     </div>
   );

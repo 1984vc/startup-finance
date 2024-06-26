@@ -14,6 +14,7 @@ interface SeriesRowProps {
   onDelete: (id: string) => void;
   onUpdate: (data: SeriesInputData) => void;
   ownershipPct: number;
+  allowDelete?: boolean;
 }
 
 const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
@@ -21,6 +22,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
   onDelete,
   onUpdate,
   ownershipPct,
+  allowDelete,
 }) => {
   const formatShares = (value: number) => {
     return value.toLocaleString("en-US");
@@ -63,7 +65,12 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       />
       <button
         onClick={() => onDelete(data.id)}
-        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+        disabled={!allowDelete}
+        className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+          allowDelete
+            ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+        }`}
       >
         Delete
       </button>
@@ -94,6 +101,7 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
           onUpdate={onUpdate}
           onDelete={onDelete}
           ownershipPct={seriesOwnershipPct[idx]}
+          allowDelete={rows.length > 1}
         />
       ))}
       <button onClick={onAddRow}>Add another Series investor</button>
