@@ -28,12 +28,12 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - name: Setup Pages ⚙️
-        uses: actions/configure-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
         with:
           static_site_generator: next
 
-      - name: Build with Next.js 🏗️
+      - name: Build with Next.js
         run: yarn build
 
       - name: Upload artifact 📡
