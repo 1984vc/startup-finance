@@ -18,6 +18,7 @@ interface SAFEInputRowProps {
   onDelete: (id: string) => void;
   onUpdate: (data: SAFEInputData) => void;
   ownershipPct: number;
+  allowDelete: boolean;
 }
 
 const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
@@ -25,11 +26,13 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   onDelete,
   onUpdate,
   ownershipPct,
+  allowDelete,
 }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+    console.log(name, value);
     onUpdate({ ...data, [name]: value });
   };
 
@@ -89,7 +92,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       />
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
-        name="type"
+        name="conversionType"
         value={data.conversionType}
         onChange={handleInputChange}
         className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -97,12 +100,14 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
       </select>
-      <button
-        onClick={() => onDelete(data.id)}
-        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-      >
-        Delete
-      </button>
+      {allowDelete && (
+        <button
+          onClick={() => onDelete(data.id)}
+          className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
+          Delete
+        </button>
+      )}
       <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
@@ -131,6 +136,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
           onUpdate={onUpdate}
           onDelete={onDelete}
           ownershipPct={safeOwnershipPct[idx]}
+          allowDelete={rows.length > 1}
         />
       ))}
       <button onClick={onAddRow}>Add another SAFE note</button>
