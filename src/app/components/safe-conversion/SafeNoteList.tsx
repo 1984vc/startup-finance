@@ -53,7 +53,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Name"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -61,7 +61,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.investment}
         onValueChange={onValueChange}
         placeholder="Investment"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         allowDecimals={false}
       />
@@ -71,7 +71,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.cap}
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
-        className="flex-1 w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         decimalScale={0}
         allowDecimals={true}
@@ -82,7 +82,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className="flex-1 w-16 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
         prefix=""
         suffix="%"
         decimalScale={0}
@@ -95,7 +95,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         name="conversionType"
         value={data.conversionType}
         onChange={handleInputChange}
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
@@ -103,7 +103,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       <button
         onClick={() => onDelete(data.id)}
         disabled={!allowDelete}
-        className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+        className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
           allowDelete
             ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
             : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -111,7 +111,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         Delete
       </button>
-      <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
+      <div className="w-36">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
@@ -132,6 +132,16 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
 
   return (
     <div>
+      <div className="flex items-center space-x-4 mb-4">
+        <div className="w-48">Name</div>
+        <div className="w-36">Investment</div>
+        <div className="w-36">Cap</div>
+        <div className="w-20">Discount</div>
+        <div className="w-36">Type</div>
+        <div className="w-24"> </div>
+        <div className="w-36">Ownership %</div>
+      </div>
+
       {rows.map((note, idx) => (
         <SAFEInputRow
           key={idx}
@@ -142,7 +152,12 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
           allowDelete={rows.length > 1}
         />
       ))}
-      <button onClick={onAddRow}>Add another SAFE note</button>
+      <button
+        onClick={onAddRow}
+        className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-blue-500"
+      >
+        Add another SAFE note
+      </button>
     </div>
   );
 };

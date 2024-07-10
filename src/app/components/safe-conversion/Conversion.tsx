@@ -166,9 +166,54 @@ const Conversion: React.FC = () => {
 
   return (
     <div>
+      <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <CommonStockList
+          rows={
+            state.rowData.filter(
+              (row) => row.type === "common"
+            ) as CommonStockInputData[]
+          }
+          onAddRow={() => onAddRow("common")}
+          onDelete={onDeleteRow}
+          onUpdate={onUpdateRow}
+          bestFit={bestFit}
+        />
+      </div>
+      <div className="flex space-x-4 mt-4">
+        <div className="flex-1">
+          <h2 className="mb-2">Unused Options</h2>
+          <CurrencyInput
+            type="text"
+            name="unusedOptions"
+            value={state.unusedOptions}
+            onValueChange={onValueChange}
+            placeholder="Unused Options"
+            className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            prefix=""
+            decimalScale={0}
+            allowDecimals={false}
+          />
+        </div>
+      </div>
+      <h1 className="text-1xl font-bold mb-4 mt-8">2) SAFE Investors</h1>
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <SafeNotes
+          rows={
+            state.rowData.filter(
+              (row) => row.type === "safe"
+            ) as SAFEInputData[]
+          }
+          onAddRow={() => onAddRow("safe")}
+          onDelete={onDeleteRow}
+          onUpdate={onUpdateRow}
+          bestFit={bestFit}
+        />
+      </div>
+      <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round</h1>
       <div className="flex space-x-4">
         <div className="flex-1">
-          <h1>Premoney Valuation</h1>
+          <h2 className="my-2">Premoney Valuation</h2>
           <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
             <CurrencyInput
               type="text"
@@ -184,7 +229,7 @@ const Conversion: React.FC = () => {
           </div>
         </div>
         <div className="flex-1">
-          <h1>Post Money Valuation</h1>
+          <h2 className="my-2">Post Money Valuation</h2>
           <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
             <CurrencyInput
               type="text"
@@ -201,21 +246,7 @@ const Conversion: React.FC = () => {
       </div>
       <div className="flex space-x-4">
         <div className="flex-1">
-          <h1>Unused Options</h1>
-          <CurrencyInput
-            type="text"
-            name="unusedOptions"
-            value={state.unusedOptions}
-            onValueChange={onValueChange}
-            placeholder="Unused Options"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            prefix=""
-            decimalScale={0}
-            allowDecimals={false}
-          />
-        </div>
-        <div className="flex-1">
-          <h1>Target Options Pool</h1>
+          <h2 className="my-2">Target Options Pool</h2>
           <CurrencyInput
             type="text"
             name="targetOptionsPool"
@@ -232,7 +263,7 @@ const Conversion: React.FC = () => {
           />
         </div>
         <div className="flex-1">
-          <h1>Additional Options</h1>
+          <h2 className="my-2">Additional Options</h2>
           <CurrencyInput
             type="text"
             name="additionalOptions"
@@ -247,35 +278,7 @@ const Conversion: React.FC = () => {
           />
         </div>
       </div>
-      <h1>Common Stock</h1>
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <CommonStockList
-          rows={
-            state.rowData.filter(
-              (row) => row.type === "common"
-            ) as CommonStockInputData[]
-          }
-          onAddRow={() => onAddRow("common")}
-          onDelete={onDeleteRow}
-          onUpdate={onUpdateRow}
-          bestFit={bestFit}
-        />
-      </div>
-      <h1>SAFE Notes</h1>
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <SafeNotes
-          rows={
-            state.rowData.filter(
-              (row) => row.type === "safe"
-            ) as SAFEInputData[]
-          }
-          onAddRow={() => onAddRow("safe")}
-          onDelete={onDeleteRow}
-          onUpdate={onUpdateRow}
-          bestFit={bestFit}
-        />
-      </div>
-      <h1>Series Investors</h1>
+      <h1 className="text-1xl font-bold mb-4 mt-5">3a) Series Investors</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <SeriesInvestorList
           rows={
