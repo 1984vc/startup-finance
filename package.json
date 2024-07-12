@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build-production": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
     "build-gas": "rm -rf build && tsc -p tsconfig.gas.json && webpack",
