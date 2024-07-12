@@ -18,3 +18,13 @@ export const formatUSDWithCommas = (value: number | string) => {
     currency: "USD",
   });
 };
+
+export const formatNumberWithCommas = (value: number | string) => {
+  if (typeof value === "string") {
+    value = stringToNumber(value);
+  }
+  return value.toLocaleString("en-US", {
+    style: "decimal",
+  });
+
+};
