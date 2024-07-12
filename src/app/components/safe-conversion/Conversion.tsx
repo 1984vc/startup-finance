@@ -292,7 +292,6 @@ const Conversion: React.FC = () => {
           bestFit={bestFit}
         />
       </div>
-      <h1>Total Value</h1>
       {bestFit !== null && <Results state={state} bestFit={bestFit} />}
     </div>
   );

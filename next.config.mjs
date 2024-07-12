@@ -9,7 +9,6 @@ if (process.env.BUILD_DIST !== undefined) {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: `/${basePathName}`,
-  assetPrefix: `/${basePathName}/`,
   distDir,
   output: "export",
 };
