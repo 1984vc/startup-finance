@@ -1,15 +1,15 @@
-/** @type {import('next').NextConfig} */
 import path from "path";
 
-const basePath = "/startup-finance";
+const basePathName = "startup-finance";
 let distDir = "out";
-if (process.env.NODE_ENV === "production") {
-  distDir = path.join("..", "build", "startup-finance");
+if (process.env.BUILD_DIST !== undefined) {
+  distDir = path.join(process.env.BUILD_DIST, basePathName);
 }
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath,
-  assetPrefix: basePath,
+  basePath: `/${basePathName}`,
+  assetPrefix: `/${basePathName}/`,
   distDir,
   output: "export",
 };
