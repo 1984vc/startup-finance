@@ -51,7 +51,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Series Investor Name"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -59,14 +59,14 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         value={data.investment}
         onValueChange={onValueChange}
         placeholder="Investment"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-32 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         decimalScale={0}
       />
       <button
         onClick={() => onDelete(data.id)}
         disabled={!allowDelete}
-        className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+        className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
           allowDelete
             ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
             : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -74,7 +74,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       >
         Delete
       </button>
-      <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
+      <div className="w-24 text-right">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
@@ -94,6 +94,12 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
 
   return (
     <div>
+      <div className="flex items-center space-x-4 mb-4">
+        <div className="w-48">Name</div>
+        <div className="w-32">Investment</div>
+        <div className="w-24"></div>
+        <div className="w-24 text-right">Ownership %</div>
+      </div>
       {rows.map((note, idx) => (
         <SeriesInvestorRow
           key={idx}
