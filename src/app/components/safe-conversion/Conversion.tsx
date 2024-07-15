@@ -182,7 +182,7 @@ const Conversion: React.FC = () => {
       </div>
       <div className="flex space-x-4 mt-4">
         <div className="flex-1">
-          <h2 className="mb-2">Unused Options</h2>
+          <h2 className="mb-2">Remaining Options Pool</h2>
           <CurrencyInput
             type="text"
             name="unusedOptions"

@@ -24,7 +24,7 @@ export const initialState: ConversionState = {
     {
       id: crypto.randomUUID(),
       type: "common",
-      name: `Employee shares`,
+      name: `Issued Options`,
       shares: 390_728,
     },
     {
