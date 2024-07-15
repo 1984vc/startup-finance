@@ -27,6 +27,7 @@ export const initialState: ConversionState = {
       name: `Issued Options`,
       shares: 390_728,
     },
+    // YC 7% SAFE
     {
       id: crypto.randomUUID(),
       type: "safe",
@@ -36,13 +37,14 @@ export const initialState: ConversionState = {
       cap: 125_000 / 0.07,
       conversionType: "post",
     },
+    // Uncapped YC MFN SAFE
     {
       id: crypto.randomUUID(),
       type: "safe",
       name: "YC MFN",
       investment: 375_000,
       discount: 0,
-      cap: 10_000_000,
+      cap: 0,
       conversionType: "post",
     },
     {
