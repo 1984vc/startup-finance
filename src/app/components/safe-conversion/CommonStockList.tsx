@@ -14,7 +14,7 @@ interface CommonStockRowProps {
   data: CommonStockInputData;
   onDelete: (id: string) => void;
   onUpdate: (data: CommonStockInputData) => void;
-  ownershipPct: number;
+  ownershipPct: [number, number];
   allowDelete?: boolean;
 }
 
@@ -49,7 +49,7 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Common Shareholder Name"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -57,7 +57,7 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
         value={data.shares}
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
-        className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix=""
         decimalScale={0}
         allowDecimals={false}
@@ -65,7 +65,7 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
       <button
         onClick={() => onDelete(data.id)}
         disabled={!allowDelete}
-        className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
+        className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
           allowDelete
             ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
             : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -73,7 +73,8 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
       >
         Delete
       </button>
-      <div className="flex-1">{ownershipPct.toFixed(2)}%</div>
+      <div className="w-24 text-right">{ownershipPct[0].toFixed(2)}%</div>
+      <div className="w-24 text-right">{ownershipPct[1].toFixed(2)}%</div>
     </div>
   );
 };
@@ -85,19 +86,31 @@ const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
   onAddRow,
   bestFit,
 }) => {
-  const commonShareholdersPct = rows.map((data) => {
-    return 100 * (data.shares / (bestFit?.totalShares ?? data.shares));
+  const totalShares = rows.map((row) => row.shares)
+    .reduce((acc, val) => acc + val, 0);
+  const shareholdersPct: [number, number][] = rows.map((data) => {
+    return [
+      100 * (data.shares / totalShares),
+      100 * (data.shares / (bestFit?.totalShares ?? data.shares)),
+    ];
   });
 
   return (
     <div>
+      <div className="flex items-center space-x-4 mb-4">
+        <div className="w-48">Name</div>
+        <div className="w-36">Shares</div>
+        <div className="w-24"></div>
+        <div className="w-24 text-right">Ownership %</div>
+        <div className="w-24 text-right">Diluted %</div>
+      </div>
       {rows.map((note, idx) => (
         <CommonStockRow
           key={idx}
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          ownershipPct={commonShareholdersPct[idx]}
+          ownershipPct={shareholdersPct[idx]}
           allowDelete={rows.length > 1}
         />
       ))}

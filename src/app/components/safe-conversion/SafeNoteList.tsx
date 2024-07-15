@@ -1,6 +1,5 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
-import { formatUSDWithCommas } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 
 export interface SAFEInputData {
@@ -111,7 +110,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         Delete
       </button>
-      <div className="w-36">{ownershipPct.toFixed(2)}%</div>
+      <div className="w-36 text-right">{ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
@@ -139,7 +138,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
         <div className="w-20">Discount</div>
         <div className="w-36">Type</div>
         <div className="w-24"> </div>
-        <div className="w-36">Ownership %</div>
+        <div className="w-36 text-right">Ownership %</div>
       </div>
 
       {rows.map((note, idx) => (
