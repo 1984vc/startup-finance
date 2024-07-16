@@ -37,14 +37,14 @@ export const initialState: ConversionState = {
       cap: 125_000 / 0.07,
       conversionType: "post",
     },
-    // Uncapped YC MFN SAFE
+    // Uncapped YC MFN SAFE (Cap to best cap of all safes)
     {
       id: crypto.randomUUID(),
       type: "safe",
       name: "YC MFN",
       investment: 375_000,
       discount: 0,
-      cap: 0,
+      cap: 10_000_000,
       conversionType: "post",
     },
     {
