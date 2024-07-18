@@ -4,7 +4,7 @@ import CommonStockList, { CommonStockInputData } from "./CommonStockList";
 import SeriesInvestorList, { SeriesInputData } from "./SeriesInvestmentList";
 import { BestFit, fitConversion } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
-import CurrencyInput from "react-currency-input-field";
+import CurrencyInput, { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { initialState } from "./initialState";
 import Results from "./Results";
 
@@ -22,6 +22,7 @@ export interface ConversionState {
   randomFounders: string[];
   randomSeed: string[];
   randomSeries: string[];
+  hasNewRound?: boolean;
   targetOptionsPool: number;
   rowData: RowData[];
   unusedOptions: number;
@@ -109,13 +110,6 @@ const Conversion: React.FC = () => {
     }));
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setState((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
   const commonStock = (
     state.rowData.filter(
       (row) => row.type === "common"
@@ -129,6 +123,8 @@ const Conversion: React.FC = () => {
   )
     .map((row) => row.investment)
     .reduce((acc, val) => acc + val, 0);
+
+  const postMoney = stringToNumber(state.preMoney) + totalSeriesInvesment;
 
   const totalShares = commonStock;
   const bestFit = fitConversion(
@@ -154,12 +150,37 @@ const Conversion: React.FC = () => {
 
   const onValueChange = (
     value: string | undefined,
-    name: string | undefined
+    name: string | undefined,
+    values?: CurrencyInputOnChangeValues
   ) => {
     if (name) {
+      let val = values?.float ?? 0;
+      if (val < 0) {
+        return
+      }
+      // Get the value and replace anything that's not a number or period
+      const newValue = value?.replace(/[^0-9.]/g, "");
       setState((prevFormData) => ({
         ...prevFormData,
-        [name]: parseFloat(value ?? "0"),
+        [name]: newValue ?? "0",
+      }));
+    }
+  };
+
+  const onPercentValueChange = (
+    value: string | undefined,
+    name: string | undefined,
+    values?: CurrencyInputOnChangeValues
+  ) => {
+    if (name) {
+      let val = values?.float ?? 0;
+      if (val > 99 || val < 0) {
+        return
+      }
+      const newValue = value?.replace(/[^0-9.]/g, "");
+      setState((prevFormData) => ({
+        ...prevFormData,
+        [name]: newValue ?? "0",
       }));
     }
   };
@@ -207,90 +228,96 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
-          bestFit={bestFit}
+          bestFit={state.hasNewRound ? bestFit : undefined}
         />
       </div>
-      <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round</h1>
-      <div className="flex space-x-4">
-        <div className="flex-1">
-          <h2 className="my-2">Premoney Valuation</h2>
-          <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+      <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round
+        <input type="checkbox" checked={state.hasNewRound} onClick={() => setState({...state, hasNewRound: !state.hasNewRound})}></input>
+      </h1>
+
+      <div style={{ display: state.hasNewRound ? "block" : "none" }}>
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <h2 className="my-2">Premoney Valuation</h2>
+            <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+              <CurrencyInput
+                type="text"
+                name="preMoney"
+                value={state.preMoney}
+                onValueChange={onValueChange}
+                placeholder="Investment"
+                className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                prefix="$"
+                decimalScale={0}
+                allowDecimals={false}
+              />
+            </div>
+          </div>
+          <div className="flex-1">
+            <h2 className="my-2">Post Money Valuation</h2>
+            <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+              <CurrencyInput
+                type="text"
+                name="totalSeriesInvestment"
+                value={postMoney}
+                className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                prefix="$"
+                decimalScale={0}
+                allowDecimals={false}
+                disabled={true}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <h2 className="my-2">Target Options Pool</h2>
             <CurrencyInput
               type="text"
-              name="preMoney"
-              value={state.preMoney}
-              onValueChange={onValueChange}
-              placeholder="Investment"
-              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              prefix="$"
-              decimalScale={0}
-              allowDecimals={false}
+              name="targetOptionsPool"
+              value={state.targetOptionsPool}
+              onValueChange={onPercentValueChange}
+              placeholder="Target Options Pool %"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              prefix=""
+              suffix="%"
+              decimalScale={1}
+              max={99}
+              allowDecimals={true}
             />
           </div>
         </div>
-        <div className="flex-1">
-          <h2 className="my-2">Post Money Valuation</h2>
-          <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <h2 className="my-2">Additional Options</h2>
             <CurrencyInput
               type="text"
-              name="totalSeriesInvestment"
-              value={state.preMoney + totalSeriesInvesment}
-              className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              prefix="$"
+              name="additionalOptions"
+              value={bestFit.additionalOptions}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              prefix=""
               decimalScale={0}
+              max={99}
+              maxLength={2}
               allowDecimals={false}
               disabled={true}
             />
           </div>
         </div>
-      </div>
-      <div className="flex space-x-4">
-        <div className="flex-1">
-          <h2 className="my-2">Target Options Pool</h2>
-          <CurrencyInput
-            type="text"
-            name="targetOptionsPool"
-            value={state.targetOptionsPool}
-            onValueChange={onValueChange}
-            placeholder="Target Options Pool %"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            prefix=""
-            suffix="%"
-            decimalScale={0}
-            max={99}
-            maxLength={2}
-            allowDecimals={false}
+        <h1 className="text-1xl font-bold mb-4 mt-5">3a) Series Investors</h1>
+        <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+          <SeriesInvestorList
+            rows={
+              state.rowData.filter(
+                (row) => row.type === "series"
+              ) as SeriesInputData[]
+            }
+            onAddRow={() => onAddRow("series")}
+            onDelete={onDeleteRow}
+            onUpdate={onUpdateRow}
+            bestFit={bestFit}
           />
         </div>
-        <div className="flex-1">
-          <h2 className="my-2">Additional Options</h2>
-          <CurrencyInput
-            type="text"
-            name="additionalOptions"
-            value={bestFit.additionalOptions}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            prefix=""
-            decimalScale={0}
-            max={99}
-            maxLength={2}
-            allowDecimals={false}
-            disabled={true}
-          />
-        </div>
-      </div>
-      <h1 className="text-1xl font-bold mb-4 mt-5">3a) Series Investors</h1>
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <SeriesInvestorList
-          rows={
-            state.rowData.filter(
-              (row) => row.type === "series"
-            ) as SeriesInputData[]
-          }
-          onAddRow={() => onAddRow("series")}
-          onDelete={onDeleteRow}
-          onUpdate={onUpdateRow}
-          bestFit={bestFit}
-        />
       </div>
       {bestFit !== null && <Results state={state} bestFit={bestFit} />}
     </div>

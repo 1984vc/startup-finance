@@ -58,4 +58,26 @@ describe('converting safe investments with existing common stock', () => {
         expect(Math.round(fit.totalShares)).toEqual(exptectedTotalShares)
         expect(Math.round(fit.totalOptions)).toEqual(exptectedTotalOptions)
     });
+    // When a user puts in a target option pool of less than the existing options pool, we should just use the existing options pool, not subtract from it
+    test('when the target options pool is less than the current pool', () => {
+        const preMoneyValuation = 16_700_000
+        const common = 9_390_728
+        const unusedOptions = { name: 'Unused options', amount: 609_272 }
+        const safes: ISafeInvestment[] = [
+            // YC 7% on $125k is $1,785,714.28571429 cap
+            { investment: 125_000, discount: 0, cap: 125_000 / 0.07, conversionType: "post" },
+            { investment: 375_000, discount: 0, cap: 0, conversionType: "post" },
+            { investment: 475_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+            { investment: 28_500, discount: 0, cap: 13_000_000, conversionType: "post" },
+            { investment: 2_997_500, discount: 0, cap: 30_000_000, conversionType: "post" },
+        ]
+        const seriesInvestments = [
+            4_000_000
+        ]
+
+        const fit = fitConversion(preMoneyValuation, common, safes, unusedOptions.amount, 0.01, seriesInvestments, { roundDownShares: false, roundPPSPlaces: -1 })
+
+        console.log("Shares:", fit.totalShares, "Valuation:", fit.totalShares * fit.pps)
+        expect(Math.round(fit.totalOptions)).toEqual(609_272)
+    });
 });

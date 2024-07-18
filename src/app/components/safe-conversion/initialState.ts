@@ -53,7 +53,7 @@ export const initialState: ConversionState = {
       name: `${randomSeed[0]}`,
       investment: 475_000,
       discount: 0,
-      cap: 13_000_000,
+      cap: 10_000_000,
       conversionType: "post",
     },
     {

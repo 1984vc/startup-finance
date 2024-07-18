@@ -92,6 +92,9 @@ const attemptFit = (preMoneyValuation: number, commonShares: number, unusedOptio
   increaseInOptionsPool = roundingStrategy.roundDownShares ?
     (Math.floor(optionPoolBase / (1 - targetOptionsPct)) - optionPoolBase) - unusedOptions :
     ((optionPoolBase / (1 - targetOptionsPct)) - optionPoolBase) - unusedOptions
+  if (increaseInOptionsPool < 0) {
+    increaseInOptionsPool = 0
+  }
 
   // Finally, run the latest numbers
   newPreMoneyShares = commonShares + unusedOptions + increaseInOptionsPool

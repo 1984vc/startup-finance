@@ -122,8 +122,15 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
   onAddRow,
   bestFit,
 }) => {
+  // Find the highest cap in our safes
   const safeOwnershipPct = rows.map((data, idx) => {
-    if (!bestFit) return 0;
+    // If we don't have a priced round, used the caps to generated an estimated percent
+    if (!bestFit) {
+      if (data.cap) {
+        return (data.investment / data.cap) * 100
+      }
+      return 0
+    }
     const pps = bestFit.ppss[idx];
     const shares = Math.floor(data.investment / pps);
     return (shares / bestFit.totalShares) * 100;
