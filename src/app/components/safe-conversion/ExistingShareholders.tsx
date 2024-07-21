@@ -3,26 +3,26 @@ import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
 import { BestFit } from "@/library/safe_conversion";
 
-export interface CommonStockInputData {
+export interface ExistingShareholderProps {
   id: string;
   type: "common";
   name: string;
   shares: number;
+  ownershipPct?: number;
+  dilutedPct?: number;
 }
 
-interface CommonStockRowProps {
-  data: CommonStockInputData;
+interface ExistingShareholderRowProps {
+  data: ExistingShareholderProps;
   onDelete: (id: string) => void;
-  onUpdate: (data: CommonStockInputData) => void;
-  ownershipPct: [number, number];
+  onUpdate: (data: ExistingShareholderProps) => void;
   allowDelete?: boolean;
 }
 
-const CommonStockRow: React.FC<CommonStockRowProps> = ({
+const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
   data,
   onDelete,
   onUpdate,
-  ownershipPct,
   allowDelete,
 }) => {
   const handleInputChange = (
@@ -73,25 +73,29 @@ const CommonStockRow: React.FC<CommonStockRowProps> = ({
       >
         Delete
       </button>
-      <div className="w-24 text-right">{ownershipPct[0].toFixed(2)}%</div>
-      <div className="w-24 text-right">{ownershipPct[1].toFixed(2)}%</div>
+      <div className="w-24 text-right">{data.ownershipPct?.toFixed(2)}%</div>
+      <div className="w-24 text-right">{data.dilutedPct?.toFixed(2)}%</div>
     </div>
   );
 };
 
-const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
+const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderProps> & {safePercent: number}> = ({
   rows,
   onDelete,
   onUpdate,
   onAddRow,
-  bestFit,
+  pricedConversion,
+  safePercent,
 }) => {
-  const totalShares = rows.map((row) => row.shares)
+  const totalInitialShares = rows.map((row) => row.shares)
     .reduce((acc, val) => acc + val, 0);
-  const shareholdersPct: [number, number][] = rows.map((data) => {
+  const shareholdersPct: [number, number, number][] = rows.map((data) => {
+    const startingOwnershipPct = (data.shares / totalInitialShares)
+    const preConversionOwnership = (100 - safePercent) * startingOwnershipPct
     return [
-      100 * (data.shares / totalShares),
-      100 * (data.shares / (bestFit?.totalShares ?? data.shares)),
+      100 * startingOwnershipPct,
+      preConversionOwnership,
+      100 * (data.shares / (pricedConversion?.totalShares ?? data.shares)),
     ];
   });
 
@@ -105,12 +109,11 @@ const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
         <div className="w-24 text-right">Diluted %</div>
       </div>
       {rows.map((note, idx) => (
-        <CommonStockRow
+        <ExistingShareholderRow
           key={idx}
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          ownershipPct={shareholdersPct[idx]}
           allowDelete={rows.length > 1}
         />
       ))}
@@ -124,4 +127,4 @@ const CommonStockList: React.FC<RowsProps<CommonStockInputData>> = ({
   );
 };
 
-export default CommonStockList;
+export default ExisingShareholderList;

@@ -84,12 +84,12 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
   onDelete,
   onUpdate,
   onAddRow,
-  bestFit,
+  pricedConversion,
 }) => {
   const seriesOwnershipPct = rows.map((data, idx) => {
-    if (!bestFit) return 0;
-    const shares = Math.floor(data.investment / bestFit.pps);
-    return (shares / bestFit.totalShares) * 100;
+    if (!pricedConversion) return 0;
+    const shares = Math.floor(data.investment / pricedConversion.pps);
+    return (shares / pricedConversion.totalShares) * 100;
   });
 
   return (

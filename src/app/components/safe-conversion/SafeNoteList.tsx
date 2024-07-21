@@ -1,6 +1,7 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
+import { getCapForSafe } from "@/app/utils/rowDataHelper";
 
 export interface SAFEInputData {
   id: string;
@@ -9,23 +10,31 @@ export interface SAFEInputData {
   investment: number;
   cap: number;
   discount: number;
-  conversionType: "post" | "pre";
+  conversionType: "post" | "pre" | "mfn" ;
+}
+
+export interface SAFEProps {
+  id: string;
+  type: "safe";
+  name: string;
+  investment: number;
+  cap: number;
+  discount: number;
+  ownershipPct: number;
+  allowDelete: boolean;
+  conversionType: "post" | "pre" | "mfn" ;
 }
 
 interface SAFEInputRowProps {
-  data: SAFEInputData;
+  data: SAFEProps;
   onDelete: (id: string) => void;
-  onUpdate: (data: SAFEInputData) => void;
-  ownershipPct: number;
-  allowDelete: boolean;
+  onUpdate: (data: SAFEProps) => void;
 }
 
 const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   data,
   onDelete,
   onUpdate,
-  ownershipPct,
-  allowDelete,
 }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -98,43 +107,47 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
+        <option value="mfn">Uncapped MFN</option>
       </select>
       <button
         onClick={() => onDelete(data.id)}
-        disabled={!allowDelete}
+        disabled={!data.allowDelete}
         className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
-          allowDelete
+          data.allowDelete
             ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
             : "bg-gray-300 text-gray-500 cursor-not-allowed"
         }`}
       >
         Delete
       </button>
-      <div className="w-36 text-right">{ownershipPct.toFixed(2)}%</div>
+      <div className="w-36 text-right">{data.ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
 
-const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
+const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   rows,
   onDelete,
   onUpdate,
   onAddRow,
-  bestFit,
+  pricedConversion,
 }) => {
   // Find the highest cap in our safes
   const safeOwnershipPct = rows.map((data, idx) => {
     // If we don't have a priced round, used the caps to generated an estimated percent
-    if (!bestFit) {
+    if (!pricedConversion) {
       if (data.cap) {
         return (data.investment / data.cap) * 100
       }
       return 0
     }
-    const pps = bestFit.ppss[idx];
+    const pps = pricedConversion.ppss[idx];
     const shares = Math.floor(data.investment / pps);
-    return (shares / bestFit.totalShares) * 100;
+    return (shares / pricedConversion.totalShares) * 100;
   });
+  const safeCaps = rows.map((safe) => {
+    return getCapForSafe(safe, rows)
+  })
 
   return (
     <div>
@@ -154,8 +167,6 @@ const SafeNoteList: React.FC<RowsProps<SAFEInputData>> = ({
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          ownershipPct={safeOwnershipPct[idx]}
-          allowDelete={rows.length > 1}
         />
       ))}
       <button

@@ -14,15 +14,19 @@
     "test": "jest"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "next": "14.2.4",
     "react": "^18",
     "react-currency-input-field": "^3.8.0",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "reselect": "^5.1.1",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@google/clasp": "^2.4.2",
     "@jest/globals": "^29.7.0",
     "@types/google-apps-script": "^1.0.83",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

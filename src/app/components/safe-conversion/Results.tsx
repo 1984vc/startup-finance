@@ -1,47 +1,47 @@
 import { BestFit } from "@/library/safe_conversion";
 import { ConversionState, RowsProps } from "./Conversion";
 import { SAFEInputData } from "./SafeNoteList";
-import { CommonStockInputData } from "./CommonStockList";
+import { ExistingShareholderProps } from "./ExistingShareholders";
 import { SeriesInputData } from "./SeriesInvestmentList";
 import { formatNumberWithCommas } from "@/app/utils/numberFormatting";
 
 interface ResultProps {
   state: ConversionState;
-  bestFit: BestFit;
+  pricedConversion: BestFit;
 }
 
-const Results: React.FC<ResultProps> = ({ state, bestFit }) => {
+const Results: React.FC<ResultProps> = ({ state, pricedConversion }) => {
   const commonShareholders = (
-    state.rowData.filter((r) => r.type === "common") as CommonStockInputData[]
+    state.rowData.filter((r) => r.type === "common") as ExistingShareholderProps[]
   ).map((r) => {
     return {
       name: r.name,
       shares: r.shares,
-      ownership: r.shares / bestFit.totalShares,
+      ownership: r.shares / pricedConversion.totalShares,
     };
   });
 
   const convertedSafes = (
     state.rowData.filter((r) => r.type === "safe") as SAFEInputData[]
   ).map((r, idx) => {
-    const pps = bestFit.ppss[idx];
+    const pps = pricedConversion.ppss[idx];
     const shares = r.investment / pps;
     return {
       name: r.name,
       shares,
       pps,
-      ownership: shares / bestFit.totalShares,
+      ownership: shares / pricedConversion.totalShares,
     };
   });
 
   const seriesShareholders = (
     state.rowData.filter((r) => r.type === "series") as SeriesInputData[]
   ).map((r) => {
-    const shares = r.investment / bestFit.pps;
+    const shares = r.investment / pricedConversion.pps;
     return {
       name: r.name,
       shares,
-      ownership: shares / bestFit.totalShares,
+      ownership: shares / pricedConversion.totalShares,
     };
   });
 
@@ -51,15 +51,15 @@ const Results: React.FC<ResultProps> = ({ state, bestFit }) => {
       <div className="space-y-4">
         <div className="flex flex-row items-center space-x-4 bg-gray-100 p-4 rounded-lg">
           <div className="flex-1">
-            <p>PPS: ${bestFit.pps}</p>
+            <p>PPS: ${pricedConversion.pps}</p>
           </div>
           <div className="flex-1">
-            <p>TotalShares: {formatNumberWithCommas(bestFit.totalShares)}</p>
+            <p>TotalShares: {formatNumberWithCommas(pricedConversion.totalShares)}</p>
           </div>
           <div className="flex-1">
             <p>
               Additional Options:{" "}
-              {formatNumberWithCommas(bestFit.additionalOptions)}
+              {formatNumberWithCommas(pricedConversion.additionalOptions)}
             </p>
           </div>
         </div>
