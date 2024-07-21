@@ -1,17 +1,6 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { getCapForSafe } from "@/app/utils/rowDataHelper";
-
-export interface SAFEInputData {
-  id: string;
-  type: "safe";
-  name: string;
-  investment: number;
-  cap: number;
-  discount: number;
-  conversionType: "post" | "pre" | "mfn" ;
-}
 
 export interface SAFEProps {
   id: string;
@@ -21,8 +10,9 @@ export interface SAFEProps {
   cap: number;
   discount: number;
   ownershipPct: number;
-  allowDelete: boolean;
+  allowDelete?: boolean;
   conversionType: "post" | "pre" | "mfn" ;
+  disabledFields?: string[];
 }
 
 interface SAFEInputRowProps {
@@ -40,7 +30,6 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    console.log(name, value);
     onUpdate({ ...data, [name]: value });
   };
 
@@ -83,6 +72,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         prefix="$"
         decimalScale={0}
         allowDecimals={true}
+        disabled={data.disabledFields?.includes("cap")}
       />
       <CurrencyInput
         type="text"
@@ -130,31 +120,14 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   onDelete,
   onUpdate,
   onAddRow,
-  pricedConversion,
 }) => {
-  // Find the highest cap in our safes
-  const safeOwnershipPct = rows.map((data, idx) => {
-    // If we don't have a priced round, used the caps to generated an estimated percent
-    if (!pricedConversion) {
-      if (data.cap) {
-        return (data.investment / data.cap) * 100
-      }
-      return 0
-    }
-    const pps = pricedConversion.ppss[idx];
-    const shares = Math.floor(data.investment / pps);
-    return (shares / pricedConversion.totalShares) * 100;
-  });
-  const safeCaps = rows.map((safe) => {
-    return getCapForSafe(safe, rows)
-  })
 
   return (
     <div>
       <div className="flex items-center space-x-4 mb-4">
         <div className="w-48">Name</div>
         <div className="w-36">Investment</div>
-        <div className="w-36">Cap</div>
+        <div className="w-36" >Cap</div>
         <div className="w-20">Discount</div>
         <div className="w-36">Type</div>
         <div className="w-24"> </div>

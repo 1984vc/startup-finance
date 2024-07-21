@@ -1,23 +1,19 @@
-import React, { useState } from "react";
-import SafeNotes, { SAFEInputData } from "./SafeNoteList";
-import ExisingShareholderList, { ExistingShareholderProps } from "./ExistingShareholders";
+import React from "react";
+import SafeNotes from "./SafeNoteList";
+import ExisingShareholderList from "./ExistingShareholders";
 import SeriesInvestorList, { SeriesInputData } from "./SeriesInvestmentList";
-import { BestFit, fitConversion } from "@/library/safe_conversion";
+import { BestFit } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
-import CurrencyInput, { CurrencyInputOnChangeValues } from "react-currency-input-field";
-import { initialState } from "./initialState";
-import Results from "./Results";
-import { getExistingShareholderPropsSelector, getSAFERowPropsSelector, useConversionStore } from "./ConversionState";
+import CurrencyInput from "react-currency-input-field";
+import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, IRowData, useConversionStore } from "./ConversionState";
 
 export interface RowsProps<T> {
   rows: T[];
   onDelete: (id: string) => void;
   onAddRow: () => void;
-  onUpdate: (data: RowData) => void;
-  pricedConversion?: BestFit;
+  onUpdate: (data: IRowData) => void;
+  pricedConversion: BestFit | undefined;
 }
-
-export type RowData = SAFEInputData | ExistingShareholderProps | SeriesInputData;
 
 export interface ConversionState {
   randomFounders: string[];
@@ -25,7 +21,7 @@ export interface ConversionState {
   randomSeries: string[];
   hasNewRound?: boolean;
   targetOptionsPool: number;
-  rowData: RowData[];
+  rowData: IRowData[];
   unusedOptions: number;
   preMoney: number;
 }
@@ -33,16 +29,7 @@ export interface ConversionState {
 const Conversion: React.FC = () => {
 
   const state = useConversionStore();
-  const {rowData, preMoney, unusedOptions ,targetOptionsPool, hasNewRound, onAddRow, onDeleteRow, onUpdateRow, onValueChange} = state;
-
-
-  const commonStock = (
-    rowData.filter(
-      (row) => row.type === "common"
-    ) as ExistingShareholderProps[]
-  )
-    .map((row) => row.shares)
-    .reduce((acc, val) => acc + val, 0);
+  const {rowData, preMoney, unusedOptions ,targetOptionsPool, hasNewRound, onAddRow, onDeleteRow, onUpdateRow, onValueChange, togglePricedRound } = state;
 
   const totalSeriesInvesment = (
     rowData.filter((row) => row.type === "series") as SeriesInputData[]
@@ -51,29 +38,6 @@ const Conversion: React.FC = () => {
     .reduce((acc, val) => acc + val, 0);
 
   const postMoney = stringToNumber(preMoney) + totalSeriesInvesment;
-
-  const totalShares = commonStock;
-  const pricedConversion = fitConversion(
-    stringToNumber(preMoney),
-    totalShares,
-    (rowData.filter((row) => row.type === "safe") as SAFEInputData[]).map(
-      (row) => {
-        return {
-          investment: stringToNumber(row.investment),
-          cap: stringToNumber(row.cap),
-          discount: stringToNumber(row.discount) / 100,
-          conversionType: row.conversionType,
-        };
-      }
-    ),
-    stringToNumber(unusedOptions),
-    stringToNumber(targetOptionsPool) / 100,
-    (
-      rowData.filter((row) => row.type === "series") as SeriesInputData[]
-    ).map((row) => row.investment),
-    { roundDownShares: true, roundPPSPlaces: 5 }
-  );
-
 
   return (
     <div>
@@ -84,7 +48,7 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("common")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
-          pricedConversion={hasNewRound  ? pricedConversion : undefined}
+          pricedConversion={getPricedConversion(state)}
           safePercent={15}
         />
       </div>
@@ -111,12 +75,13 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
-          pricedConversion={hasNewRound ? pricedConversion : undefined}
+          pricedConversion={getPricedConversion(state)}
         />
       </div>
-      {/* <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round
-        <input type="checkbox" checked={hasNewRound} onClick={() => setState({...state, hasNewRound: !hasNewRound})}></input>
-      </h1> */}
+
+      <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round
+        <input type="checkbox" checked={hasNewRound} onClick={() => togglePricedRound(!state.hasNewRound)}></input>
+      </h1>
 
       <div style={{ display: hasNewRound ? "block" : "none" }}>
         <div className="flex space-x-4">
@@ -176,7 +141,7 @@ const Conversion: React.FC = () => {
             <CurrencyInput
               type="text"
               name="additionalOptions"
-              value={pricedConversion.additionalOptions}
+              value={getPricedConversion(state)?.additionalOptions}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               prefix=""
               decimalScale={0}
@@ -198,7 +163,7 @@ const Conversion: React.FC = () => {
             onAddRow={() => onAddRow("series")}
             onDelete={onDeleteRow}
             onUpdate={onUpdateRow}
-            pricedConversion={pricedConversion}
+            pricedConversion={getPricedConversion(state)}
           />
         </div>
       </div>

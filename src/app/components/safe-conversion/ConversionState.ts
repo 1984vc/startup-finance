@@ -1,14 +1,15 @@
-import { SAFEInputData, SAFEProps } from "./SafeNoteList";
+import { SAFEProps } from "./SafeNoteList";
 import { ExistingShareholderProps } from "./ExistingShareholders";
 import { SeriesInputData } from "./SeriesInvestmentList";
 import { initialState } from "./initialState";
 import { create } from 'zustand'
 import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
-import { BestFit } from "@/library/safe_conversion";
+import { BestFit, fitConversion } from "@/library/safe_conversion";
 import { calcSAFEPcts, getCapForSafe } from "@/app/utils/rowDataHelper";
+import { stringToNumber } from "@/app/utils/numberFormatting";
 
-export type IRowData = SAFEInputData | ExistingShareholderProps | SeriesInputData;
+export type IRowData = SAFEProps | ExistingShareholderProps | SeriesInputData
 
 export interface IConversionState {
   randomFounders: string[];
@@ -19,10 +20,10 @@ export interface IConversionState {
   rowData: IRowData[];
   unusedOptions: number;
   preMoney: number;
-  pricedConversion?: BestFit;
   onAddRow: (type: "safe" | "series" | "common") => void;
   onDeleteRow: (id: string) => void;
   onUpdateRow: (data: IRowData) => void;
+  togglePricedRound: (on?: boolean) => void;
   onValueChange: (type: "number" | "percent") => (val: string | undefined, name: string | undefined, values?: CurrencyInputOnChangeValues) => void;
 }
 
@@ -48,6 +49,7 @@ export const useConversionStore = create<IConversionState>((set, get) => ({
             investment: 0,
             cap: 0,
             discount: 0,
+            ownershipPct: 0,
             conversionType: "post",
           },
         ],
@@ -140,10 +142,72 @@ export const useConversionStore = create<IConversionState>((set, get) => ({
         }
       }
     },
+    togglePricedRound: (on?: boolean) => {
+        set((state) => ({
+            ...state,
+            hasNewRound: on ?? false,
+        }));
+    }
 }));
 
+export const getPricedConversion = createSelector(
+  (state: IConversionState) => state.rowData,
+  (state: IConversionState) => state.preMoney,
+  (state: IConversionState) => state.targetOptionsPool,
+  (state: IConversionState) => state.unusedOptions,
+  (state: IConversionState) => state.hasNewRound,
+  (
+    rowData,
+    preMoney,
+    targetOptionsPool,
+    unusedOptions,
+    hasNewRound
+  ): BestFit | undefined => {
+    if (!hasNewRound) {
+      return undefined;
+    }
+    const commonStock = (
+      rowData.filter(
+        (row) => row.type === "common"
+      ) as ExistingShareholderProps[]
+    )
+      .map((row) => row.shares)
+      .reduce((acc, val) => acc + val, 0);
+
+    const totalSeriesInvesment = (
+      rowData.filter((row) => row.type === "series") as SeriesInputData[]
+    )
+      .map((row) => row.investment)
+      .reduce((acc, val) => acc + val, 0);
+
+    const totalShares = commonStock;
+    const pricedConversion = fitConversion(
+      stringToNumber(preMoney),
+      totalShares,
+      (rowData.filter((row) => row.type === "safe") as SAFEProps[]).map(
+        (row) => {
+          return {
+            investment: stringToNumber(row.investment),
+            cap: stringToNumber(row.cap),
+            discount: stringToNumber(row.discount) / 100,
+            conversionType: row.conversionType,
+          };
+        }
+      ),
+      stringToNumber(unusedOptions),
+      stringToNumber(targetOptionsPool) / 100,
+      (rowData.filter((row) => row.type === "series") as SeriesInputData[]).map(
+        (row) => row.investment
+      ),
+      { roundDownShares: true, roundPPSPlaces: 5 }
+    );
+    return pricedConversion;
+  }
+);
+
+
 export const getSAFERowPropsSelector = createSelector(
-    (state: IConversionState) => state.pricedConversion,
+    getPricedConversion,
     (state: IConversionState) => state.rowData,
     (pricedConversion, rowData): SAFEProps[] => {
         const rows = rowData.filter((row) => row.type === "safe");
@@ -164,6 +228,7 @@ export const getSAFERowPropsSelector = createSelector(
                 discount: row.discount,
                 ownershipPct: safeOwnershipPct[idx],
                 allowDelete: true,
+                disabledFields: row.conversionType === 'mfn' ? ['cap'] : [],
                 conversionType: row.conversionType,
             };
         });
@@ -171,7 +236,7 @@ export const getSAFERowPropsSelector = createSelector(
 );
 
 export const getExistingShareholderPropsSelector = createSelector(
-    (state: IConversionState) => state.pricedConversion,
+    getPricedConversion,
     (state: IConversionState) => state.rowData,
     (pricedConversion, rowData): ExistingShareholderProps[] => {
         const safeTotalOwnershipPct = calcSAFEPcts(rowData, pricedConversion).reduce((acc, val) => acc + val, 0);

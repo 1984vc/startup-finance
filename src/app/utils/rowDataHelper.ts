@@ -1,9 +1,9 @@
 import { BestFit } from "@/library/safe_conversion";
-import { SAFEInputData } from "../components/safe-conversion/SafeNoteList";
+import { SAFEProps } from "../components/safe-conversion/SafeNoteList";
 import { IRowData } from "../components/safe-conversion/ConversionState";
 
 
-const getMFNCapAter = (rows: SAFEInputData[], idx: number): number => {
+const getMFNCapAter = (rows: SAFEProps[], idx: number): number => {
     // For each safe after the idx, find the lowest number that's not 0
     // and return that number
     return rows.slice(idx + 1).reduce((val, row) => {
@@ -22,7 +22,7 @@ const getMFNCapAter = (rows: SAFEInputData[], idx: number): number => {
 type SAFECalculation = {
     cap: number
 }
-export const getCapForSafe = (safe: SAFEInputData, safes: SAFEInputData[]): number => {
+export const getCapForSafe = (safe: SAFEProps, safes: SAFEProps[]): number => {
     const idx = safes.findIndex(r => r.id === safe.id)
     if (safe.conversionType === 'mfn') {
         return getMFNCapAter(safes, idx)
