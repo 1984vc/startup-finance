@@ -174,12 +174,6 @@ export const getPricedConversion = createSelector(
       .map((row) => row.shares)
       .reduce((acc, val) => acc + val, 0);
 
-    const totalSeriesInvesment = (
-      rowData.filter((row) => row.type === "series") as SeriesInputData[]
-    )
-      .map((row) => row.investment)
-      .reduce((acc, val) => acc + val, 0);
-
     const totalShares = commonStock;
     const pricedConversion = fitConversion(
       stringToNumber(preMoney),
@@ -240,6 +234,7 @@ export const getExistingShareholderPropsSelector = createSelector(
     (state: IConversionState) => state.rowData,
     (pricedConversion, rowData): ExistingShareholderProps[] => {
         const safeTotalOwnershipPct = calcSAFEPcts(rowData, pricedConversion).reduce((acc, val) => acc + val, 0);
+        const tbdSafes = rowData.filter((row) => row.type === "safe" && row.cap === 0).length > 0;
 
         const existingShareholders = rowData.filter((row) => row.type === "common");
         const totalInitialShares = existingShareholders.map((row) => row.shares)
@@ -250,7 +245,7 @@ export const getExistingShareholderPropsSelector = createSelector(
             const preConversionOwnership = (100 - safeTotalOwnershipPct) * startingOwnershipPct
             return [
             100 * startingOwnershipPct,
-            preConversionOwnership,
+            tbdSafes ? 0 : preConversionOwnership,
             100 * (data.shares / (pricedConversion?.totalShares ?? data.shares)),
             ];
         });

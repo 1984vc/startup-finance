@@ -110,7 +110,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         Delete
       </button>
-      <div className="w-36 text-right">{data.ownershipPct.toFixed(2)}%</div>
+      <div className="w-36 text-right">{data.ownershipPct === 0 ? "TBD" : data.ownershipPct.toFixed(2) + "%"}</div>
     </div>
   );
 };

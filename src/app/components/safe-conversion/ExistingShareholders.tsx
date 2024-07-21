@@ -75,7 +75,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         Delete
       </button>
       <div className="w-24 text-right">{ data.ownershipPct?.toFixed(2)}%</div>
-      <div className="w-24 text-right">{data.dilutedPct?.toFixed(2)}%</div>
+      <div className="w-24 text-right">{data.dilutedPct === 0 ? "TBD" : data.dilutedPct?.toFixed(2) + "%"}</div>
     </div>
   );
 };
