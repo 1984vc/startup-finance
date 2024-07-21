@@ -1,18 +1,15 @@
 import { BestFit } from "@/library/safe_conversion";
-import { ConversionState, RowsProps } from "./Conversion";
-import { SAFERowData } from "./SafeNoteList";
-import { ExistingShareholderData } from "./ExistingShareholders";
-import { SeriesRowData } from "./SeriesInvestmentList";
 import { formatNumberWithCommas } from "@/app/utils/numberFormatting";
+import { ExistingShareholderState, IConversionState, SAFERowState, SeriesRowState } from "./ConversionState";
 
 interface ResultProps {
-  state: ConversionState;
+  state: IConversionState;
   pricedConversion: BestFit;
 }
 
 const Results: React.FC<ResultProps> = ({ state, pricedConversion }) => {
   const commonShareholders = (
-    state.rowData.filter((r) => r.type === "common") as ExistingShareholderData[]
+    state.rowData.filter((r) => r.type === "common") as ExistingShareholderState[]
   ).map((r) => {
     return {
       name: r.name,
@@ -22,7 +19,7 @@ const Results: React.FC<ResultProps> = ({ state, pricedConversion }) => {
   });
 
   const convertedSafes = (
-    state.rowData.filter((r) => r.type === "safe") as SAFERowData[]
+    state.rowData.filter((r) => r.type === "safe") as SAFERowState[]
   ).map((r, idx) => {
     const pps = pricedConversion.ppss[idx];
     const shares = r.investment / pps;
@@ -35,7 +32,7 @@ const Results: React.FC<ResultProps> = ({ state, pricedConversion }) => {
   });
 
   const seriesShareholders = (
-    state.rowData.filter((r) => r.type === "series") as SeriesRowData[]
+    state.rowData.filter((r) => r.type === "series") as SeriesRowState[]
   ).map((r) => {
     const shares = r.investment / pricedConversion.pps;
     return {

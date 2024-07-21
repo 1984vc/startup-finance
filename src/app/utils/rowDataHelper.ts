@@ -1,5 +1,4 @@
 import { BestFit } from "@/library/safe_conversion";
-import { SAFERowData } from "../components/safe-conversion/SafeNoteList";
 import { IRowState, SAFERowState } from "../components/safe-conversion/ConversionState";
 
 
