@@ -1,28 +1,18 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-
-export interface SeriesInputData {
-  id: string;
-  type: "series";
-  name: string;
-  investment: number;
-}
+import { SeriesRowData } from "./ConversionState";
 
 interface SeriesRowProps {
-  data: SeriesInputData;
+  data: SeriesRowData;
   onDelete: (id: string) => void;
-  onUpdate: (data: SeriesInputData) => void;
-  ownershipPct: number;
-  allowDelete?: boolean;
+  onUpdate: (data: SeriesRowData) => void;
 }
 
 const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
   data,
   onDelete,
   onUpdate,
-  ownershipPct,
-  allowDelete,
 }) => {
   const formatShares = (value: number) => {
     return value.toLocaleString("en-US");
@@ -65,33 +55,26 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       />
       <button
         onClick={() => onDelete(data.id)}
-        disabled={!allowDelete}
+        disabled={!data.allowDelete}
         className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 ${
-          allowDelete
+          data.allowDelete
             ? "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500"
             : "bg-gray-300 text-gray-500 cursor-not-allowed"
         }`}
       >
         Delete
       </button>
-      <div className="w-24 text-right">{ownershipPct.toFixed(2)}%</div>
+      <div className="w-24 text-right">{data.ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };
 
-const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
+const SeriesInvestorList: React.FC<RowsProps<SeriesRowData>> = ({
   rows,
   onDelete,
   onUpdate,
   onAddRow,
-  pricedConversion,
 }) => {
-  const seriesOwnershipPct = rows.map((data, idx) => {
-    if (!pricedConversion) return 0;
-    const shares = Math.floor(data.investment / pricedConversion.pps);
-    return (shares / pricedConversion.totalShares) * 100;
-  });
-
   return (
     <div>
       <div className="flex items-center space-x-4 mb-4">
@@ -106,8 +89,6 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesInputData>> = ({
           data={note}
           onUpdate={onUpdate}
           onDelete={onDelete}
-          ownershipPct={seriesOwnershipPct[idx]}
-          allowDelete={rows.length > 1}
         />
       ))}
       <button

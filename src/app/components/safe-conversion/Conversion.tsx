@@ -1,29 +1,18 @@
 import React from "react";
 import SafeNotes from "./SafeNoteList";
 import ExisingShareholderList from "./ExistingShareholders";
-import SeriesInvestorList, { SeriesInputData } from "./SeriesInvestmentList";
+import SeriesInvestorList from "./SeriesInvestmentList";
 import { BestFit } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
-import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, IRowData, useConversionStore } from "./ConversionState";
+import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IRowState, SeriesRowData, SeriesRowState, useConversionStore } from "./ConversionState";
 
 export interface RowsProps<T> {
   rows: T[];
   onDelete: (id: string) => void;
   onAddRow: () => void;
-  onUpdate: (data: IRowData) => void;
+  onUpdate: (data: IRowState) => void;
   pricedConversion: BestFit | undefined;
-}
-
-export interface ConversionState {
-  randomFounders: string[];
-  randomSeed: string[];
-  randomSeries: string[];
-  hasNewRound?: boolean;
-  targetOptionsPool: number;
-  rowData: IRowData[];
-  unusedOptions: number;
-  preMoney: number;
 }
 
 const Conversion: React.FC = () => {
@@ -32,7 +21,7 @@ const Conversion: React.FC = () => {
   const {rowData, preMoney, unusedOptions ,targetOptionsPool, hasNewRound, onAddRow, onDeleteRow, onUpdateRow, onValueChange, togglePricedRound } = state;
 
   const totalSeriesInvesment = (
-    rowData.filter((row) => row.type === "series") as SeriesInputData[]
+    rowData.filter((row) => row.type === "series") as SeriesRowState[]
   )
     .map((row) => row.investment)
     .reduce((acc, val) => acc + val, 0);
@@ -155,11 +144,7 @@ const Conversion: React.FC = () => {
         <h1 className="text-1xl font-bold mb-4 mt-5">3a) Series Investors</h1>
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
           <SeriesInvestorList
-            rows={
-              rowData.filter(
-                (row) => row.type === "series"
-              ) as SeriesInputData[]
-            }
+            rows={getSeriesPropsSelector(state)}
             onAddRow={() => onAddRow("series")}
             onDelete={onDeleteRow}
             onUpdate={onUpdateRow}

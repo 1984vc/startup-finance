@@ -1,9 +1,9 @@
 import { BestFit } from "@/library/safe_conversion";
-import { SAFEProps } from "../components/safe-conversion/SafeNoteList";
-import { IRowData } from "../components/safe-conversion/ConversionState";
+import { SAFERowData } from "../components/safe-conversion/SafeNoteList";
+import { IRowState, SAFERowState } from "../components/safe-conversion/ConversionState";
 
 
-const getMFNCapAter = (rows: SAFEProps[], idx: number): number => {
+const getMFNCapAter = (rows: SAFERowState[], idx: number): number => {
     // For each safe after the idx, find the lowest number that's not 0
     // and return that number
     return rows.slice(idx + 1).reduce((val, row) => {
@@ -22,7 +22,7 @@ const getMFNCapAter = (rows: SAFEProps[], idx: number): number => {
 type SAFECalculation = {
     cap: number
 }
-export const getCapForSafe = (safe: SAFEProps, safes: SAFEProps[]): number => {
+export const getCapForSafe = (safe: SAFERowState, safes: SAFERowState[]): number => {
     const idx = safes.findIndex(r => r.id === safe.id)
     if (safe.conversionType === 'mfn') {
         return getMFNCapAter(safes, idx)
@@ -30,7 +30,7 @@ export const getCapForSafe = (safe: SAFEProps, safes: SAFEProps[]): number => {
     return safe.cap
 }
 
-export const calcSAFEPcts = (rowData: IRowData[], pricedConversion?: BestFit): number[] => {
+export const calcSAFEPcts = (rowData: IRowState[], pricedConversion?: BestFit): number[] => {
 
         const rows = rowData.filter((row) => row.type === "safe");
 

@@ -1,22 +1,12 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { BestFit } from "@/library/safe_conversion";
-
-export interface ExistingShareholderProps {
-  id: string;
-  type: "common";
-  name: string;
-  shares: number;
-  ownershipPct?: number;
-  preConversionOwnershipPct?: number;
-  dilutedPct?: number;
-}
+import { ExistingShareholderData } from "./ConversionState";
 
 interface ExistingShareholderRowProps {
-  data: ExistingShareholderProps;
+  data: ExistingShareholderData;
   onDelete: (id: string) => void;
-  onUpdate: (data: ExistingShareholderProps) => void;
+  onUpdate: (data: ExistingShareholderData) => void;
   allowDelete?: boolean;
 }
 
@@ -75,30 +65,19 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         Delete
       </button>
       <div className="w-24 text-right">{ data.ownershipPct?.toFixed(2)}%</div>
-      <div className="w-24 text-right">{data.dilutedPct === 0 ? "TBD" : data.dilutedPct?.toFixed(2) + "%"}</div>
+      <div className="w-24 text-right">{data.dilutedPctError ?? data.dilutedPct?.toFixed(2) + "%"}</div>
     </div>
   );
 };
 
-const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderProps> & {safePercent: number}> = ({
+const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderData> & {safePercent: number}> = ({
   rows,
   onDelete,
   onUpdate,
   onAddRow,
-  pricedConversion,
-  safePercent,
 }) => {
   const totalInitialShares = rows.map((row) => row.shares)
     .reduce((acc, val) => acc + val, 0);
-  const shareholdersPct: [number, number, number][] = rows.map((data) => {
-    const startingOwnershipPct = (data.shares / totalInitialShares)
-    const preConversionOwnership = (100 - safePercent) * startingOwnershipPct
-    return [
-      100 * startingOwnershipPct,
-      preConversionOwnership,
-      100 * (data.shares / (pricedConversion?.totalShares ?? data.shares)),
-    ];
-  });
 
   return (
     <div>

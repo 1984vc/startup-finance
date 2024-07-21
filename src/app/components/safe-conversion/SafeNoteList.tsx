@@ -1,24 +1,12 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-
-export interface SAFEProps {
-  id: string;
-  type: "safe";
-  name: string;
-  investment: number;
-  cap: number;
-  discount: number;
-  ownershipPct: number;
-  allowDelete?: boolean;
-  conversionType: "post" | "pre" | "mfn" ;
-  disabledFields?: string[];
-}
+import { SAFERowData } from "./ConversionState";
 
 interface SAFEInputRowProps {
-  data: SAFEProps;
+  data: SAFERowData;
   onDelete: (id: string) => void;
-  onUpdate: (data: SAFEProps) => void;
+  onUpdate: (data: SAFERowData) => void;
 }
 
 const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
@@ -110,12 +98,12 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         Delete
       </button>
-      <div className="w-36 text-right">{data.ownershipPct === 0 ? "TBD" : data.ownershipPct.toFixed(2) + "%"}</div>
+      <div className="w-36 text-right">{data.ownershipError ??  data.ownershipPct.toFixed(2) + "%"}</div>
     </div>
   );
 };
 
-const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
+const SafeNoteList: React.FC<RowsProps<SAFERowData>> = ({
   rows,
   onDelete,
   onUpdate,

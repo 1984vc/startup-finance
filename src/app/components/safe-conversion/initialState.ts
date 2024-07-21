@@ -1,13 +1,11 @@
-import { ConversionState } from './Conversion';
+import { IConversionStateData } from './ConversionState';
 import { earlyStageInvestors, founders, seriesAInvestors } from './data'
-const randomFounders = founders.sort(() => Math.random() - 0.5);
-const randomSeed = earlyStageInvestors.sort(() => Math.random() - 0.5);
-const randomSeries = seriesAInvestors.sort(() => Math.random() - 0.5);
 
-export const initialState: ConversionState = {
-  randomFounders,
-  randomSeed,
-  randomSeries,
+export const randomFounders = founders.sort(() => Math.random() - 0.5);
+export const randomSeed = earlyStageInvestors.sort(() => Math.random() - 0.5);
+export const randomSeries = seriesAInvestors.sort(() => Math.random() - 0.5);
+
+export const initialState: IConversionStateData = {
   rowData: [
     {
       id: crypto.randomUUID(),
