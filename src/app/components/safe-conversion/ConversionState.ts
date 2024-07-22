@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { BestFit, fitConversion } from "@/library/safe_conversion";
-import { calcSAFEPcts, getCapForSafe } from "@/app/utils/rowDataHelper";
+import { calcSAFEsPctAndCap } from "@/app/utils/rowDataHelper";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 
 
@@ -69,6 +69,21 @@ export interface IConversionState extends IConversionStateData {
   onValueChange: (type: "number" | "percent") => (val: string | undefined, name: string | undefined, values?: CurrencyInputOnChangeValues) => void;
 }
 
+const determineRowError = (row: IRowState, pricedConversion: BestFit | undefined): string | undefined => {
+    if (row.type === "safe") {
+        const safe = row as SAFERowData;
+        if (safe.cap === 0) {
+            if (pricedConversion) {
+              return undefined
+            }
+            return "TBD"
+        }
+        else if (safe.cap < safe.investment) {
+            return "Error"
+        }
+    }
+    return undefined
+}
 
 export const useConversionStore = create<IConversionState>((set, get) => ({
   ...initialState,
@@ -247,28 +262,19 @@ export const getSAFERowPropsSelector = createSelector(
     (pricedConversion, rowData): SAFERowData[] => {
         const rows = rowData.filter((row) => row.type === "safe");
 
-        const safeOwnershipPct = calcSAFEPcts(rowData, pricedConversion);
-
-        const safeCaps = rows.map((safe) => {
-            return getCapForSafe(safe, rows);
-        });
+        const safeCalcs = calcSAFEsPctAndCap(rowData, pricedConversion);
 
 
         return rows.map((row, idx) => {
-            let ownershipError = undefined
-            if (row.cap < row.investment) {
-                ownershipError = "Error"
-            } else if (row.cap === 0) {
-                ownershipError = "TBD"
-            }
+            const ownershipError = determineRowError(row, pricedConversion);
             return {
                 id: row.id,
                 type: "safe",
                 name: row.name,
                 investment: row.investment,
-                cap: safeCaps[idx],
+                cap: safeCalcs[idx][1],
                 discount: row.discount,
-                ownershipPct: safeOwnershipPct[idx],
+                ownershipPct: safeCalcs[idx][0],
                 ownershipError,
                 allowDelete: rows.length > 1,
                 disabledFields: row.conversionType === 'mfn' ? ['cap'] : [],
@@ -280,11 +286,14 @@ export const getSAFERowPropsSelector = createSelector(
 
 export const getExistingShareholderPropsSelector = createSelector(
     getPricedConversion,
+    getSAFERowPropsSelector,
     (state: IConversionState) => state.rowData,
-    (pricedConversion, rowData): ExistingShareholderData[] => {
-        const safeTotalOwnershipPct = calcSAFEPcts(rowData, pricedConversion).reduce((acc, val) => acc + val, 0);
-        const tbdSafes = rowData.filter((row) => row.type === "safe" && row.cap === 0).length > 0;
-        const errSafes = rowData.filter((row) => row.type === "safe" && row.cap < row.investment).length > 0;
+    (pricedConversion, safes, rowData): ExistingShareholderData[] => {
+        const safeTotalOwnershipPct = safes.reduce((acc, val) => acc + val.ownershipPct, 0);
+        // Look through the SAFEs and find out if any have an OwnershipError
+        // If so, we need to show an error on the dilutedPct
+        const dilutedPctError = safes.some((safe) => safe.ownershipError === "Error") ? "Error" :
+          safes.some((safe) => safe.ownershipError === "TBD") ? "TBD" : undefined;
 
         const existingShareholders = rowData.filter((row) => row.type === "common");
         const totalInitialShares = existingShareholders.map((row) => row.shares)
@@ -294,18 +303,12 @@ export const getExistingShareholderPropsSelector = createSelector(
             const startingOwnershipPct = (data.shares / totalInitialShares)
             const preConversionOwnership = (100 - safeTotalOwnershipPct) * startingOwnershipPct
             return [
-            100 * startingOwnershipPct,
-            tbdSafes ? 0 : preConversionOwnership,
-            100 * (data.shares / (pricedConversion?.totalShares ?? data.shares)),
+                100 * startingOwnershipPct,
+                preConversionOwnership,
+                100 * (data.shares / (pricedConversion?.totalShares ?? data.shares)),
             ];
         });
         
-        let dilutedPctError = undefined
-        if (tbdSafes) {
-            dilutedPctError = "TBD"
-        } else if (errSafes) {
-            dilutedPctError = "Error"
-        }
 
         return existingShareholders.map((row, idx) => {
             return {

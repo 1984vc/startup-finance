@@ -6,10 +6,13 @@ const getMFNCapAter = (rows: SAFERowState[], idx: number): number => {
     // For each safe after the idx, find the lowest number that's not 0
     // and return that number
     return rows.slice(idx + 1).reduce((val, row) => {
+        if (row.conversionType === 'mfn') {
+            return 0
+        }
         if (val === 0) {
             return row.cap
         }
-        if (val > 0 && row.cap < val) {
+        if (val > 0 && row.cap > 0 && row.cap < val) {
             return row.cap
         }
         return val
@@ -18,10 +21,7 @@ const getMFNCapAter = (rows: SAFERowState[], idx: number): number => {
 
 // Do all the complex work here of handling row data and doing some complex calculations
 // like MFN on safes and ownership percentages at various stages
-type SAFECalculation = {
-    cap: number
-}
-export const getCapForSafe = (safe: SAFERowState, safes: SAFERowState[]): number => {
+const getCapForSafe = (safe: SAFERowState, safes: SAFERowState[]): number => {
     const idx = safes.findIndex(r => r.id === safe.id)
     if (safe.conversionType === 'mfn') {
         return getMFNCapAter(safes, idx)
@@ -29,7 +29,7 @@ export const getCapForSafe = (safe: SAFERowState, safes: SAFERowState[]): number
     return safe.cap
 }
 
-export const calcSAFEPcts = (rowData: IRowState[], pricedConversion?: BestFit): number[] => {
+export const calcSAFEsPctAndCap = (rowData: IRowState[], pricedConversion?: BestFit): [pct: number, cap: number][] => {
 
         const rows = rowData.filter((row) => row.type === "safe");
 
@@ -37,16 +37,15 @@ export const calcSAFEPcts = (rowData: IRowState[], pricedConversion?: BestFit): 
             return getCapForSafe(safe, rows);
         });
 
-        const safeOwnershipPct = rows.map((data, idx) => {
+        return rows.map((data, idx) => {
             if (!pricedConversion) {
-                if (data.cap) {
-                    return (data.investment / safeCaps[idx]) * 100;
+                if (data.cap !== 0 && safeCaps[idx] !== 0) {
+                    return [(data.investment / safeCaps[idx]) * 100, safeCaps[idx]];
                 }
-                return 0;
+                return [0, safeCaps[idx]];
             }
             const pps = pricedConversion.ppss[idx];
             const shares = Math.floor(data.investment / pps);
-            return (shares / pricedConversion.totalShares) * 100;
+            return [(shares / pricedConversion.totalShares) * 100, safeCaps[idx]];
         });
-        return safeOwnershipPct
 }

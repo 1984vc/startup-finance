@@ -6,6 +6,7 @@ import { BestFit } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IRowState, SeriesRowData, SeriesRowState, useConversionStore } from "./ConversionState";
+import Results from "./Results";
 
 export interface RowsProps<T> {
   rows: T[];
@@ -27,6 +28,7 @@ const Conversion: React.FC = () => {
     .reduce((acc, val) => acc + val, 0);
 
   const postMoney = stringToNumber(preMoney) + totalSeriesInvesment;
+  const pricedConversion = getPricedConversion(state);
 
   return (
     <div>
@@ -37,7 +39,7 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("common")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
-          pricedConversion={getPricedConversion(state)}
+          pricedConversion={pricedConversion}
           safePercent={15}
         />
       </div>
@@ -64,7 +66,7 @@ const Conversion: React.FC = () => {
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
-          pricedConversion={getPricedConversion(state)}
+          pricedConversion={pricedConversion}
         />
       </div>
 
@@ -130,7 +132,7 @@ const Conversion: React.FC = () => {
             <CurrencyInput
               type="text"
               name="additionalOptions"
-              value={getPricedConversion(state)?.additionalOptions}
+              value={pricedConversion?.additionalOptions}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               prefix=""
               decimalScale={0}
@@ -152,7 +154,7 @@ const Conversion: React.FC = () => {
           />
         </div>
       </div>
-      {/* {pricedConversion !== null && <Results state={state} pricedConversion={pricedConversion} />} */}
+      { pricedConversion !== undefined && <Results state={state} pricedConversion={pricedConversion} /> }
     </div>
   );
 };
