@@ -1,8 +1,8 @@
 import { BestFit } from "@/library/safe_conversion";
-import { IRowState, SAFERowState } from "../components/safe-conversion/ConversionState";
+import { IRowState, SAFEState } from "../components/safe-conversion/Conversion/state/ConversionState";
 
 
-const getMFNCapAter = (rows: SAFERowState[], idx: number): number => {
+const getMFNCapAter = (rows: SAFEState[], idx: number): number => {
     // For each safe after the idx, find the lowest number that's not 0
     // and return that number
     return rows.slice(idx + 1).reduce((val, row) => {
@@ -26,7 +26,7 @@ const getMFNCapAter = (rows: SAFERowState[], idx: number): number => {
 
 // Do all the complex work here of handling row data and doing some complex calculations
 // like MFN on safes and ownership percentages at various stages
-const getCapForSafe = (safe: SAFERowState, safes: SAFERowState[]): number => {
+const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
     const idx = safes.findIndex(r => r.id === safe.id)
     if (safe.conversionType === 'mfn') {
         return getMFNCapAter(safes, idx)

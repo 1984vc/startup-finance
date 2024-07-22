@@ -1,6 +1,6 @@
 import { BestFit } from "@/library/safe_conversion";
 import { formatNumberWithCommas } from "@/app/utils/numberFormatting";
-import { ExistingShareholderState, IConversionState, SAFERowState, SeriesRowState } from "./ConversionState";
+import { ExistingShareholderState, IConversionState, SAFEState, SeriesState } from "./state/ConversionState";
 
 interface ResultProps {
   state: IConversionState;
@@ -19,7 +19,7 @@ const Results: React.FC<ResultProps> = ({ state, pricedConversion }) => {
   });
 
   const convertedSafes = (
-    state.rowData.filter((r) => r.type === "safe") as SAFERowState[]
+    state.rowData.filter((r) => r.type === "safe") as SAFEState[]
   ).map((r, idx) => {
     const pps = pricedConversion.ppss[idx];
     const shares = r.investment / pps;
@@ -32,7 +32,7 @@ const Results: React.FC<ResultProps> = ({ state, pricedConversion }) => {
   });
 
   const seriesShareholders = (
-    state.rowData.filter((r) => r.type === "series") as SeriesRowState[]
+    state.rowData.filter((r) => r.type === "series") as SeriesState[]
   ).map((r) => {
     const shares = r.investment / pricedConversion.pps;
     return {

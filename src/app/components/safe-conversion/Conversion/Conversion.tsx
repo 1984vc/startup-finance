@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import SafeNotes from "./SafeNoteList";
 import ExisingShareholderList from "./ExistingShareholders";
-import SeriesInvestorList from "./SeriesInvestmentList";
+import SeriesInvestorList from "./SeriesInvestorList";
 import { BestFit } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
-import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IRowState, SeriesRowData, SeriesRowState, useConversionStore } from "./ConversionState";
+import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IConversionState, IRowState, SeriesProps, SeriesState, createConversionStore, ConversionStore } from "./state/ConversionState";
 import Results from "./Results";
+import { initialState } from "./state/initialState";
+import { useStore } from "zustand";
 
 export interface RowsProps<T> {
   rows: T[];
@@ -18,11 +20,18 @@ export interface RowsProps<T> {
 
 const Conversion: React.FC = () => {
 
-  const state = useConversionStore();
+  const ref = useRef<ConversionStore>()
+  if (!ref.current) {
+    ref.current = createConversionStore(initialState)
+  }
+
+  if (ref.current === undefined) { throw new Error("State is undefined") }
+
+  const state = useStore(ref.current);
   const {rowData, preMoney, unusedOptions ,targetOptionsPool, hasNewRound, onAddRow, onDeleteRow, onUpdateRow, onValueChange, togglePricedRound } = state;
 
   const totalSeriesInvesment = (
-    rowData.filter((row) => row.type === "series") as SeriesRowState[]
+    rowData.filter((row) => row.type === "series") as SeriesState[]
   )
     .map((row) => row.investment)
     .reduce((acc, val) => acc + val, 0);
@@ -70,11 +79,22 @@ const Conversion: React.FC = () => {
         />
       </div>
 
-      <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round
-        <input type="checkbox" checked={hasNewRound} onClick={() => togglePricedRound(!state.hasNewRound)}></input>
-      </h1>
+      {/* Toggle button to show/hide new round */}
+      <button
+        onClick={() => togglePricedRound(!hasNewRound)}
+        className={`mt-8 px-4 py-2 rounded-md focus:outline-none focus:ring-2 text-white ${
+          hasNewRound
+            ? "bg-red-500 hover:bg-red-600 focus:ring-red-500"
+            : "bg-blue-500"
+        }`}
+      >
+        { hasNewRound ? "Remove Priced Round" : "Add Priced Round" }
+      </button>
+
+
 
       <div style={{ display: hasNewRound ? "block" : "none" }}>
+        <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round</h1>
         <div className="flex space-x-4">
           <div className="flex-1">
             <h2 className="my-2">Premoney Valuation</h2>

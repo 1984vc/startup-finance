@@ -1,4 +1,4 @@
-import { initialState, randomFounders, randomSeed, randomSeries } from "./initialState";
+import { randomFounders, randomSeed, randomSeries } from "./initialState";
 import { create } from 'zustand'
 import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
@@ -7,14 +7,19 @@ import { calcSAFEsPctAndCap } from "@/app/utils/rowDataHelper";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 
 
-export interface SeriesRowState {
+export interface SeriesState {
   id: string;
   type: "series";
   name: string;
   investment: number;
 }
 
-export interface SAFERowState {
+export interface SeriesProps extends SeriesState {
+    ownershipPct: number;
+    allowDelete?: boolean;
+}
+
+export interface SAFEState {
   id: string;
   type: "safe";
   name: string;
@@ -24,6 +29,13 @@ export interface SAFERowState {
   conversionType: "post" | "pre" | "mfn" ;
 }
 
+export interface SAFEProps extends SAFEState {
+    ownershipPct: number;
+    ownershipError?: string;
+    allowDelete?: boolean;
+    disabledFields?: string[];
+}
+
 export interface ExistingShareholderState {
   id: string;
   type: "common";
@@ -31,26 +43,15 @@ export interface ExistingShareholderState {
   shares: number;
 }
 
-export interface ExistingShareholderData extends ExistingShareholderState {
+export interface ExistingShareholderProps extends ExistingShareholderState {
     ownershipPct: number;
     dilutedPct: number;
     dilutedPctError?: string;
     allowDelete?: boolean;
 }
 
-export interface SAFERowData extends SAFERowState {
-    ownershipPct: number;
-    ownershipError?: string;
-    allowDelete?: boolean;
-    disabledFields?: string[];
-}
 
-export interface SeriesRowData extends SeriesRowState {
-    ownershipPct: number;
-    allowDelete?: boolean;
-}
-
-export type IRowState = SAFERowState | ExistingShareholderState | SeriesRowState
+export type IRowState = SAFEState | ExistingShareholderState | SeriesState
 
 // The only thing we need to serialize
 export interface IConversionStateData {
@@ -60,6 +61,8 @@ export interface IConversionStateData {
   unusedOptions: number;
   preMoney: number;
 }
+
+export type ConversionStore = ReturnType<typeof createConversionStore>
 
 export interface IConversionState extends IConversionStateData {
   onAddRow: (type: "safe" | "series" | "common") => void;
@@ -71,7 +74,7 @@ export interface IConversionState extends IConversionStateData {
 
 const determineRowError = (row: IRowState, pricedConversion: BestFit | undefined): string | undefined => {
     if (row.type === "safe") {
-        const safe = row as SAFERowData;
+        const safe = row as SAFEProps;
         if (safe.cap === 0) {
             if (pricedConversion) {
               return undefined
@@ -85,7 +88,7 @@ const determineRowError = (row: IRowState, pricedConversion: BestFit | undefined
     return undefined
 }
 
-export const useConversionStore = create<IConversionState>((set, get) => ({
+export const createConversionStore = (initialState: IConversionStateData) => create<IConversionState>((set, get) => ({
   ...initialState,
 
   onAddRow: (type: "safe" | "series" | "common") => {
@@ -158,6 +161,7 @@ export const useConversionStore = create<IConversionState>((set, get) => ({
   },
 
   onUpdateRow: (data: IRowState) => {
+    console.log("update", data)
     set((state) => ({
       ...state,
       rowData: state.rowData.map((row) => (row.id === data.id ? data : row)),
@@ -225,7 +229,7 @@ export const getPricedConversion = createSelector(
     const commonStock = (
       rowData.filter(
         (row) => row.type === "common"
-      ) as ExistingShareholderData[]
+      ) as ExistingShareholderProps[]
     )
       .map((row) => row.shares)
       .reduce((acc, val) => acc + val, 0);
@@ -234,7 +238,7 @@ export const getPricedConversion = createSelector(
     const pricedConversion = fitConversion(
       stringToNumber(preMoney),
       totalShares,
-      (rowData.filter((row) => row.type === "safe") as SAFERowData[]).map(
+      (rowData.filter((row) => row.type === "safe") as SAFEProps[]).map(
         (row) => {
           return {
             investment: stringToNumber(row.investment),
@@ -246,7 +250,7 @@ export const getPricedConversion = createSelector(
       ),
       stringToNumber(unusedOptions),
       stringToNumber(targetOptionsPool) / 100,
-      (rowData.filter((row) => row.type === "series") as SeriesRowData[]).map(
+      (rowData.filter((row) => row.type === "series") as SeriesProps[]).map(
         (row) => row.investment
       ),
       { roundDownShares: true, roundPPSPlaces: 5 }
@@ -259,13 +263,13 @@ export const getPricedConversion = createSelector(
 export const getSAFERowPropsSelector = createSelector(
     getPricedConversion,
     (state: IConversionState) => state.rowData,
-    (pricedConversion, rowData): SAFERowData[] => {
+    (pricedConversion, rowData): SAFEProps[] => {
         const rows = rowData.filter((row) => row.type === "safe");
 
         const safeCalcs = calcSAFEsPctAndCap(rows, pricedConversion);
 
         return rows.map((row, idx) => {
-            const rowResult: SAFERowData = {
+            const rowResult: SAFEProps = {
                 id: row.id,
                 type: "safe",
                 name: row.name,
@@ -290,7 +294,7 @@ export const getExistingShareholderPropsSelector = createSelector(
     getPricedConversion,
     getSAFERowPropsSelector,
     (state: IConversionState) => state.rowData,
-    (pricedConversion, safes, rowData): ExistingShareholderData[] => {
+    (pricedConversion, safes, rowData): ExistingShareholderProps[] => {
         const safeTotalOwnershipPct = safes.reduce((acc, val) => acc + val.ownershipPct, 0);
         // Look through the SAFEs and find out if any have an OwnershipError
         // If so, we need to show an error on the dilutedPct
@@ -330,7 +334,7 @@ export const getExistingShareholderPropsSelector = createSelector(
 export const getSeriesPropsSelector = createSelector(
     getPricedConversion,
     (state: IConversionState) => state.rowData,
-    (pricedConversion, rowData): SeriesRowData[] => {
+    (pricedConversion, rowData): SeriesProps[] => {
         const rows = rowData.filter((row) => row.type === "series");
         const seriesOwnershipPct = rows.map((data, idx) => {
             if (!pricedConversion) return 0;

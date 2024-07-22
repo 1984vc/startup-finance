@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import Conversion from "../components/safe-conversion/Conversion";
+import Conversion from "../components/safe-conversion/Conversion/Conversion";
 
 const Page: React.FC = () => {
   return (

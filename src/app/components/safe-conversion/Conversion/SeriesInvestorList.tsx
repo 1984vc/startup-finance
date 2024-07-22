@@ -1,12 +1,13 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { SeriesRowData } from "./ConversionState";
+import { SeriesProps } from "./state/ConversionState";
 
 interface SeriesRowProps {
-  data: SeriesRowData;
+  data: SeriesProps;
   onDelete: (id: string) => void;
-  onUpdate: (data: SeriesRowData) => void;
+  onUpdate: (data: SeriesProps) => void;
+  allowDelete?: boolean;
 }
 
 const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
@@ -14,9 +15,6 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
   onDelete,
   onUpdate,
 }) => {
-  const formatShares = (value: number) => {
-    return value.toLocaleString("en-US");
-  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -69,7 +67,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
   );
 };
 
-const SeriesInvestorList: React.FC<RowsProps<SeriesRowData>> = ({
+const SeriesInvestorList: React.FC<RowsProps<SeriesProps>> = ({
   rows,
   onDelete,
   onUpdate,

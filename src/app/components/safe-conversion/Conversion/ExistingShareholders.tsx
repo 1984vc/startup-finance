@@ -1,12 +1,12 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { ExistingShareholderData } from "./ConversionState";
+import { ExistingShareholderProps } from "./state/ConversionState";
 
 interface ExistingShareholderRowProps {
-  data: ExistingShareholderData;
+  data: ExistingShareholderProps;
   onDelete: (id: string) => void;
-  onUpdate: (data: ExistingShareholderData) => void;
+  onUpdate: (data: ExistingShareholderProps) => void;
   allowDelete?: boolean;
 }
 
@@ -70,7 +70,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
   );
 };
 
-const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderData> & {safePercent: number}> = ({
+const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderProps> & {safePercent: number}> = ({
   rows,
   onDelete,
   onUpdate,

@@ -1,12 +1,12 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { SAFERowData } from "./ConversionState";
+import { SAFEProps } from "./state/ConversionState";
 
 interface SAFEInputRowProps {
-  data: SAFERowData;
+  data: SAFEProps;
   onDelete: (id: string) => void;
-  onUpdate: (data: SAFERowData) => void;
+  onUpdate: (data: SAFEProps) => void;
 }
 
 const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
@@ -103,7 +103,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   );
 };
 
-const SafeNoteList: React.FC<RowsProps<SAFERowData>> = ({
+const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   rows,
   onDelete,
   onUpdate,
