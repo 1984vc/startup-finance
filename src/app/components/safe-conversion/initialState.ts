@@ -42,8 +42,8 @@ export const initialState: IConversionStateData = {
       name: "YC MFN",
       investment: 375_000,
       discount: 0,
-      cap: 10_000_000,
-      conversionType: "post",
+      cap: 0,
+      conversionType: "mfn",
     },
     {
       id: crypto.randomUUID(),

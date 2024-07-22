@@ -6,15 +6,20 @@ const getMFNCapAter = (rows: SAFERowState[], idx: number): number => {
     // For each safe after the idx, find the lowest number that's not 0
     // and return that number
     return rows.slice(idx + 1).reduce((val, row) => {
+        // Ignore anything that's in MFN
         if (row.conversionType === 'mfn') {
-            return 0
+            return val
         }
+        // if the value is 0, return the cap (this is the lowest possible value)
         if (val === 0) {
             return row.cap
         }
+        // If the value is greater than 0 and the cap is greater than 0 and less than the value
+        // This is our new MFN
         if (val > 0 && row.cap > 0 && row.cap < val) {
             return row.cap
         }
+        // Just return the current value
         return val
     }, 0) ?? 0
 }
@@ -39,7 +44,7 @@ export const calcSAFEsPctAndCap = (rowData: IRowState[], pricedConversion?: Best
 
         return rows.map((data, idx) => {
             if (!pricedConversion) {
-                if (data.cap !== 0 && safeCaps[idx] !== 0) {
+                if (safeCaps[idx] !== 0) {
                     return [(data.investment / safeCaps[idx]) * 100, safeCaps[idx]];
                 }
                 return [0, safeCaps[idx]];

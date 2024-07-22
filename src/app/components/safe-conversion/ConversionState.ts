@@ -262,12 +262,10 @@ export const getSAFERowPropsSelector = createSelector(
     (pricedConversion, rowData): SAFERowData[] => {
         const rows = rowData.filter((row) => row.type === "safe");
 
-        const safeCalcs = calcSAFEsPctAndCap(rowData, pricedConversion);
-
+        const safeCalcs = calcSAFEsPctAndCap(rows, pricedConversion);
 
         return rows.map((row, idx) => {
-            const ownershipError = determineRowError(row, pricedConversion);
-            return {
+            const rowResult: SAFERowData = {
                 id: row.id,
                 type: "safe",
                 name: row.name,
@@ -275,11 +273,15 @@ export const getSAFERowPropsSelector = createSelector(
                 cap: safeCalcs[idx][1],
                 discount: row.discount,
                 ownershipPct: safeCalcs[idx][0],
-                ownershipError,
                 allowDelete: rows.length > 1,
                 disabledFields: row.conversionType === 'mfn' ? ['cap'] : [],
                 conversionType: row.conversionType,
             };
+            const ownershipError = determineRowError(rowResult, pricedConversion);
+            return {
+              ...rowResult,
+              ownershipError,
+            }
         });
     },
 );
