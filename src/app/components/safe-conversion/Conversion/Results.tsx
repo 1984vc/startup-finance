@@ -117,7 +117,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
         <div className="bg-white rounded-lg shadow-lg p-8 flex-1">
           <h2 className="text-2xl font-bold mb-4">Investment</h2>
           <label className="block text-gray-700 font-bold mb-2">
-            Investment: ${formatNumberWithCommas(seriesTotalInvestment + investmentChange)}
+            ${formatNumberWithCommas(seriesTotalInvestment + investmentChange)}
             { investmentChange !== 0 ? ` (${investmentChange > 0 ? "+" : ""}$${formatNumberWithCommas(investmentChange)})` : "" }
           </label>
           <div className="mb-4">
