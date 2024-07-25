@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { BestFit, fitConversion } from "@/library/safe_conversion";
-import { calcSAFEsPctAndCap } from "@/app/utils/rowDataHelper";
+import { calcSAFEs } from "@/app/utils/rowDataHelper";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 
 
@@ -16,6 +16,7 @@ export interface SeriesState {
 
 export interface SeriesProps extends SeriesState {
     ownershipPct: number;
+    shares: number;
     allowDelete?: boolean;
 }
 
@@ -33,6 +34,7 @@ export interface SAFEProps extends SAFEState {
     ownershipPct: number;
     ownershipError?: string;
     allowDelete?: boolean;
+    shares?: number;
     disabledFields?: string[];
 }
 
@@ -183,9 +185,10 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
           }
           // Get the value and replace anything that's not a number or period
           const newValue = value?.replace(/[^0-9.]/g, "");
+          const newValueNumber = parseFloat(newValue ?? "0");
           set((state) => ({
             ...state,
-            [name]: newValue ?? "0",
+            [name]: newValueNumber,
           }));
         }
       } else if (type === "percent") {
@@ -195,9 +198,10 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
             return;
           }
           const newValue = value?.replace(/[^0-9.]/g, "");
+          const newValueNumber = parseFloat(newValue ?? "0");
           set((state) => ({
             ...state,
-            [name]: newValue ?? "0",
+            [name]: newValueNumber
           }));
         }
       }
@@ -259,14 +263,13 @@ export const getPricedConversion = createSelector(
   }
 );
 
-
 export const getSAFERowPropsSelector = createSelector(
     getPricedConversion,
     (state: IConversionState) => state.rowData,
     (pricedConversion, rowData): SAFEProps[] => {
         const rows = rowData.filter((row) => row.type === "safe");
 
-        const safeCalcs = calcSAFEsPctAndCap(rows, pricedConversion);
+        const safeCalcs = calcSAFEs(rows, pricedConversion);
 
         return rows.map((row, idx) => {
             const rowResult: SAFEProps = {
@@ -277,6 +280,7 @@ export const getSAFERowPropsSelector = createSelector(
                 cap: safeCalcs[idx][1],
                 discount: row.discount,
                 ownershipPct: safeCalcs[idx][0],
+                shares: safeCalcs[idx][2],
                 allowDelete: rows.length > 1,
                 disabledFields: row.conversionType === 'mfn' ? ['cap'] : [],
                 conversionType: row.conversionType,
@@ -289,6 +293,7 @@ export const getSAFERowPropsSelector = createSelector(
         });
     },
 );
+
 
 export const getExistingShareholderPropsSelector = createSelector(
     getPricedConversion,
@@ -336,10 +341,10 @@ export const getSeriesPropsSelector = createSelector(
     (state: IConversionState) => state.rowData,
     (pricedConversion, rowData): SeriesProps[] => {
         const rows = rowData.filter((row) => row.type === "series");
-        const seriesOwnershipPct = rows.map((data, idx) => {
-            if (!pricedConversion) return 0;
+        const seriesOwnershipPct = rows.map((data) => {
+            if (!pricedConversion) return [0, 0];
             const shares = Math.floor(data.investment / pricedConversion.pps);
-            return (shares / pricedConversion.totalShares) * 100;
+            return [shares, (shares / pricedConversion.totalShares) * 100];
         });
 
         return rows.map((row, idx) => {
@@ -348,7 +353,8 @@ export const getSeriesPropsSelector = createSelector(
                 type: "series",
                 name: row.name,
                 investment: row.investment,
-                ownershipPct: seriesOwnershipPct[idx] ?? 0,
+                shares: seriesOwnershipPct[idx][0] ?? 0,
+                ownershipPct: seriesOwnershipPct[idx][1] ?? 0,
                 allowDelete: rows.length > 1,
             };
         });

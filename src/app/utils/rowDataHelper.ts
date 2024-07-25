@@ -34,7 +34,7 @@ const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
     return safe.cap
 }
 
-export const calcSAFEsPctAndCap = (rowData: IRowState[], pricedConversion?: BestFit): [pct: number, cap: number][] => {
+export const calcSAFEs = (rowData: IRowState[], pricedConversion?: BestFit): [pct: number, cap: number, shares: number][] => {
 
         const rows = rowData.filter((row) => row.type === "safe");
 
@@ -45,12 +45,12 @@ export const calcSAFEsPctAndCap = (rowData: IRowState[], pricedConversion?: Best
         return rows.map((data, idx) => {
             if (!pricedConversion) {
                 if (safeCaps[idx] !== 0) {
-                    return [(data.investment / safeCaps[idx]) * 100, safeCaps[idx]];
+                    return [(data.investment / safeCaps[idx]) * 100, safeCaps[idx], 0];
                 }
-                return [0, safeCaps[idx]];
+                return [0, safeCaps[idx], 0];
             }
             const pps = pricedConversion.ppss[idx];
             const shares = Math.floor(data.investment / pps);
-            return [(shares / pricedConversion.totalShares) * 100, safeCaps[idx]];
+            return [(shares / pricedConversion.totalShares) * 100, safeCaps[idx], shares];
         });
 }
