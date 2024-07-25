@@ -16,6 +16,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
 
   const [investmentSlider, setInvestmentSlider] = useState(20)
   const investmentChange = sliderChange(investmentSlider)
+
   
   // Get the Series Investments and distribute the investmentChange over the series investors pro rata
   const seriesTotalInvestment = state.rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
@@ -82,6 +83,9 @@ const Results: React.FC<ResultProps> = ({ state }) => {
   const totalPct = Math.round(existingShareholders.map((shareholder) => shareholder.dilutedPct).reduce((acc, val) => acc + val, 0) +
     safeInvestors.map((investor) => investor.ownershipPct).reduce((acc, val) => acc + val, 0) +
     seriesInvestors.map((investor) => investor.ownershipPct).reduce((acc, val) => acc + val, 0) + state.targetOptionsPool)
+
+  const totalInvestedToDate = trialState.rowData.filter((row) => row.type === "safe").map((row) => row.investment).reduce((acc, val) => acc + val, 0) +
+    trialState.rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
 
   return (
     <div className="pt-10">
@@ -152,6 +156,9 @@ const Results: React.FC<ResultProps> = ({ state }) => {
                 Shareholder / Investor
               </th>
               <th className="py-3 px-4 text-left font-medium text-gray-600">
+                Investment
+              </th>
+              <th className="py-3 px-4 text-left font-medium text-gray-600">
                 Shares
               </th>
               <th className="py-3 px-4 text-right font-medium text-gray-600">
@@ -164,6 +171,8 @@ const Results: React.FC<ResultProps> = ({ state }) => {
               <tr key={`shareholder-${idx}`}>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">
                   {shareholder.name}
+                </td>
+                <td className="py-3 px-4 text-left">
                 </td>
                 <td className="py-3 px-4 text-left">
                   {formatNumberWithCommas(shareholder.shares)}
@@ -179,6 +188,9 @@ const Results: React.FC<ResultProps> = ({ state }) => {
                   {investor.name}
                 </td>
                 <td className="py-3 px-4 text-left">
+                  ${formatNumberWithCommas(investor.investment ?? 0)}
+                </td>
+                <td className="py-3 px-4 text-left">
                   {formatNumberWithCommas(investor.shares ?? 0)}
                 </td>
                 <td className="py-3 px-4 text-right">
@@ -190,6 +202,9 @@ const Results: React.FC<ResultProps> = ({ state }) => {
               <tr key={`seriesinvestorresult-${idx}`}>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">
                   {investor.name}
+                </td>
+                <td className="py-3 px-4 text-left">
+                  ${formatNumberWithCommas(investor.investment ?? 0)}
                 </td>
                 <td className="py-3 px-4 text-left">
                   {formatNumberWithCommas(investor.shares)}
@@ -204,6 +219,8 @@ const Results: React.FC<ResultProps> = ({ state }) => {
                 Refreshed Options Pool
               </td>
               <td className="py-3 px-4 text-left">
+              </td>
+              <td className="py-3 px-4 text-left">
                 {formatNumberWithCommas(pricedConversion.totalOptions)}
               </td>
               <td className="py-3 px-4 text-right">
@@ -215,6 +232,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
             </tr>
             <tr className="font-bold">
               <td className="py-3 px-4 text-left">Total</td>
+              <td className="py-3 px-4 text-left">${ formatNumberWithCommas(totalInvestedToDate) }</td>
               <td className="py-3 px-4 text-left">
                 {formatNumberWithCommas(totalShares)}
               </td>

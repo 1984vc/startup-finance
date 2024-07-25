@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef } from "react";
 import SafeNotes from "./SafeNoteList";
 import ExisingShareholderList from "./ExistingShareholders";
@@ -5,9 +7,9 @@ import SeriesInvestorList from "./SeriesInvestorList";
 import { BestFit } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
-import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IConversionState, IRowState, SeriesProps, SeriesState, createConversionStore, ConversionStore } from "./state/ConversionState";
+import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IRowState, SeriesState, createConversionStore, ConversionStore } from "./state/ConversionState";
 import Results from "./Results";
-import { initialState } from "./state/initialState";
+import { getRandomData, initialState } from "./state/initialState";
 import { useStore } from "zustand";
 
 export interface RowsProps<T> {
@@ -20,9 +22,14 @@ export interface RowsProps<T> {
 
 const Conversion: React.FC = () => {
 
+  const randomInvestors = useRef<ReturnType<typeof getRandomData>>()
+  if (!randomInvestors.current) {
+    randomInvestors.current = getRandomData()
+  }
+
   const ref = useRef<ConversionStore>()
   if (!ref.current) {
-    ref.current = createConversionStore(initialState)
+    ref.current = createConversionStore(initialState({...randomInvestors.current}));
   }
 
   if (ref.current === undefined) { throw new Error("State is undefined") }

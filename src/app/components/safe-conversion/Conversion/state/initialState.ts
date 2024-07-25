@@ -5,7 +5,15 @@ export const randomFounders = founders.sort(() => Math.random() - 0.5);
 export const randomSeed = earlyStageInvestors.sort(() => Math.random() - 0.5);
 export const randomSeries = seriesAInvestors.sort(() => Math.random() - 0.5);
 
-export const initialState: IConversionStateData = {
+export const getRandomData = () => {
+  return {
+    randomFounders,
+    randomSeed,
+    randomSeries,
+  }
+}
+
+export const initialState = ({randomFounders, randomSeed, randomSeries}: ReturnType<typeof getRandomData>): IConversionStateData => ({
   rowData: [
     {
       id: crypto.randomUUID(),
@@ -48,6 +56,15 @@ export const initialState: IConversionStateData = {
     {
       id: crypto.randomUUID(),
       type: "safe",
+      name: "1984 Ventures",
+      investment: 750_000,
+      discount: 0,
+      cap: 10_000_000,
+      conversionType: "post",
+    },
+    {
+      id: crypto.randomUUID(),
+      type: "safe",
       name: `${randomSeed[0]}`,
       investment: 475_000,
       discount: 0,
@@ -58,18 +75,9 @@ export const initialState: IConversionStateData = {
       id: crypto.randomUUID(),
       type: "safe",
       name: `${randomSeed[1]}`,
-      investment: 28_500,
+      investment: 500_000,
       discount: 0,
       cap: 13_000_000,
-      conversionType: "post",
-    },
-    {
-      id: crypto.randomUUID(),
-      type: "safe",
-      name: `${randomSeed[2]}`,
-      investment: 2_997_599,
-      discount: 0,
-      cap: 30_000_000,
       conversionType: "post",
     },
     {
@@ -88,4 +96,4 @@ export const initialState: IConversionStateData = {
   preMoney: 16_700_000,
   targetOptionsPool: 10,
   unusedOptions: 609_272,
-};
+});
