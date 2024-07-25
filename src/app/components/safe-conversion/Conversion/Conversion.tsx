@@ -176,11 +176,7 @@ const Conversion: React.FC = () => {
       </div>
       { pricedConversion !== undefined && <Results
         state={state}
-        existingShareholders={getExistingShareholderPropsSelector(state)} 
-        safeInvestors={getSAFERowPropsSelector(state)}
-        seriesInvestors={getSeriesPropsSelector(state)}
-        pricedConversion={pricedConversion}
-        />
+      />
       }
     </div>
   );

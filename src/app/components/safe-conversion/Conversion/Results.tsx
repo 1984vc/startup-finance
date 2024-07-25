@@ -6,14 +6,7 @@ import { useStore } from "zustand";
 
 interface ResultProps {
   state: IConversionState;
-  pricedConversion: BestFit;
-  seriesInvestors: SeriesProps[];
-  safeInvestors: SAFEProps[];
-  existingShareholders: ExistingShareholderProps[];
 }
-
-// Should round a number up to the nearest multiple 10**nearest
-// EG. 1234, 2 => 1300
 
 const Results: React.FC<ResultProps> = ({ state }) => {
 
