@@ -215,11 +215,11 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
 }));
 
 export const getPricedConversion = createSelector(
-  (state: IConversionState) => state.rowData,
-  (state: IConversionState) => state.preMoney,
-  (state: IConversionState) => state.targetOptionsPool,
-  (state: IConversionState) => state.unusedOptions,
-  (state: IConversionState) => state.hasNewRound,
+  (state: IConversionStateData) => state.rowData,
+  (state: IConversionStateData) => state.preMoney,
+  (state: IConversionStateData) => state.targetOptionsPool,
+  (state: IConversionStateData) => state.unusedOptions,
+  (state: IConversionStateData) => state.hasNewRound,
   (
     rowData,
     preMoney,
@@ -265,7 +265,7 @@ export const getPricedConversion = createSelector(
 
 export const getSAFERowPropsSelector = createSelector(
     getPricedConversion,
-    (state: IConversionState) => state.rowData,
+    (state: IConversionStateData) => state.rowData,
     (pricedConversion, rowData): SAFEProps[] => {
         const rows = rowData.filter((row) => row.type === "safe");
 
@@ -298,7 +298,7 @@ export const getSAFERowPropsSelector = createSelector(
 export const getExistingShareholderPropsSelector = createSelector(
     getPricedConversion,
     getSAFERowPropsSelector,
-    (state: IConversionState) => state.rowData,
+    (state: IConversionStateData) => state.rowData,
     (pricedConversion, safes, rowData): ExistingShareholderProps[] => {
         const safeTotalOwnershipPct = safes.reduce((acc, val) => acc + val.ownershipPct, 0);
         // Look through the SAFEs and find out if any have an OwnershipError
@@ -338,7 +338,7 @@ export const getExistingShareholderPropsSelector = createSelector(
 
 export const getSeriesPropsSelector = createSelector(
     getPricedConversion,
-    (state: IConversionState) => state.rowData,
+    (state: IConversionStateData) => state.rowData,
     (pricedConversion, rowData): SeriesProps[] => {
         const rows = rowData.filter((row) => row.type === "series");
         const seriesOwnershipPct = rows.map((data) => {
