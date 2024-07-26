@@ -1,7 +1,7 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { ExistingShareholderProps } from "./state/ConversionState";
+import { ExistingShareholderProps } from "./state/ExistingShareholderSelector";
 
 interface ExistingShareholderRowProps {
   data: ExistingShareholderProps;

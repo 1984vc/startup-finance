@@ -51,7 +51,25 @@ const Results: React.FC<ResultProps> = ({ state }) => {
 
   return (
     <div className="pt-10">
-      <h2 className="text-2xl font-bold mb-4">Priced Round Overview</h2>
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold mb-4">Priced Round Overview</h2>
+        <p className="font-bold">PostMoney: ${formatNumberWithCommas(results.postMoney)}</p>
+        <p className="font-bold">PreMoney: ${formatNumberWithCommas(results.preMoney)}</p>
+        <p className="font-bold">Investment: ${formatNumberWithCommas(results.totalSeriesInvestment)}</p>
+        <p>PPS: ${pricedConversion.pps}</p>
+        <p> TotalShares:{" "}
+          {formatNumberWithCommas(pricedConversion.totalShares)}
+        </p>
+        <p>
+          Additional Options:{" "}
+          {formatNumberWithCommas(pricedConversion.additionalOptions)}
+        </p>
+        <p>
+          Total Options after conversion:{" "}
+          {formatNumberWithCommas(pricedConversion.totalOptions)}
+        </p>
+
+      </div>
       <div className="flex flex-row space-x-8">
         <div className="bg-white rounded-lg shadow-lg p-4 flex-1">
           <h2 className="text-2xl font-bold mb-4">Post Money</h2>
@@ -73,7 +91,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
             />
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow-lg p-8 flex-1">
+        <div className="bg-white rounded-lg shadow-lg p-4 flex-1">
           <h2 className="text-2xl font-bold mb-4">Investment</h2>
           <label className="block text-gray-700 font-bold mb-2">
             ${formatNumberWithCommas(results.totalSeriesInvestment)}
@@ -95,34 +113,20 @@ const Results: React.FC<ResultProps> = ({ state }) => {
         </div>
 
       </div>
-      <h2 className="text-xl font-bold mb-4 mt-8">Round Details</h2>
-      <h3 className="text-l font-bold mb-4 mt-8">${formatNumberWithCommas(results.totalSeriesInvestment)} on ${formatNumberWithCommas(results.postMoney)} at a pre-money of ${formatNumberWithCommas(results.preMoney)}</h3>
-      <p>PPS: ${pricedConversion.pps}</p>
-      <p> TotalShares:{" "}
-        {formatNumberWithCommas(pricedConversion.totalShares)}
-      </p>
-      <p>
-        Additional Options:{" "}
-        {formatNumberWithCommas(pricedConversion.additionalOptions)}
-      </p>
-      <p>
-        Total Options after conversion:{" "}
-        {formatNumberWithCommas(pricedConversion.totalOptions)}
-      </p>
       <div className="border border-gray-300 shadow-sm rounded-lg overflow-hidden w-full mx-auto mt-16">
         <table className="w-full text-sm leading-5">
-          <thead className="bg-gray-100">
+          <thead className="bg-gray-300 font-bold">
             <tr>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">
+              <th className="py-3 px-4 text-left">
                 Shareholder / Investor
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">
+              <th className="py-3 px-4 text-left">
                 Investment
               </th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">
+              <th className="py-3 px-4 text-left">
                 Shares
               </th>
-              <th className="py-3 px-4 text-right font-medium text-gray-600">
+              <th className="py-3 px-4 text-right">
                 Ownership %
               </th>
             </tr>
@@ -191,7 +195,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
                 %
               </td>
             </tr>
-            <tr className="font-bold">
+            <tr className="font-bold bg-gray-200">
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">${ formatNumberWithCommas(results.totalInvestedToDate) }</td>
               <td className="py-3 px-4 text-left">

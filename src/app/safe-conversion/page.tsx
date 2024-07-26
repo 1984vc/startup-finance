@@ -21,16 +21,18 @@ const Page: React.FC = () => {
 
   return (
     <div>
-      <Link href="https://1984.vc">
-        <Image
-          src="/startup-finance/images/logo.svg"
-          alt="1984 Logo"
-          className="dark:invert p-8"
-          width={90}
-          height={90}
-          priority
-        />
-      </Link>
+      <div className="absolute">
+        <Link href="https://1984.vc" className="w-64">
+          <Image
+            src="/startup-finance/images/logo.svg"
+            alt="1984 Logo"
+            className="dark:invert pt-16 pl-16"
+            width={120}
+            height={120}
+            priority
+          />
+        </Link>
+      </div>
       <main className="flex min-h-screen flex-col items-center justify-between px-24 py-8">
         <h1 className="text-xl">1984 SAFE Conversion Worksheet</h1>
         <h2 className="text-orange-700">

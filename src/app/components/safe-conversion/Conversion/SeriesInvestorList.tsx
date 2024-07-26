@@ -1,7 +1,7 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { SeriesProps } from "./state/ConversionState";
+import { SeriesProps } from "./state/SeriesSelector";
 
 interface SeriesRowProps {
   data: SeriesProps;

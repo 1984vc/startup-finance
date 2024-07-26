@@ -7,10 +7,13 @@ import SeriesInvestorList from "./SeriesInvestorList";
 import { BestFit } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
-import { getExistingShareholderPropsSelector, getPricedConversion, getSAFERowPropsSelector, getSeriesPropsSelector, IRowState, SeriesState, createConversionStore, ConversionStore } from "./state/ConversionState";
+import { getPricedConversion, IRowState, SeriesState, createConversionStore, ConversionStore } from "./state/ConversionState";
 import Results from "./Results";
 import { getRandomData, initialState } from "./state/initialState";
 import { useStore } from "zustand";
+import { getSAFERowPropsSelector } from "./state/SAFESelector";
+import { getExistingShareholderPropsSelector } from "./state/ExistingShareholderSelector";
+import { getSeriesPropsSelector } from "./state/SeriesSelector";
 
 export interface RowsProps<T> {
   rows: T[];
@@ -126,7 +129,7 @@ const Conversion: React.FC = () => {
                 type="text"
                 name="totalSeriesInvestment"
                 value={postMoney}
-                className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 bg-gray-100 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 prefix="$"
                 decimalScale={0}
                 allowDecimals={false}
@@ -152,15 +155,13 @@ const Conversion: React.FC = () => {
               allowDecimals={true}
             />
           </div>
-        </div>
-        <div className="flex space-x-4">
           <div className="flex-1">
             <h2 className="my-2">Additional Options</h2>
             <CurrencyInput
               type="text"
               name="additionalOptions"
               value={pricedConversion?.additionalOptions}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-gray-100 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               prefix=""
               decimalScale={0}
               max={99}

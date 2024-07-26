@@ -1,7 +1,7 @@
 import React from "react";
 import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { SAFEProps } from "./state/ConversionState";
+import { SAFEProps } from "./state/SAFESelector";
 
 interface SAFEInputRowProps {
   data: SAFEProps;
