@@ -10,12 +10,18 @@ export type ResultSelectorState = IConversionStateData & {
     investmentChange: number;
 }
 
+export interface ShareholderRow {
+    name: string;
+    shares?: number;
+    investment?: number;
+    ownershipPct: number;
+    ownershipChange: number;
+}
+
 export interface ResultProps {
     preMoney: number;
     postMoney: number;
-    existingShareholders: ExistingShareholderProps[];
-    safeInvestors: SAFEProps[];
-    seriesInvestors: SeriesProps[]
+    shareholders: ShareholderRow[];
     totalSeriesInvestment: number;
     totalShares: number;
     totalPct: number;
@@ -26,13 +32,16 @@ export interface ResultProps {
 // The goal is to build a result set for a priced round that allows the user to play around
 // with pre-money and investment changes to see how it affects the cap table
 export const getResultsPropsSelector = createSelector(
+    getExistingShareholderPropsSelector,
+    getSAFERowPropsSelector,
+    getSeriesPropsSelector,
     (state: ResultSelectorState) => state.preMoneyChange,
     (state: ResultSelectorState) => state.investmentChange,
     (state: ResultSelectorState) => state.rowData,
     (state: ResultSelectorState) => state.preMoney,
     (state: ResultSelectorState) => state.targetOptionsPool,
     (state: ResultSelectorState) => state.unusedOptions,
-    (preMoneyChange, investmentChange, rowData, preMoney, targetOptionsPool, unusedOptions): ResultProps => {
+    (existingShareholders, safeInvestors, seriesInvestors, preMoneyChange, investmentChange, rowData, preMoney, targetOptionsPool, unusedOptions): ResultProps => {
         // Get the Series Investments and distribute the investmentChange over the series investors pro rata
         const initialSeriesInvestment = rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
         const seriesInvestmentChanges = rowData.map((row) => {
@@ -54,7 +63,6 @@ export const getResultsPropsSelector = createSelector(
             return row
         })
 
-
         const trialState: IConversionStateData = {
             preMoney: newPreMoney,
             targetOptionsPool,
@@ -63,21 +71,52 @@ export const getResultsPropsSelector = createSelector(
             hasNewRound: true,
         };
 
-        const pricedConversion = getPricedConversion(trialState)!
+        const trialPricedConversion = getPricedConversion(trialState)!
 
-        const existingShareholders = getExistingShareholderPropsSelector(trialState);
-        const safeInvestors = getSAFERowPropsSelector(trialState);
-        const seriesInvestors = getSeriesPropsSelector(trialState);
+        const shareholders: ShareholderRow[] = []
 
-        // Double check the math
-        const totalShares = existingShareholders.map((shareholder) => shareholder.shares).reduce((acc, val) => acc + val, 0) +
-            safeInvestors.map((investor) => investor.shares ?? 0).reduce((acc, val) => acc + val, 0) +
-            seriesInvestors.map((investor) => investor.shares).reduce((acc, val) => acc + val, 0) +
-            (pricedConversion?.totalOptions ?? 0);
+        const currentShareholders = [
+            ...existingShareholders,
+            ...safeInvestors,
+            ...seriesInvestors,
+        ]
+        const trialShareholders = [
+            ...getExistingShareholderPropsSelector(trialState),
+            ...getSAFERowPropsSelector(trialState),
+            ...getSeriesPropsSelector(trialState),
+        ]
+        trialShareholders.forEach((shareholder, idx) => {
+            if (shareholder.type === 'common') {
+                const currentShareholder = currentShareholders[idx] as ExistingShareholderProps
+                shareholders.push({
+                    name: shareholder.name,
+                    shares: shareholder.shares,
+                    ownershipPct: shareholder.dilutedPct,
+                    ownershipChange: shareholder.dilutedPct - currentShareholder.dilutedPct,
+                })
+            } else if (shareholder.type === 'safe') {
+                const currentShareholder = currentShareholders[idx] as SAFEProps
+                shareholders.push({
+                    name: shareholder.name,
+                    shares: shareholder.shares,
+                    investment: shareholder.investment,
+                    ownershipPct: shareholder.ownershipPct,
+                    ownershipChange: shareholder.ownershipPct - currentShareholder.ownershipPct,
+                })
+            } else if (shareholder.type === 'series') {
+                const currentShareholder = currentShareholders[idx] as SeriesProps
+                shareholders.push({
+                    name: shareholder.name,
+                    shares: shareholder.shares,
+                    investment: shareholder.investment,
+                    ownershipPct: shareholder.ownershipPct,
+                    ownershipChange: shareholder.ownershipPct - currentShareholder.ownershipPct,
+                })
+            }
+        })
 
-        const totalPct = Math.round(existingShareholders.map((shareholder) => shareholder.dilutedPct).reduce((acc, val) => acc + val, 0) +
-            safeInvestors.map((investor) => investor.ownershipPct).reduce((acc, val) => acc + val, 0) +
-            seriesInvestors.map((investor) => investor.ownershipPct).reduce((acc, val) => acc + val, 0) + targetOptionsPool)
+        const totalPct = Math.round(shareholders.map((shareholder) => shareholder.ownershipPct).reduce((acc, val) => acc + val, 0)
+            + targetOptionsPool)
 
         const totalInvestedToDate = trialState.rowData.filter((row) => row.type === "safe").map((row) => row.investment).reduce((acc, val) => acc + val, 0) +
             trialState.rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
@@ -85,14 +124,12 @@ export const getResultsPropsSelector = createSelector(
         return {
             preMoney: newPreMoney,
             postMoney: newPreMoney + totalSeriesInvestment,
-            existingShareholders,
-            safeInvestors,
-            seriesInvestors,
-            totalShares,
+            totalShares: trialPricedConversion.totalShares,
             totalPct,
             totalInvestedToDate,
             totalSeriesInvestment,
-            pricedConversion,
+            pricedConversion: trialPricedConversion,
+            shareholders,
         }
 
     },
