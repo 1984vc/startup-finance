@@ -1,48 +1,70 @@
 import { formatNumberWithCommas } from "@/app/utils/numberFormatting";
-import { IConversionState } from "./state/ConversionState";
-import { MouseEventHandler, useState } from "react";
-import { getResultsPropsSelector } from "./state/ResultSelector";
+import { BestFit } from "@/library/safe_conversion";
 
-interface ResultProps {
-  state: IConversionState;
+export interface ShareholderRow {
+    name: string;
+    shares?: number;
+    investment?: number;
+    ownershipPct: number;
+    ownershipChange: number;
 }
 
-const Results: React.FC<ResultProps> = ({ state }) => {
+export interface ResultPropsData {
+    preMoney: number;
+    postMoney: number;
+    shareholders: ShareholderRow[];
+    totalSeriesInvestment: number;
+    totalShares: number;
+    totalPct: number;
+    totalInvestedToDate: number;
+    pricedConversion: BestFit;
+    preMoneyChange: number;
+    investmentChange: number;
+}
 
-  const [investmentChange, setInvestmentChange] = useState(0)
-  const [preMoneyChange, setPreMoneyChange] = useState(0)
 
-  const seriesOriginalInvestment = state.rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
+export interface ResultProps extends ResultPropsData {
+    updateInvestmentChange: (change: number) => void;
+    updatePreMoneyChange: (change: number) => void;
+}
 
-  const results = getResultsPropsSelector({
-    ...state,
+const Results: React.FC<ResultProps> = (props) => {
+  const {
+    preMoney,
+    pricedConversion,
+    postMoney,
+    totalShares,
+    totalSeriesInvestment,
+    totalPct,
+    totalInvestedToDate,
+    shareholders,
     preMoneyChange,
-    investmentChange
-  })
-
-  const pricedConversion = results.pricedConversion
+    investmentChange,
+    updateInvestmentChange,
+    updatePreMoneyChange,
+  } = props;
 
   const increment = (name: "preMoney" | "investment") => {
     console.log(name);
     if (name === "preMoney") {
       const change = preMoneyChange + 500_000;
-      setPreMoneyChange(change);
+      updatePreMoneyChange(change);
     } else if (name === "investment") {
       const change = investmentChange + 500_000;
-      setInvestmentChange(change);
+      updateInvestmentChange(change);
     }
   }
 
   const decrement = (name: "preMoney" | "investment") => {
       if (name === 'preMoney') {
         const change = preMoneyChange - 500_000;
-        if ((state.preMoney - change) > 0) {
-          setPreMoneyChange(change);
+        if ((preMoney - change) > 0) {
+          updatePreMoneyChange(change);
         }
       } else if (name === 'investment') {
         const change = investmentChange - 500_000;
-        if (seriesOriginalInvestment - change > 0) {
-          setInvestmentChange(change);
+        if (totalSeriesInvestment - change > 0) {
+          updateInvestmentChange(change);
         }
       }
   }
@@ -58,7 +80,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
           <dd className="order-first font-semibold tracking-tight text-gray-900">
             <span className="text-2xl p-0 m-0">
               <button className="px-2 mr-2 bg-blue-100 rounded-md" name="increment" onClick={() => decrement('preMoney')}>-</button>
-              ${formatNumberWithCommas(results.postMoney)}
+              ${formatNumberWithCommas(postMoney)}
               <button className="px-2 ml-2 bg-blue-100 rounded-md" name="increment" onClick={() => increment('preMoney')}>+</button>
             </span>
             <span className="text-sm text-gray-600">
@@ -76,7 +98,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
           </dt>
           <dd className="order-first text-2xl font-semibold tracking-tight text-gray-900">
             <span className="text-2xl p-0 m-0">
-              ${formatNumberWithCommas(results.preMoney)}
+              ${formatNumberWithCommas(preMoney)}
             </span>
           </dd>
         </div>
@@ -87,7 +109,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
           <dd className="order-first font-semibold tracking-tight text-gray-900">
             <span className="text-2xl p-0 m-0">
               <button className="px-2 mr-2 bg-blue-100 rounded-md" name="increment" onClick={() => decrement('investment')}>-</button>
-              ${formatNumberWithCommas(results.totalSeriesInvestment)}
+              ${formatNumberWithCommas(totalSeriesInvestment)}
               <button className="px-2 ml-2 bg-blue-100 rounded-md" name="increment" onClick={() => increment('investment')}>+</button>
             </span>
             <span className="text-sm text-gray-600">
@@ -134,7 +156,7 @@ const Results: React.FC<ResultProps> = ({ state }) => {
             </tr>
           </thead>
           <tbody>
-            {results.shareholders.map((shareholder, idx) => (
+            {shareholders.map((shareholder, idx) => (
               <tr key={`shareholder-${idx}`}>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">
                   {shareholder.name}
@@ -161,12 +183,12 @@ const Results: React.FC<ResultProps> = ({ state }) => {
               </td>
               <td className="py-3 px-4 text-left"></td>
               <td className="py-3 px-4 text-left">
-                {formatNumberWithCommas(results.pricedConversion.totalOptions)}
+                {formatNumberWithCommas(pricedConversion.totalOptions)}
               </td>
               <td className="py-3 px-4 text-right">
                 {(
                   100 *
-                  (results.pricedConversion.totalOptions / results.totalShares)
+                  (pricedConversion.totalOptions / totalShares)
                 ).toFixed(2)}
                 %
               </td>
@@ -175,13 +197,13 @@ const Results: React.FC<ResultProps> = ({ state }) => {
             <tr className="font-bold bg-gray-200">
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">
-                ${formatNumberWithCommas(results.totalInvestedToDate)}
+                ${formatNumberWithCommas(totalInvestedToDate)}
               </td>
               <td className="py-3 px-4 text-left">
-                {formatNumberWithCommas(results.totalShares)}
+                {formatNumberWithCommas(totalShares)}
               </td>
               <td className="py-3 px-4 text-right">
-                {results.totalPct.toFixed(2)}%
+                {totalPct.toFixed(2)}%
               </td>
               <td className="py-3 px-4 text-right"></td>
             </tr>

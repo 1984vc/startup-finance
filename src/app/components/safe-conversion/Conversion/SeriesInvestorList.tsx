@@ -1,7 +1,16 @@
 import React from "react";
-import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { SeriesProps } from "./state/SeriesSelector";
+import { RowsProps } from "./PropTypes";
+
+export interface SeriesProps{
+    id: string;
+    type: "series";
+    name: string;
+    investment: number;
+    ownershipPct: number;
+    shares: number;
+    allowDelete?: boolean;
+}
 
 interface SeriesRowProps {
   data: SeriesProps;

@@ -1,15 +1,8 @@
 import { createSelector } from "reselect";
-import { getPricedConversion, IConversionStateData, IRowState, SAFEState } from "./ConversionState";
+import { getPricedConversion, IConversionStateData, IRowState } from "./ConversionState";
 import { calcSAFEs } from "@/app/utils/rowDataHelper";
 import { BestFit } from "@/library/safe_conversion";
-
-export interface SAFEProps extends SAFEState {
-    ownershipPct: number;
-    ownershipError?: string;
-    allowDelete?: boolean;
-    shares?: number;
-    disabledFields?: string[];
-}
+import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteList";
 
 const determineRowError = (row: IRowState, pricedConversion: BestFit | undefined): string | undefined => {
     if (row.type === "safe") {

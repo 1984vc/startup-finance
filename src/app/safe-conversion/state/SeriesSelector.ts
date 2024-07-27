@@ -1,11 +1,6 @@
 import { createSelector } from "reselect";
-import { getPricedConversion, IConversionStateData, SeriesState } from "./ConversionState";
-
-export interface SeriesProps extends SeriesState {
-    ownershipPct: number;
-    shares: number;
-    allowDelete?: boolean;
-}
+import { getPricedConversion, IConversionStateData } from "./ConversionState";
+import { SeriesProps } from "@/app/components/safe-conversion/Conversion/SeriesInvestorList";
 
 export const getSeriesPropsSelector = createSelector(
     getPricedConversion,

@@ -1,5 +1,5 @@
 import { BestFit } from "@/library/safe_conversion";
-import { IRowState, SAFEState } from "../components/safe-conversion/Conversion/state/ConversionState";
+import { IRowState, SAFEState } from "../safe-conversion/state/ConversionState";
 
 
 const getMFNCapAter = (rows: SAFEState[], idx: number): number => {

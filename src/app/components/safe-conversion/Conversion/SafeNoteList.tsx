@@ -1,7 +1,21 @@
 import React from "react";
-import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { SAFEProps } from "./state/SAFESelector";
+import { RowsProps } from "./PropTypes";
+
+export interface SAFEProps {
+  id: string;
+  type: "safe";
+  name: string;
+  investment: number;
+  cap: number;
+  discount: number;
+  conversionType: "post" | "pre" | "mfn";
+  ownershipPct: number;
+  ownershipError?: string;
+  allowDelete?: boolean;
+  shares?: number;
+  disabledFields?: string[];
+}
 
 interface SAFEInputRowProps {
   data: SAFEProps;

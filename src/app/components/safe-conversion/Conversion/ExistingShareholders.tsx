@@ -1,7 +1,17 @@
 import React from "react";
-import { RowsProps } from "./Conversion";
 import CurrencyInput from "react-currency-input-field";
-import { ExistingShareholderProps } from "./state/ExistingShareholderSelector";
+import { RowsProps } from "./PropTypes";
+
+export interface ExistingShareholderProps {
+  id: string;
+  type: "common";
+  name: string;
+  shares: number;
+  ownershipPct: number;
+  dilutedPct: number;
+  dilutedPctError?: string;
+  allowDelete?: boolean;
+}
 
 interface ExistingShareholderRowProps {
   data: ExistingShareholderProps;
@@ -76,8 +86,6 @@ const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderProps> & {sa
   onUpdate,
   onAddRow,
 }) => {
-  const totalInitialShares = rows.map((row) => row.shares)
-    .reduce((acc, val) => acc + val, 0);
 
   return (
     <div>

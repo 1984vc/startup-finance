@@ -4,36 +4,15 @@ import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { BestFit, fitConversion } from "@/library/safe_conversion";
 import { stringToNumber } from "@/app/utils/numberFormatting";
-import { SAFEProps } from "./SAFESelector";
-import { SeriesProps } from "./SeriesSelector";
-import { ExistingShareholderProps } from "./ExistingShareholderSelector";
+import { SeriesProps } from "@/app/components/safe-conversion/Conversion/SeriesInvestorList";
+import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteList";
+import { ExistingShareholderProps } from "@/app/components/safe-conversion/Conversion/ExistingShareholders";
 
 
-export interface SeriesState {
-  id: string;
-  type: "series";
-  name: string;
-  investment: number;
-}
-
-export interface SAFEState {
-  id: string;
-  type: "safe";
-  name: string;
-  investment: number;
-  cap: number;
-  discount: number;
-  conversionType: "post" | "pre" | "mfn" ;
-}
-
-
-export interface ExistingShareholderState {
-  id: string;
-  type: "common";
-  name: string;
-  shares: number;
-}
-
+// Only the state that we need to serialize
+export type ExistingShareholderState = Pick<ExistingShareholderProps, "id" | "type" | "name" | "shares">
+export type SAFEState = Pick<SAFEProps, "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType">
+export type SeriesState = Pick<SeriesProps, "id" | "type" | "name" | "investment">
 
 export type IRowState = SAFEState | ExistingShareholderState | SeriesState
 

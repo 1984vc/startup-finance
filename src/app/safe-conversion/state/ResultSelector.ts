@@ -1,32 +1,16 @@
 import { createSelector } from "reselect";
 import { getPricedConversion, IConversionStateData } from "./ConversionState";
-import { BestFit } from "@/library/safe_conversion";
-import { getSAFERowPropsSelector, SAFEProps } from "./SAFESelector";
-import { getSeriesPropsSelector, SeriesProps } from "./SeriesSelector";
-import { ExistingShareholderProps, getExistingShareholderPropsSelector } from "./ExistingShareholderSelector";
+import { getSAFERowPropsSelector } from "./SAFESelector";
+import { getSeriesPropsSelector } from "./SeriesSelector";
+import { getExistingShareholderPropsSelector } from "./ExistingShareholderSelector";
+import { ExistingShareholderProps } from "@/app/components/safe-conversion/Conversion/ExistingShareholders";
+import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteList";
+import { SeriesProps } from "@/app/components/safe-conversion/Conversion/SeriesInvestorList";
+import { ResultPropsData, ShareholderRow } from "@/app/components/safe-conversion/Conversion/Results";
 
 export type ResultSelectorState = IConversionStateData & {
     preMoneyChange: number;
     investmentChange: number;
-}
-
-export interface ShareholderRow {
-    name: string;
-    shares?: number;
-    investment?: number;
-    ownershipPct: number;
-    ownershipChange: number;
-}
-
-export interface ResultProps {
-    preMoney: number;
-    postMoney: number;
-    shareholders: ShareholderRow[];
-    totalSeriesInvestment: number;
-    totalShares: number;
-    totalPct: number;
-    totalInvestedToDate: number;
-    pricedConversion: BestFit;
 }
 
 // The goal is to build a result set for a priced round that allows the user to play around
@@ -41,7 +25,7 @@ export const getResultsPropsSelector = createSelector(
     (state: ResultSelectorState) => state.preMoney,
     (state: ResultSelectorState) => state.targetOptionsPool,
     (state: ResultSelectorState) => state.unusedOptions,
-    (existingShareholders, safeInvestors, seriesInvestors, preMoneyChange, investmentChange, rowData, preMoney, targetOptionsPool, unusedOptions): ResultProps => {
+    (existingShareholders, safeInvestors, seriesInvestors, preMoneyChange, investmentChange, rowData, preMoney, targetOptionsPool, unusedOptions): ResultPropsData => {
         // Get the Series Investments and distribute the investmentChange over the series investors pro rata
         const initialSeriesInvestment = rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
         const seriesInvestmentChanges = rowData.map((row) => {
@@ -122,6 +106,8 @@ export const getResultsPropsSelector = createSelector(
             trialState.rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
 
         return {
+            preMoneyChange,
+            investmentChange,
             preMoney: newPreMoney,
             postMoney: newPreMoney + totalSeriesInvestment,
             totalShares: trialPricedConversion.totalShares,

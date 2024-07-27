@@ -1,14 +1,7 @@
 import { createSelector } from "reselect";
-import { ExistingShareholderState, getPricedConversion, IConversionStateData } from "./ConversionState";
+import { getPricedConversion, IConversionStateData } from "./ConversionState";
 import { getSAFERowPropsSelector } from "./SAFESelector";
-
-export interface ExistingShareholderProps extends ExistingShareholderState {
-    ownershipPct: number;
-    dilutedPct: number;
-    dilutedPctError?: string;
-    allowDelete?: boolean;
-}
-
+import { ExistingShareholderProps } from "@/app/components/safe-conversion/Conversion/ExistingShareholders";
 
 export const getExistingShareholderPropsSelector = createSelector(
     getPricedConversion,
