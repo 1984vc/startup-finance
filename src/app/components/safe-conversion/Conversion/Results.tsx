@@ -44,6 +44,10 @@ const Results: React.FC<ResultProps> = (props) => {
     updatePreMoneyChange,
   } = props;
 
+  const roundTo = (num: number, decimal: number): number => {
+    return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+  }
+
   const increment = (name: "preMoney" | "investment") => {
     console.log(name);
     if (name === "preMoney") {
@@ -172,8 +176,8 @@ const Results: React.FC<ResultProps> = (props) => {
                 <td className="py-3 px-4 text-right">
                   {shareholder.ownershipPct.toFixed(2)}%
                 </td>
-                <td className="py-3 px-4 text-right">
-                  {shareholder.ownershipChange.toFixed(2)}%
+                <td className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? 'text-green-500' : roundTo(shareholder.ownershipChange, 2) < 0 ? 'text-red-500' : 'text-black'}`}>
+                  {roundTo(shareholder.ownershipChange, 2).toFixed(2)}
                 </td>
               </tr>
             ))}
