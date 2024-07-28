@@ -27,7 +27,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
   allowDelete,
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     onUpdate({ ...data, [name]: value });
@@ -35,7 +35,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
 
   const onValueChange = (
     value: string | undefined,
-    name: string | undefined
+    name: string | undefined,
   ) => {
     if (name) {
       onUpdate({ ...data, [name]: parseFloat(value ?? "0") });
@@ -74,19 +74,17 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
       >
         Delete
       </button>
-      <div className="w-24 text-right">{ data.ownershipPct?.toFixed(2)}%</div>
-      <div className="w-24 text-right">{data.dilutedPctError ?? data.dilutedPct?.toFixed(2) + "%"}</div>
+      <div className="w-24 text-right">{data.ownershipPct?.toFixed(2)}%</div>
+      <div className="w-24 text-right">
+        {data.dilutedPctError ?? data.dilutedPct?.toFixed(2) + "%"}
+      </div>
     </div>
   );
 };
 
-const ExisingShareholderList: React.FC<RowsProps<ExistingShareholderProps> & {safePercent: number}> = ({
-  rows,
-  onDelete,
-  onUpdate,
-  onAddRow,
-}) => {
-
+const ExisingShareholderList: React.FC<
+  RowsProps<ExistingShareholderProps> & { safePercent: number }
+> = ({ rows, onDelete, onUpdate, onAddRow }) => {
   return (
     <div>
       <div className="flex items-center space-x-4 mb-4">

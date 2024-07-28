@@ -1,6 +1,6 @@
-import { getDiffieHellman } from 'crypto';
-import { IConversionStateData } from './ConversionState';
-import { earlyStageInvestors, founders, seriesAInvestors } from './data'
+import { getDiffieHellman } from "crypto";
+import { IConversionStateData } from "./ConversionState";
+import { earlyStageInvestors, founders, seriesAInvestors } from "./data";
 
 export const randomFounders = founders.sort(() => Math.random() - 0.5);
 export const randomSeed = earlyStageInvestors.sort(() => Math.random() - 0.5);
@@ -11,17 +11,20 @@ export const getRandomData = () => {
     randomFounders,
     randomSeed,
     randomSeries,
-  }
-}
+  };
+};
 
-let idx = 0
-
+let idx = 0;
 
 const getID = (): string => {
-  return (idx++).toString()
-}
+  return (idx++).toString();
+};
 
-export const initialState = ({randomFounders, randomSeed, randomSeries}: ReturnType<typeof getRandomData>): IConversionStateData => ({
+export const initialState = ({
+  randomFounders,
+  randomSeed,
+  randomSeries,
+}: ReturnType<typeof getRandomData>): IConversionStateData => ({
   rowData: [
     {
       id: getID(),

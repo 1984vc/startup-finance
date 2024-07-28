@@ -2,14 +2,14 @@ import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 
-export interface SeriesProps{
-    id: string;
-    type: "series";
-    name: string;
-    investment: number;
-    ownershipPct: number;
-    shares: number;
-    allowDelete?: boolean;
+export interface SeriesProps {
+  id: string;
+  type: "series";
+  name: string;
+  investment: number;
+  ownershipPct: number;
+  shares: number;
+  allowDelete?: boolean;
 }
 
 interface SeriesRowProps {
@@ -24,16 +24,15 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
   onDelete,
   onUpdate,
 }) => {
-
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     onUpdate({ ...data, [name]: value });
   };
   const onValueChange = (
     value: string | undefined,
-    name: string | undefined
+    name: string | undefined,
   ) => {
     if (name) {
       onUpdate({ ...data, [name]: parseFloat(value ?? "0") });

@@ -5,7 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "zustand";
 
-import { ConversionStore, createConversionStore, getPricedConversion, IConversionStateData, SeriesState } from "./state/ConversionState";
+import {
+  ConversionStore,
+  createConversionStore,
+  getPricedConversion,
+  IConversionStateData,
+  SeriesState,
+} from "./state/ConversionState";
 import CurrencyInput from "react-currency-input-field";
 import ExisingShareholderList from "../components/safe-conversion/Conversion/ExistingShareholders";
 import Results from "../components/safe-conversion/Conversion/Results";
@@ -21,43 +27,56 @@ import Share from "../components/safe-conversion/Conversion/Share";
 import { compressState, decompressState } from "@/utils/stateCompression";
 
 const Conversion: React.FC = () => {
-
-  const randomInvestors = useRef<ReturnType<typeof getRandomData>>()
+  const randomInvestors = useRef<ReturnType<typeof getRandomData>>();
   if (!randomInvestors.current) {
-    randomInvestors.current = getRandomData()
+    randomInvestors.current = getRandomData();
   }
 
-  const store = useRef<ConversionStore>()
+  const store = useRef<ConversionStore>();
   if (!store.current) {
     // If first run, set the initial state to a default or the hash value
-    const hash = window.location.hash?.slice(1)
-    let hashState: any | undefined = undefined
+    const hash = window.location.hash?.slice(1);
+    let hashState: any | undefined = undefined;
     if (hash) {
       try {
-        hashState = decompressState(hash)
+        hashState = decompressState(hash);
       } catch (e) {
-        console.error("Error parsing state from hash", e)
+        console.error("Error parsing state from hash", e);
       }
     }
     if (hashState) {
       store.current = createConversionStore(hashState as IConversionStateData);
     } else {
-      store.current = createConversionStore(initialState({...randomInvestors.current}));
+      store.current = createConversionStore(
+        initialState({ ...randomInvestors.current }),
+      );
     }
   }
 
-
-  if (store.current === undefined) { throw new Error("State is undefined") }
+  if (store.current === undefined) {
+    throw new Error("State is undefined");
+  }
 
   const state = useStore(store.current);
-  const {rowData, preMoney, unusedOptions ,targetOptionsPool, hasNewRound, onAddRow, onDeleteRow, onUpdateRow, onValueChange, togglePricedRound } = state;
+  const {
+    rowData,
+    preMoney,
+    unusedOptions,
+    targetOptionsPool,
+    hasNewRound,
+    onAddRow,
+    onDeleteRow,
+    onUpdateRow,
+    onValueChange,
+    togglePricedRound,
+  } = state;
 
   useEffect(() => {
-    if (store.current === undefined) { throw new Error("State is undefined") }
-    window.location.hash = compressState(state)
-  },
-    [state]
-  )
+    if (store.current === undefined) {
+      throw new Error("State is undefined");
+    }
+    window.location.hash = compressState(state);
+  }, [state]);
 
   const totalSeriesInvesment = (
     rowData.filter((row) => row.type === "series") as SeriesState[]
@@ -77,7 +96,7 @@ const Conversion: React.FC = () => {
       <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <ExisingShareholderList
-          rows={getExistingShareholderPropsSelector(state)} 
+          rows={getExistingShareholderPropsSelector(state)}
           onAddRow={() => onAddRow("common")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
@@ -92,7 +111,7 @@ const Conversion: React.FC = () => {
             type="text"
             name="unusedOptions"
             value={unusedOptions}
-            onValueChange={onValueChange('number')}
+            onValueChange={onValueChange("number")}
             placeholder="Unused Options"
             className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             prefix=""
@@ -104,7 +123,7 @@ const Conversion: React.FC = () => {
       <h1 className="text-1xl font-bold mb-4 mt-8">2) SAFE Investors</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <SafeNoteList
-          rows={getSAFERowPropsSelector(state)} 
+          rows={getSAFERowPropsSelector(state)}
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
@@ -121,10 +140,8 @@ const Conversion: React.FC = () => {
             : "bg-blue-500"
         }`}
       >
-        { hasNewRound ? "Remove Priced Round" : "Add Priced Round" }
+        {hasNewRound ? "Remove Priced Round" : "Add Priced Round"}
       </button>
-
-
 
       <div style={{ display: hasNewRound ? "block" : "none" }}>
         <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round</h1>
@@ -136,7 +153,7 @@ const Conversion: React.FC = () => {
                 type="text"
                 name="preMoney"
                 value={preMoney}
-                onValueChange={onValueChange('number')}
+                onValueChange={onValueChange("number")}
                 placeholder="Investment"
                 className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 prefix="$"
@@ -168,7 +185,7 @@ const Conversion: React.FC = () => {
               type="text"
               name="targetOptionsPool"
               value={targetOptionsPool}
-              onValueChange={onValueChange('percent')}
+              onValueChange={onValueChange("percent")}
               placeholder="Target Options Pool %"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               prefix=""
@@ -205,31 +222,32 @@ const Conversion: React.FC = () => {
           />
         </div>
       </div>
-      { pricedConversion !== undefined && <Results
-          {
-            ...getResultsPropsSelector({... state, preMoneyChange, investmentChange})
-          }
+      {pricedConversion !== undefined && (
+        <Results
+          {...getResultsPropsSelector({
+            ...state,
+            preMoneyChange,
+            investmentChange,
+          })}
           updateInvestmentChange={updateInvestmentChange}
           updatePreMoneyChange={updatePreMoneyChange}
         />
-      }
+      )}
     </div>
   );
 };
 
-
 const Page: React.FC = () => {
-
   // We use random values which gets the DOM out of sync SS vs Client in development
   // This is a hack to make sure the DOM is in sync and prevent hydration flashing of different random values
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setReady(true);
-  }, [ready])
+  }, [ready]);
 
   if (!ready) {
-    return
+    return;
   }
 
   return (
@@ -257,10 +275,35 @@ const Page: React.FC = () => {
       </main>
       <div className="flex justify-center p-8 my-4">
         <div className="text-sm text-gray-500">
-          Copyright 2024 <Link className="text-blue-600 hover:text-blue-800" href="https://1984.vc">1984 Ventures</Link> - {""}
-          <Link className="text-blue-600 hover:text-blue-800" href="https://github.com/1984vc/startup-finance/blob/main/PRIVACY.md">Privacy Policy</Link> - {""}
-          <Link className="text-blue-600 hover:text-blue-800" href="https://github.com/1984vc/startup-finance/blob/main/TOS.md">Terms of Service</Link> - {""}
-          <Link className="text-blue-600 hover:text-blue-800" href="https://github.com/1984vc/startup-finance">Github</Link></div>
+          Copyright 2024{" "}
+          <Link
+            className="text-blue-600 hover:text-blue-800"
+            href="https://1984.vc"
+          >
+            1984 Ventures
+          </Link>{" "}
+          - {""}
+          <Link
+            className="text-blue-600 hover:text-blue-800"
+            href="https://github.com/1984vc/startup-finance/blob/main/PRIVACY.md"
+          >
+            Privacy Policy
+          </Link>{" "}
+          - {""}
+          <Link
+            className="text-blue-600 hover:text-blue-800"
+            href="https://github.com/1984vc/startup-finance/blob/main/TOS.md"
+          >
+            Terms of Service
+          </Link>{" "}
+          - {""}
+          <Link
+            className="text-blue-600 hover:text-blue-800"
+            href="https://github.com/1984vc/startup-finance"
+          >
+            Github
+          </Link>
+        </div>
       </div>
     </div>
   );

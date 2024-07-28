@@ -1,6 +1,11 @@
 // You can access any of the global GAS objects in this file. You can also
 // import local files or external dependencies:
-import { DEFAULT_ROUNDING_STRATEGY, ISafeInvestment, RoundingStrategy, fitConversion } from "./safe_conversion";
+import {
+  DEFAULT_ROUNDING_STRATEGY,
+  ISafeInvestment,
+  RoundingStrategy,
+  fitConversion,
+} from "./safe_conversion";
 
 type SAFE_CONVERSION_RESULT = [
   ["Result", string],
@@ -8,113 +13,140 @@ type SAFE_CONVERSION_RESULT = [
   ["PreMoney", number],
   ["PostMoney", number],
   ["TotalShares", number],
-  ["PPS", number]
-]
+  ["PPS", number],
+];
 
-const defaultRounding = DEFAULT_ROUNDING_STRATEGY
+const defaultRounding = DEFAULT_ROUNDING_STRATEGY;
 
 function toNumber(i: string | number): number {
-  if (typeof i === 'number') return i
-  const num = parseFloat(i)
+  if (typeof i === "number") return i;
+  const num = parseFloat(i);
   if (isNaN(num)) {
-    throw new Error(`Error: expected a number but got ${i}`)
+    throw new Error(`Error: expected a number but got ${i}`);
   }
-  return num
+  return num;
 }
 
 function SAFE_CONVERSION(
   preMoney: number | string,
   commonShares: number | string,
-  safeRanges: [investment: number, cap: number, discount: number, conversionType: string][],
+  safeRanges: [
+    investment: number,
+    cap: number,
+    discount: number,
+    conversionType: string,
+  ][],
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
   roundDownShares: boolean = defaultRounding.roundDownShares,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
-
   try {
     const safes: ISafeInvestment[] = safeRanges.map((e) => {
       // Check each element of the array to see if it's a number, if not throw an Error
       if ([e[0], e[1], e[2]].some((el) => typeof el !== "number")) {
-        throw new Error(`SAFE_CONVERSION: Invalid input for SAFE, expected numbers, got ${e[0]}, ${e[1]}, ${e[2]}`)
+        throw new Error(
+          `SAFE_CONVERSION: Invalid input for SAFE, expected numbers, got ${e[0]}, ${e[1]}, ${e[2]}`,
+        );
       }
       return {
         investment: e[0],
         cap: e[1],
         discount: e[2],
-        conversionType: e[3].match(/^pre/i) ? "pre" : "post"
-      }
-    })
+        conversionType: e[3].match(/^pre/i) ? "pre" : "post",
+      };
+    });
 
     // We need to handle when the seriesInvestment is just one cell, or when it's a series of cells as investments
-    let seriesInvestments: number[] = []
+    let seriesInvestments: number[] = [];
     if (Array.isArray(seriesInvestmentRanges)) {
       seriesInvestments = seriesInvestmentRanges.map((e) => {
         try {
-          const num = toNumber(e[0])
-          return num
+          const num = toNumber(e[0]);
+          return num;
         } catch (err) {
-          throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`)
+          throw new Error(
+            `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`,
+          );
         }
         // Check each element of the array to see if it's a number, if not throw an Error
-      })
+      });
     } else {
       try {
-        seriesInvestments = [toNumber(seriesInvestmentRanges)]
+        seriesInvestments = [toNumber(seriesInvestmentRanges)];
       } catch (err) {
-        throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`)
+        throw new Error(
+          `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`,
+        );
       }
     }
 
     if (typeof preMoney !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for premoney, expected number, got ${preMoney}}`)
+      throw new Error(
+        `SAFE_CONVERSION: Invalid input for premoney, expected number, got ${preMoney}}`,
+      );
     }
     if (typeof commonShares !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for commonShares, expected number, got ${commonShares}}`)
+      throw new Error(
+        `SAFE_CONVERSION: Invalid input for commonShares, expected number, got ${commonShares}}`,
+      );
     }
     if (typeof unusedOptions !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for unusedOptions, expected number, got ${unusedOptions}}`)
+      throw new Error(
+        `SAFE_CONVERSION: Invalid input for unusedOptions, expected number, got ${unusedOptions}}`,
+      );
     }
     if (typeof targetOptionsPct !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for targetOptionsPct, expected number, got ${targetOptionsPct}}`)
+      throw new Error(
+        `SAFE_CONVERSION: Invalid input for targetOptionsPct, expected number, got ${targetOptionsPct}}`,
+      );
     }
 
     if (roundPPSPlaces !== undefined && typeof roundPPSPlaces !== "number") {
-      throw new Error(`SAFE_CONVERSION: Invalid input for roundPPSPlaces, expected a number, got ${seriesInvestmentRanges}`)
+      throw new Error(
+        `SAFE_CONVERSION: Invalid input for roundPPSPlaces, expected a number, got ${seriesInvestmentRanges}`,
+      );
     }
 
     const roundingStrategy: RoundingStrategy = {
       roundDownShares,
       roundPPSPlaces,
-    }
+    };
 
-    const fit = fitConversion(preMoney, commonShares, safes, unusedOptions, targetOptionsPct, seriesInvestments, roundingStrategy)
+    const fit = fitConversion(
+      preMoney,
+      commonShares,
+      safes,
+      unusedOptions,
+      targetOptionsPct,
+      seriesInvestments,
+      roundingStrategy,
+    );
     return [
       ["Result", "Success"],
       ["Calculated At", new Date().toISOString()],
       ["PreMoney", Number(fit.preMoneyShares)],
       ["PostMoney", Number(fit.postMoneyShares)],
       ["TotalShares", Number(fit.totalShares)],
-      ["PPS", Number(fit.pps)]
-    ]
-
+      ["PPS", Number(fit.pps)],
+    ];
   } catch (e: Error | unknown) {
-    const message = (e as Error).message || "Unknown Error"
+    const message = (e as Error).message || "Unknown Error";
     return [
       ["Result", "Error: " + message],
       ["Calculated At", new Date().toISOString()],
       ["PreMoney", 0],
       ["PostMoney", 0],
       ["TotalShares", 0],
-      ["PPS", 0]
-    ]
+      ["PPS", 0],
+    ];
   }
 }
 
 function VERSION() {
   // Replaced via WebPack DefinePlugin with the package.json version
-  return process.env.VERSION
+  return process.env.VERSION;
 }
 
 function onOpen(
@@ -154,7 +186,7 @@ declare const global: {
 
 /**
  * Finds the best fit for the conversion of SAFEs to priced rounds
- * 
+ *
  * @param { number }  preMoney Premoney valuation
  * @param { number }  commonShares Current total common shares
  * @param { Array }   safeRanges  Range of cells containing the SAFE data [[investment, cap, discount, type]...]
@@ -165,19 +197,33 @@ declare const global: {
  * @param { number }   roundPPSPlaces  Optional: Round the PPS to this many decimal places (default 5) Use -1 to not round
  * @return An array of key value pairs
  * @customfunction
-*/
+ */
 global.SAFE_CONVERSION = (
   preMoney: number | string,
   commonShares: number | string,
-  safeRanges: [investment: number, cap: number, discount: number, conversionType: string][],
+  safeRanges: [
+    investment: number,
+    cap: number,
+    discount: number,
+    conversionType: string,
+  ][],
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
   roundDownShares: boolean = defaultRounding.roundDownShares,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ) => {
-  return SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targetOptionsPct, seriesInvestmentRanges, roundDownShares, roundPPSPlaces);
-}
+  return SAFE_CONVERSION(
+    preMoney,
+    commonShares,
+    safeRanges,
+    unusedOptions,
+    targetOptionsPct,
+    seriesInvestmentRanges,
+    roundDownShares,
+    roundPPSPlaces,
+  );
+};
 
 /**
  * Returns the version of the script

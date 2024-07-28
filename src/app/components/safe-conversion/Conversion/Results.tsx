@@ -2,30 +2,29 @@ import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import { BestFit } from "@/library/safe_conversion";
 
 export interface ShareholderRow {
-    name: string;
-    shares?: number;
-    investment?: number;
-    ownershipPct: number;
-    ownershipChange: number;
+  name: string;
+  shares?: number;
+  investment?: number;
+  ownershipPct: number;
+  ownershipChange: number;
 }
 
 export interface ResultPropsData {
-    preMoney: number;
-    postMoney: number;
-    shareholders: ShareholderRow[];
-    totalSeriesInvestment: number;
-    totalShares: number;
-    totalPct: number;
-    totalInvestedToDate: number;
-    pricedConversion: BestFit;
-    preMoneyChange: number;
-    investmentChange: number;
+  preMoney: number;
+  postMoney: number;
+  shareholders: ShareholderRow[];
+  totalSeriesInvestment: number;
+  totalShares: number;
+  totalPct: number;
+  totalInvestedToDate: number;
+  pricedConversion: BestFit;
+  preMoneyChange: number;
+  investmentChange: number;
 }
 
-
 export interface ResultProps extends ResultPropsData {
-    updateInvestmentChange: (change: number) => void;
-    updatePreMoneyChange: (change: number) => void;
+  updateInvestmentChange: (change: number) => void;
+  updatePreMoneyChange: (change: number) => void;
 }
 
 const Results: React.FC<ResultProps> = (props) => {
@@ -46,7 +45,7 @@ const Results: React.FC<ResultProps> = (props) => {
 
   const roundTo = (num: number, decimal: number): number => {
     return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
-  }
+  };
 
   const increment = (name: "preMoney" | "investment") => {
     console.log(name);
@@ -57,21 +56,21 @@ const Results: React.FC<ResultProps> = (props) => {
       const change = investmentChange + 500_000;
       updateInvestmentChange(change);
     }
-  }
+  };
 
   const decrement = (name: "preMoney" | "investment") => {
-      if (name === 'preMoney') {
-        const change = preMoneyChange - 500_000;
-        if ((preMoney - change) > 0) {
-          updatePreMoneyChange(change);
-        }
-      } else if (name === 'investment') {
-        const change = investmentChange - 500_000;
-        if (totalSeriesInvestment - change > 0) {
-          updateInvestmentChange(change);
-        }
+    if (name === "preMoney") {
+      const change = preMoneyChange - 500_000;
+      if (preMoney - change > 0) {
+        updatePreMoneyChange(change);
       }
-  }
+    } else if (name === "investment") {
+      const change = investmentChange - 500_000;
+      if (totalSeriesInvestment - change > 0) {
+        updateInvestmentChange(change);
+      }
+    }
+  };
 
   return (
     <div className="pt-10">
@@ -83,14 +82,26 @@ const Results: React.FC<ResultProps> = (props) => {
           </dt>
           <dd className="order-first font-semibold tracking-tight text-gray-900">
             <span className="text-2xl p-0 m-0">
-              <button className="px-2 mr-2 bg-blue-100 rounded-md" name="increment" onClick={() => decrement('preMoney')}>-</button>
+              <button
+                className="px-2 mr-2 bg-blue-100 rounded-md"
+                name="increment"
+                onClick={() => decrement("preMoney")}
+              >
+                -
+              </button>
               ${formatNumberWithCommas(postMoney)}
-              <button className="px-2 ml-2 bg-blue-100 rounded-md" name="increment" onClick={() => increment('preMoney')}>+</button>
+              <button
+                className="px-2 ml-2 bg-blue-100 rounded-md"
+                name="increment"
+                onClick={() => increment("preMoney")}
+              >
+                +
+              </button>
             </span>
             <span className="text-sm text-gray-600">
               {preMoneyChange !== 0
                 ? ` (${preMoneyChange > 0 ? "+" : ""}$${formatNumberWithCommas(
-                    preMoneyChange
+                    preMoneyChange,
                   )})`
                 : ""}
             </span>
@@ -112,9 +123,21 @@ const Results: React.FC<ResultProps> = (props) => {
           </dt>
           <dd className="order-first font-semibold tracking-tight text-gray-900">
             <span className="text-2xl p-0 m-0">
-              <button className="px-2 mr-2 bg-blue-100 rounded-md" name="increment" onClick={() => decrement('investment')}>-</button>
+              <button
+                className="px-2 mr-2 bg-blue-100 rounded-md"
+                name="increment"
+                onClick={() => decrement("investment")}
+              >
+                -
+              </button>
               ${formatNumberWithCommas(totalSeriesInvestment)}
-              <button className="px-2 ml-2 bg-blue-100 rounded-md" name="increment" onClick={() => increment('investment')}>+</button>
+              <button
+                className="px-2 ml-2 bg-blue-100 rounded-md"
+                name="increment"
+                onClick={() => increment("investment")}
+              >
+                +
+              </button>
             </span>
             <span className="text-sm text-gray-600">
               {investmentChange !== 0
@@ -166,7 +189,9 @@ const Results: React.FC<ResultProps> = (props) => {
                   {shareholder.name}
                 </td>
                 <td className="py-3 px-4 text-left">
-                  {shareholder.investment ? "$" + formatNumberWithCommas(shareholder.investment) : ""}
+                  {shareholder.investment
+                    ? "$" + formatNumberWithCommas(shareholder.investment)
+                    : ""}
                 </td>
                 <td className="py-3 px-4 text-left">
                   {shareholder.shares
@@ -176,7 +201,9 @@ const Results: React.FC<ResultProps> = (props) => {
                 <td className="py-3 px-4 text-right">
                   {shareholder.ownershipPct.toFixed(2)}%
                 </td>
-                <td className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? 'text-green-500' : roundTo(shareholder.ownershipChange, 2) < 0 ? 'text-red-500' : 'text-black'}`}>
+                <td
+                  className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange, 2) < 0 ? "text-red-500" : "text-black"}`}
+                >
                   {roundTo(shareholder.ownershipChange, 2).toFixed(2)}
                 </td>
               </tr>
@@ -190,10 +217,9 @@ const Results: React.FC<ResultProps> = (props) => {
                 {formatNumberWithCommas(pricedConversion.totalOptions)}
               </td>
               <td className="py-3 px-4 text-right">
-                {(
-                  100 *
-                  (pricedConversion.totalOptions / totalShares)
-                ).toFixed(2)}
+                {(100 * (pricedConversion.totalOptions / totalShares)).toFixed(
+                  2,
+                )}
                 %
               </td>
               <td className="py-3 px-4 text-right"></td>
@@ -206,9 +232,7 @@ const Results: React.FC<ResultProps> = (props) => {
               <td className="py-3 px-4 text-left">
                 {formatNumberWithCommas(totalShares)}
               </td>
-              <td className="py-3 px-4 text-right">
-                {totalPct.toFixed(2)}%
-              </td>
+              <td className="py-3 px-4 text-right">{totalPct.toFixed(2)}%</td>
               <td className="py-3 px-4 text-right"></td>
             </tr>
           </tbody>

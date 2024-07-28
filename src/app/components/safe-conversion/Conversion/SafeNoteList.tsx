@@ -29,7 +29,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   onUpdate,
 }) => {
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     onUpdate({ ...data, [name]: value });
@@ -37,7 +37,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
 
   const onValueChange = (
     value: string | undefined,
-    name: string | undefined
+    name: string | undefined,
   ) => {
     if (name) {
       onUpdate({ ...data, [name]: parseFloat(value ?? "0") });
@@ -112,7 +112,9 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       >
         Delete
       </button>
-      <div className="w-36 text-right">{data.ownershipError ??  data.ownershipPct.toFixed(2) + "%"}</div>
+      <div className="w-36 text-right">
+        {data.ownershipError ?? data.ownershipPct.toFixed(2) + "%"}
+      </div>
     </div>
   );
 };
@@ -123,13 +125,12 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   onUpdate,
   onAddRow,
 }) => {
-
   return (
     <div>
       <div className="flex items-center space-x-4 mb-4">
         <div className="w-48">Name</div>
         <div className="w-36">Investment</div>
-        <div className="w-36" >Cap</div>
+        <div className="w-36">Cap</div>
         <div className="w-20">Discount</div>
         <div className="w-36">Type</div>
         <div className="w-24"> </div>

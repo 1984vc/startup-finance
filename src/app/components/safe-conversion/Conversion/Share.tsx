@@ -1,18 +1,14 @@
-import { copyTextToClipboard } from '@/utils/clipboard';
-import { compressState, decompressState } from '@/utils/stateCompression';
-import { useState } from 'react';
+import { copyTextToClipboard } from "@/utils/clipboard";
+import { compressState, decompressState } from "@/utils/stateCompression";
+import { useState } from "react";
 
-const Share: React.FC<{url:string, state: any}> = ({
-    url,
-    state
-}) => {
-
-    let hash: string | undefined = undefined;
-    const [showShare, setShowShare] = useState(false);
-    if (showShare) {
-        hash = compressState(state);
-    }
-    const shareUrl = `${url}#${hash}`;
+const Share: React.FC<{ url: string; state: any }> = ({ url, state }) => {
+  let hash: string | undefined = undefined;
+  const [showShare, setShowShare] = useState(false);
+  if (showShare) {
+    hash = compressState(state);
+  }
+  const shareUrl = `${url}#${hash}`;
 
   return (
     <div className="flex items-center space-x-4 mb-4">
