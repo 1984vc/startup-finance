@@ -1,4 +1,4 @@
-import { formatNumberWithCommas } from "@/app/utils/numberFormatting";
+import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import { BestFit } from "@/library/safe_conversion";
 
 export interface ShareholderRow {

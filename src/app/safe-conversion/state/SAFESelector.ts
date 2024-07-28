@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { getPricedConversion, IConversionStateData, IRowState } from "./ConversionState";
-import { calcSAFEs } from "@/app/utils/rowDataHelper";
+import { calcSAFEs } from "@/utils/rowDataHelper";
 import { BestFit } from "@/library/safe_conversion";
 import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteList";
 

@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { BestFit, fitConversion } from "@/library/safe_conversion";
-import { stringToNumber } from "@/app/utils/numberFormatting";
+import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/app/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteList";
 import { ExistingShareholderProps } from "@/app/components/safe-conversion/Conversion/ExistingShareholders";
@@ -39,13 +39,14 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
   ...initialState,
 
   onAddRow: (type: "safe" | "series" | "common") => {
+    const idx = get().rowData.length.toString()
     if (type === "safe") {
       set((state) => ({
         ...state,
         rowData: [
           ...state.rowData,
           {
-            id: crypto.randomUUID(),
+            id: idx,
             type: "safe",
             name: `${
               randomSeed[
@@ -66,7 +67,7 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
         rowData: [
           ...state.rowData,
           {
-            id: crypto.randomUUID(),
+            id: idx,
             type: "common",
             name: `${
               randomFounders[
@@ -84,7 +85,7 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
         rowData: [
           ...state.rowData,
           {
-            id: crypto.randomUUID(),
+            id: idx,
             type: "series",
             name: `${
               randomSeries[
@@ -100,7 +101,6 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
   },
 
   onDeleteRow: (id: string): void => {
-    console.log("delete ", id);
     set((state) => ({
       ...state,
       rowData: state.rowData.filter((row) => row.id !== id),
@@ -108,7 +108,6 @@ export const createConversionStore = (initialState: IConversionStateData) => cre
   },
 
   onUpdateRow: (data: IRowState) => {
-    console.log("update", data)
     set((state) => ({
       ...state,
       rowData: state.rowData.map((row) => (row.id === data.id ? data : row)),

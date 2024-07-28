@@ -5,18 +5,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "zustand";
 
-import { ConversionStore, createConversionStore, getPricedConversion, SeriesState } from "./state/ConversionState";
+import { ConversionStore, createConversionStore, getPricedConversion, IConversionStateData, SeriesState } from "./state/ConversionState";
 import CurrencyInput from "react-currency-input-field";
 import ExisingShareholderList from "../components/safe-conversion/Conversion/ExistingShareholders";
 import Results from "../components/safe-conversion/Conversion/Results";
 import SeriesInvestorList from "../components/safe-conversion/Conversion/SeriesInvestorList";
-import { stringToNumber } from "../utils/numberFormatting";
+import { stringToNumber } from "../../utils/numberFormatting";
 import { getExistingShareholderPropsSelector } from "./state/ExistingShareholderSelector";
 import { getRandomData, initialState } from "./state/initialState";
 import { getSAFERowPropsSelector } from "./state/SAFESelector";
 import { getSeriesPropsSelector } from "./state/SeriesSelector";
 import SafeNoteList from "../components/safe-conversion/Conversion/SafeNoteList";
 import { getResultsPropsSelector } from "./state/ResultSelector";
+import Share from "../components/safe-conversion/Conversion/Share";
+import { compressState, decompressState } from "@/utils/stateCompression";
 
 const Conversion: React.FC = () => {
 
@@ -25,15 +27,37 @@ const Conversion: React.FC = () => {
     randomInvestors.current = getRandomData()
   }
 
-  const ref = useRef<ConversionStore>()
-  if (!ref.current) {
-    ref.current = createConversionStore(initialState({...randomInvestors.current}));
+  const store = useRef<ConversionStore>()
+  if (!store.current) {
+    // If first run, set the initial state to a default or the hash value
+    const hash = window.location.hash?.slice(1)
+    let hashState: any | undefined = undefined
+    if (hash) {
+      try {
+        hashState = decompressState(hash)
+      } catch (e) {
+        console.error("Error parsing state from hash", e)
+      }
+    }
+    if (hashState) {
+      store.current = createConversionStore(hashState as IConversionStateData);
+    } else {
+      store.current = createConversionStore(initialState({...randomInvestors.current}));
+    }
   }
 
-  if (ref.current === undefined) { throw new Error("State is undefined") }
 
-  const state = useStore(ref.current);
+  if (store.current === undefined) { throw new Error("State is undefined") }
+
+  const state = useStore(store.current);
   const {rowData, preMoney, unusedOptions ,targetOptionsPool, hasNewRound, onAddRow, onDeleteRow, onUpdateRow, onValueChange, togglePricedRound } = state;
+
+  useEffect(() => {
+    if (store.current === undefined) { throw new Error("State is undefined") }
+    window.location.hash = compressState(state)
+  },
+    [state]
+  )
 
   const totalSeriesInvesment = (
     rowData.filter((row) => row.type === "series") as SeriesState[]
@@ -49,6 +73,7 @@ const Conversion: React.FC = () => {
 
   return (
     <div>
+      {/* <Share state={state} url={document.location.href}></Share> */}
       <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
         <ExisingShareholderList
