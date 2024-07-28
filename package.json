@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prettier": "prettier --write src",
     "build-gas": "rm -rf build && tsc -p tsconfig.gas.json && webpack",
     "deploy-gas": "npm run push && clasp deploy",
     "format": "prettier . --write",
