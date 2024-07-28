@@ -4,11 +4,13 @@ import { compressToBase64, decompressFromBase64 } from "lz-string";
 const VERSION = 0;
 
 const encodeURLSafeBase64 = (str: string): string => {
-  return str.replace(/\//g, "_").replace(/\+/g, "-");
+  // Replace characters that are not URL safe
+  // Use `.` for `+` because it doesn't wrap in a text editor
+  return str.replace(/\//g, "_").replace(/\+/g, ".");
 };
 
 const decodeURLSafeBase64 = (str: string): string => {
-  return str.replace(/_/g, "/").replace(/-/g, "+");
+  return str.replace(/_/g, "/").replace(/-/g, "+").replace(/\./g, "+");
 };
 
 const encodeVersionMagicCode = (version: number): string => {
