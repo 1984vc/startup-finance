@@ -11,21 +11,21 @@ import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteL
 const determineRowError = (
   row: IRowState,
   pricedConversion: BestFit | undefined,
-): string | undefined => {
+): [error: string | undefined, reason: string | undefined] => {
   if (row.type === "safe") {
     const safe = row as SAFEProps;
     if (safe.cap === 0) {
       if (pricedConversion) {
-        return undefined;
+        return [ undefined, undefined ];
       }
       // Unless with have priced round, we can't calculate an uncapped SAFE
-      return "TBD";
+      return ["TBD", "Can't estimate ownership of an uncapped SAFE until a priced round is entered"]; 
     } else if (safe.cap < safe.investment) {
       // We shouldn't allow for this, as it makes no sense
-      return "Error";
+      return ["Error", "Cap must be greater than investment"];
     }
   }
-  return undefined;
+  return [undefined, undefined];
 };
 
 export const getSAFERowPropsSelector = createSelector(
@@ -50,10 +50,11 @@ export const getSAFERowPropsSelector = createSelector(
         disabledFields: row.conversionType === "mfn" ? ["cap"] : [],
         conversionType: row.conversionType,
       };
-      const ownershipError = determineRowError(rowResult, pricedConversion);
+      const [ownershipError, ownershipErrorReason] = determineRowError(rowResult, pricedConversion);
       return {
         ...rowResult,
         ownershipError,
+        ownershipErrorReason,
       };
     });
   },

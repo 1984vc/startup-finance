@@ -1,6 +1,8 @@
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
+import ToolipComponent from "../../tooltip/Tooltip";
+import { QuestionMarkIcon } from "../../tooltip/Icons";
 
 export interface ExistingShareholderProps {
   id: string;
@@ -92,7 +94,7 @@ const ExisingShareholderList: React.FC<
         <div className="w-36">Shares</div>
         <div className="w-24"></div>
         <div className="w-24 text-right">Ownership %</div>
-        <div className="w-24 text-right">Diluted %</div>
+        <div className="w-36 text-right">Diluted % </div>
       </div>
       {rows.map((note, idx) => (
         <ExistingShareholderRow

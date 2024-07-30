@@ -20,9 +20,11 @@
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "next": "14.2.4",
+    "posthog-js": "^1.150.1",
     "react": "^18",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18",
+    "react-tooltip": "^5.27.1",
     "reselect": "^5.1.1",
     "yarn": "^1.22.22",
     "zustand": "^4.5.4"
@@ -30,6 +32,8 @@
   "devDependencies": {
     "@google/clasp": "^2.4.2",
     "@jest/globals": "^29.7.0",
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
     "@types/google-apps-script": "^1.0.83",
     "@types/lodash": "^4.17.7",
     "@types/node": "^20",
@@ -41,6 +45,7 @@
     "eslint-plugin-googleappsscript": "^1.0.5",
     "gas-webpack-plugin": "^2.6.0",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",

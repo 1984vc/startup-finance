@@ -1,6 +1,7 @@
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
+import ToolipComponent from "../../tooltip/Tooltip";
 
 export interface SAFEProps {
   id: string;
@@ -12,6 +13,7 @@ export interface SAFEProps {
   conversionType: "post" | "pre" | "mfn";
   ownershipPct: number;
   ownershipError?: string;
+  ownershipErrorReason?: string;
   allowDelete?: boolean;
   shares?: number;
   disabledFields?: string[];
@@ -113,7 +115,10 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         Delete
       </button>
       <div className="w-36 text-right">
-        {data.ownershipError ?? data.ownershipPct.toFixed(2) + "%"}
+        { data.ownershipError
+          ? <ToolipComponent content={data.ownershipErrorReason ?? ""}>{data.ownershipError}<sup>*</sup></ToolipComponent>
+          : data.ownershipPct.toFixed(2) + "%"
+        }
       </div>
     </div>
   );

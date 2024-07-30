@@ -94,7 +94,7 @@ const Conversion: React.FC = () => {
     <div>
       {/* <Share state={state} url={document.location.href}></Share> */}
       <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+      <div className="">
         <ExisingShareholderList
           rows={getExistingShareholderPropsSelector(state)}
           onAddRow={() => onAddRow("common")}
@@ -121,7 +121,7 @@ const Conversion: React.FC = () => {
         </div>
       </div>
       <h1 className="text-1xl font-bold mb-4 mt-8">2) SAFE Investors</h1>
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+      <div className="">
         <SafeNoteList
           rows={getSAFERowPropsSelector(state)}
           onAddRow={() => onAddRow("safe")}
@@ -264,7 +264,7 @@ const Page: React.FC = () => {
           />
         </Link>
       </div>
-      <main className="flex min-h-screen flex-col items-center justify-between px-24 py-8">
+      <main className="flex min-h-screen flex-col items-center justify-between px-24 py-8 min-w-[1024px]">
         <h1 className="text-xl">1984 SAFE Conversion Worksheet</h1>
         <h2 className="text-orange-700">
           Warning: Beta version, expect changes
@@ -288,13 +288,6 @@ const Page: React.FC = () => {
             href="https://github.com/1984vc/startup-finance/blob/main/PRIVACY.md"
           >
             Privacy Policy
-          </Link>{" "}
-          - {""}
-          <Link
-            className="text-blue-600 hover:text-blue-800"
-            href="https://github.com/1984vc/startup-finance/blob/main/TOS.md"
-          >
-            Terms of Service
           </Link>{" "}
           - {""}
           <Link
