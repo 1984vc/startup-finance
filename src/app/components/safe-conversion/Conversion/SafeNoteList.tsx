@@ -115,10 +115,14 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         Delete
       </button>
       <div className="w-36 text-right">
-        { data.ownershipError
-          ? <ToolipComponent content={data.ownershipErrorReason ?? ""}>{data.ownershipError}<sup>*</sup></ToolipComponent>
-          : data.ownershipPct.toFixed(2) + "%"
-        }
+        {data.ownershipError ? (
+          <ToolipComponent content={data.ownershipErrorReason ?? ""}>
+            {data.ownershipError}
+            <sup>*</sup>
+          </ToolipComponent>
+        ) : (
+          data.ownershipPct.toFixed(2) + "%"
+        )}
       </div>
     </div>
   );

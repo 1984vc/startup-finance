@@ -6,9 +6,7 @@ import { useStore } from "zustand";
 
 describe("Existing Shareholder Selector", () => {
   test("that it passes a basic sanity check", () => {
-    const store =  createConversionStore(
-      initialState({ ...getRandomData()}),
-    );
-    console.log(getExistingShareholderPropsSelector(store.getState()))
+    const store = createConversionStore(initialState({ ...getRandomData() }));
+    console.log(getExistingShareholderPropsSelector(store.getState()));
   });
-})
+});

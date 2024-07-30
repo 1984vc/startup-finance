@@ -4,13 +4,11 @@ import { getRandomData, initialState } from "../initialState";
 
 describe("Basic ConversionState", () => {
   test("that it passes a sanity check", () => {
-    const store =  createConversionStore(
-      initialState({ ...getRandomData()}),
-    );
+    const store = createConversionStore(initialState({ ...getRandomData() }));
     const { onAddRow, togglePricedRound } = store.getState();
     onAddRow("safe");
     expect(store.getState().rowData.length).toEqual(11);
-    togglePricedRound(true)
+    togglePricedRound(true);
     expect(store.getState().hasNewRound).toEqual(true);
   });
-})
+});

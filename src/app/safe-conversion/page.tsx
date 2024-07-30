@@ -31,7 +31,6 @@ const Conversion: React.FC = () => {
   if (!randomInvestors.current) {
     randomInvestors.current = getRandomData();
   }
-  
 
   const store = useRef<ConversionStore>();
   if (!store.current) {
@@ -73,8 +72,7 @@ const Conversion: React.FC = () => {
   } = state;
 
   const [saveURL, setSaveURL] = useState<string>(
-    window.location.href +
-    window.location.hash
+    window.location.href + window.location.hash,
   );
 
   useEffect(() => {
@@ -83,7 +81,7 @@ const Conversion: React.FC = () => {
     }
     const hash = compressState(state);
     const url = window.location.href + "#" + hash;
-    window.location.hash = hash
+    window.location.hash = hash;
     console.log("Setting URL", url);
     setSaveURL(url);
   }, [state]);
