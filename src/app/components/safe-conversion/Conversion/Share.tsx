@@ -63,7 +63,7 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
   return (
     <div className="w-full m-auto my-4 text-center">
       <button
-        className={`w-36 px-4 py-2 rounded-md focus:outline-none focus:ring-2 text-white  ${isUpdated ? "bg-green-500 hover:bg-green-600 focus:ring-green-500" : "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500"}`}
+        className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 text-white  ${isUpdated ? "bg-green-500 hover:bg-green-600 focus:ring-green-500" : "bg-blue-500 hover:bg-blue-600 focus:ring-blue-500"}`}
         onClick={() => setShowModal(true)}
       >
         { buttonText()}
@@ -77,9 +77,10 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
           <div className="bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Share this worksheet
+                Save this worksheet
               </h3>
-              <p>The link to this worksheet contains all the cap table data in the URL. If you update make sure to share the updated link!</p>
+              <p>The link to this worksheet contains all the cap table data in the URL.
+                If you update it make sure to share the updated link!</p>
               <div className="mt-2">
                 <input 
                 className="flex-1 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
