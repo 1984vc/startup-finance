@@ -7,7 +7,7 @@ This repository builds a set of startup finance applications and libraries:
 
 # SAFE Conversion worksheet (React app)
 
-[SAFE Conversion Worksheet App](https://1984vc.github.io/startup-finance/safe-conversion)
+[SAFE Conversion Worksheet App](https://1984.vc/startup-finance/safe-conversion)
 
 This app is 100% client-side, and allows you to quickly model what your Cap table would look like in a variety of scenarios.
 
