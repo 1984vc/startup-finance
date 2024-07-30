@@ -31,6 +31,7 @@ const Conversion: React.FC = () => {
   if (!randomInvestors.current) {
     randomInvestors.current = getRandomData();
   }
+  
 
   const store = useRef<ConversionStore>();
   if (!store.current) {
@@ -71,11 +72,20 @@ const Conversion: React.FC = () => {
     togglePricedRound,
   } = state;
 
+  const [saveURL, setSaveURL] = useState<string>(
+    window.location.href +
+    window.location.hash
+  );
+
   useEffect(() => {
     if (store.current === undefined) {
       throw new Error("State is undefined");
     }
-    window.location.hash = compressState(state);
+    const hash = compressState(state);
+    const url = window.location.href + "#" + hash;
+    window.location.hash = hash
+    console.log("Setting URL", url);
+    setSaveURL(url);
   }, [state]);
 
   const totalSeriesInvesment = (
@@ -92,7 +102,7 @@ const Conversion: React.FC = () => {
 
   return (
     <div>
-      {/* <Share state={state} url={document.location.href}></Share> */}
+      <Share url={saveURL}></Share>
       <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
       <div className="">
         <ExisingShareholderList
