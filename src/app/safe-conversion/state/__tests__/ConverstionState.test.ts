@@ -1,10 +1,10 @@
 import { describe, expect, test } from "@jest/globals";
-import { createConversionStore } from "../ConversionState";
-import { getRandomData, initialState } from "../initialState";
+import { createConversionStore, IConversionStateData } from "../ConversionState";
+import fixtureData from "./fixtures/state_fixtures.json"
 
 describe("Basic ConversionState", () => {
   test("that it passes a sanity check", () => {
-    const store = createConversionStore(initialState({ ...getRandomData() }));
+    const store = createConversionStore(fixtureData as IConversionStateData);
     const { onAddRow, togglePricedRound } = store.getState();
     onAddRow("safe");
     expect(store.getState().rowData.length).toEqual(11);
