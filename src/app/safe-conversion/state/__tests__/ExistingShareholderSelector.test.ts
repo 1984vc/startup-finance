@@ -1,6 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
 import { createConversionStore, IConversionStateData } from "../ConversionState";
-import { getRandomData, initialState } from "../initialState";
 import { getExistingShareholderPropsSelector } from "../ExistingShareholderSelector";
 import fixtureData from "./fixtures/state_fixtures.json"
 
