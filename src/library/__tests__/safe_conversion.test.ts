@@ -49,12 +49,6 @@ describe("converting safe investments with existing common stock", () => {
       { roundDownShares: false, roundPPSPlaces: -1 },
     );
 
-    console.log(
-      "Shares:",
-      fit.totalShares,
-      "Valuation:",
-      fit.totalShares * fit.pps,
-    );
     expect(Math.round(fit.totalShares * fit.pps)).toEqual(expectedValuation);
     expect(Math.round(fit.totalShares)).toEqual(exptectedTotalShares);
     expect(Math.round(fit.totalOptions)).toEqual(exptectedTotalOptions);
@@ -140,12 +134,6 @@ describe("converting safe investments with existing common stock", () => {
       { roundDownShares: true, roundPPSPlaces: 5 },
     );
 
-    console.log(
-      "Shares:",
-      fit.totalShares,
-      "Valuation:",
-      fit.totalShares * fit.pps,
-    );
     expect(Math.round(fit.totalShares * fit.pps)).toEqual(expectedValuation);
     expect(Math.round(fit.totalShares)).toEqual(exptectedTotalShares);
     expect(Math.round(fit.totalOptions)).toEqual(exptectedTotalOptions);
@@ -195,12 +183,6 @@ describe("converting safe investments with existing common stock", () => {
       { roundDownShares: false, roundPPSPlaces: -1 },
     );
 
-    console.log(
-      "Shares:",
-      fit.totalShares,
-      "Valuation:",
-      fit.totalShares * fit.pps,
-    );
     expect(Math.round(fit.totalOptions)).toEqual(609_272);
   });
 });
