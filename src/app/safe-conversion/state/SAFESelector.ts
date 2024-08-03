@@ -49,7 +49,7 @@ export const getSAFERowPropsSelector = createSelector(
         discount: row.discount,
         ownershipPct: safeCalcs[idx][0],
         shares: safeCalcs[idx][2],
-        allowDelete: rows.length > 1,
+        allowDelete: true,
         disabledFields: row.conversionType === "mfn" ? ["cap"] : [],
         conversionType: row.conversionType,
       };

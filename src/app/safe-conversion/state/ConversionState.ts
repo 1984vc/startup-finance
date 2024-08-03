@@ -49,12 +49,53 @@ export interface IConversionState extends IConversionStateData {
   ) => void;
 }
 
+function getNextIdx(rowData: IRowState[]) {
+  // get the highest id from rowData[] and return an increment
+  return (rowData.map((row) => parseInt(row.id)).reduce((a, b) => Math.max(a, b), 0) + 1).toString();
+}
+
+function getRandomSeed(rowData: IRowState[]) {
+  const existingNames = rowData.filter((r) => r.type === "safe").map((r) => r.name);
+  const availableNames = randomSeed.filter((r) => !existingNames.includes(r));
+  if (availableNames.length > 0) {
+    return availableNames[
+      Math.floor(Math.random() * availableNames.length)
+    ];
+  } else {
+    return "Another Seed Investor"
+  }
+}
+
+function getRandomInvestor(rowData: IRowState[]) {
+  const existingNames = rowData.filter((r) => r.type === "series").map((r) => r.name);
+  const availableNames = randomSeries.filter((r) => !existingNames.includes(r));
+  if (availableNames.length > 0) {
+    return availableNames[
+      Math.floor(Math.random() * availableNames.length)
+    ];
+  } else {
+    return "Another Series Investor"
+  }
+}
+
+function getRandomFounder(rowData: IRowState[]) {
+  const existingNames = rowData.filter((r) => r.type === "common").map((r) => r.name);
+  const availableNames = randomFounders.filter((r) => !existingNames.includes(r));
+  if (availableNames.length > 0) {
+    return availableNames[
+      Math.floor(Math.random() * availableNames.length)
+    ];
+  } else {
+    return "Another Founder"
+  }
+}
+
 export const createConversionStore = (initialState: IConversionStateData) =>
   create<IConversionState>((set, get) => ({
     ...initialState,
 
     onAddRow: (type: "safe" | "series" | "common") => {
-      const idx = get().rowData.length.toString();
+      const idx = getNextIdx(get().rowData)
       if (type === "safe") {
         set((state) => ({
           ...state,
@@ -63,12 +104,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             {
               id: idx,
               type: "safe",
-              name: `${
-                randomSeed[
-                  state.rowData.filter((r) => r.type === "safe").length %
-                    randomSeed.length
-                ]
-              }`,
+              name: getRandomSeed(state.rowData),
               investment: 0,
               cap: 0,
               discount: 0,
@@ -84,12 +120,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             {
               id: idx,
               type: "common",
-              name: `${
-                randomFounders[
-                  state.rowData.filter((r) => r.type === "common").length %
-                    randomFounders.length
-                ]
-              }`,
+              name: getRandomFounder(state.rowData),
               shares: 0,
             },
           ],
@@ -102,12 +133,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             {
               id: idx,
               type: "series",
-              name: `${
-                randomSeries[
-                  state.rowData.filter((r) => r.type === "series").length %
-                    randomSeries.length
-                ]
-              }`,
+              name: getRandomInvestor(state.rowData),
               investment: 0,
             },
           ],

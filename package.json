@@ -19,7 +19,7 @@
     "add": "^2.0.6",
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
-    "next": "14.2.4",
+    "next": "^14.2.5",
     "posthog-js": "^1.150.1",
     "react": "^18",
     "react-currency-input-field": "^3.8.0",

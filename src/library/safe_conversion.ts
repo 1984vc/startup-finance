@@ -28,7 +28,7 @@ export const DEFAULT_ROUNDING_STRATEGY: RoundingStrategy = {
   roundPPSPlaces: 5,
 };
 
-const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b);
+const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b, 0);
 
 const sumSafeConvertedShares = (
   safes: ISafeInvestment[],
