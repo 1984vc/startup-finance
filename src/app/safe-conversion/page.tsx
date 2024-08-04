@@ -84,7 +84,6 @@ const Conversion: React.FC = () => {
     const hash = compressState(state);
     const url = window.location.href + "#" + hash;
     window.location.hash = hash;
-    console.log("Setting URL", url);
     setSaveURL(url);
   }, [state]);
 

@@ -41,11 +41,12 @@ export const getSAFEOnlyCapTableSelector = createSelector(
           investment: shareholder.investment,
           ownershipPct: shareholder.ownershipPct,
           ownershipChange: 0,
+          ownershipError: shareholder.ownershipError,
         });
       }
     });
 
-    const totalPct = 100
+    const totalPct = shareholders.reduce((acc, val) => acc + val.ownershipPct, 0);
 
     return {
       totalPct,

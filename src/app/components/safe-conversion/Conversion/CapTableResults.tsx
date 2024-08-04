@@ -7,6 +7,7 @@ export interface ShareholderRow {
   investment?: number;
   ownershipPct: number;
   ownershipChange: number;
+  ownershipError?: string;
 }
 
 export interface CapTableResultProps {
@@ -31,6 +32,7 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
   };
 
   const hasChanges = shareholders.some((shareholder) => shareholder.ownershipChange !== 0);
+  const ownershipError = shareholders.find((shareholder) => shareholder.ownershipError !== undefined)?.ownershipError;
 
   return (
     <div className="">
@@ -64,7 +66,7 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                   </td>
                 }
                 <td className="py-3 px-4 text-right">
-                  {shareholder.ownershipPct.toFixed(2)}%
+                  {ownershipError ? ownershipError : shareholder.ownershipPct.toFixed(2) + "%"}
                 </td>
                 { hasChanges && <td
                   className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange, 2) < 0 ? "text-red-500" : "text-black"}`}
@@ -102,7 +104,9 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                   {formatNumberWithCommas(totalShares)}
                 </td>
               }
-              <td className="py-3 px-4 text-right">{totalPct.toFixed(2)}%</td>
+              <td className="py-3 px-4 text-right">{
+                ownershipError ? ownershipError : totalPct.toFixed(2) + "%"
+              }</td>
               { hasChanges && <td className="py-3 px-4 text-right"></td> }
             </tr>
           </tbody>

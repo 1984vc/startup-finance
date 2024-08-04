@@ -28,4 +28,15 @@ describe("Result Selector", () => {
     expect(resultSelector.totalShares).toEqual(12_886_615);
     expect(resultSelector.shareholders[0].ownershipChange.toFixed(2)).toEqual("-0.85");
   });
+  test("Ensure percentages total to 100%", () => {
+    const store = createConversionStore(fixtureData as IConversionStateData);
+    const resultSelector = getPriceRoundPropsSelector({
+      ...store.getState(),
+      hasNewRound: true,
+      preMoneyChange: 0,
+      investmentChange: 500_000,
+      targetOptionsPool: 0,
+    });
+    expect(resultSelector.totalPct).toEqual(100);
+  });
 });

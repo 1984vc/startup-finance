@@ -7,6 +7,7 @@ export interface ShareholderRow {
   investment?: number;
   ownershipPct: number;
   ownershipChange: number;
+  ownershipError?: string;
 }
 
 export interface PricedRoundPropsData {
