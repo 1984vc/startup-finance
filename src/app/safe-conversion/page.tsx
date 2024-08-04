@@ -14,7 +14,7 @@ import {
 } from "./state/ConversionState";
 import CurrencyInput from "react-currency-input-field";
 import ExisingShareholderList from "../components/safe-conversion/Conversion/ExistingShareholders";
-import Results from "../components/safe-conversion/Conversion/Results";
+import PricedRound from "../components/safe-conversion/Conversion/PricedRound";
 import SeriesInvestorList from "../components/safe-conversion/Conversion/SeriesInvestorList";
 import { stringToNumber } from "../../utils/numberFormatting";
 import { getExistingShareholderPropsSelector } from "./state/ExistingShareholderSelector";
@@ -22,9 +22,11 @@ import { getRandomData, initialState } from "./state/initialState";
 import { getSAFERowPropsSelector } from "./state/SAFESelector";
 import { getSeriesPropsSelector } from "./state/SeriesSelector";
 import SafeNoteList from "../components/safe-conversion/Conversion/SafeNoteList";
-import { getResultsPropsSelector } from "./state/ResultSelector";
+import { getPriceRoundPropsSelector } from "./state/PricedRoundSelector";
 import Share from "../components/safe-conversion/Conversion/Share";
 import { compressState, decompressState } from "@/utils/stateCompression";
+import { CapTableResults } from "../components/safe-conversion/Conversion/CapTableResults";
+import { getSAFEOnlyCapTableSelector } from "./state/SAFEOnlyCapTableSelector";
 
 const Conversion: React.FC = () => {
   const randomInvestors = useRef<ReturnType<typeof getRandomData>>();
@@ -231,15 +233,31 @@ const Conversion: React.FC = () => {
         </div>
       </div>
       {pricedConversion !== undefined && (
-        <Results
-          {...getResultsPropsSelector({
+        <div className="pt-10">
+          <h2 className="text-2xl font-bold mb-4">Priced Round Overview</h2>
+          <PricedRound
+            {...getPriceRoundPropsSelector({
+              ...state,
+              preMoneyChange,
+              investmentChange,
+            })}
+            updateInvestmentChange={updateInvestmentChange}
+            updatePreMoneyChange={updatePreMoneyChange}
+          />
+          <CapTableResults {...getPriceRoundPropsSelector({
             ...state,
             preMoneyChange,
             investmentChange,
-          })}
-          updateInvestmentChange={updateInvestmentChange}
-          updatePreMoneyChange={updatePreMoneyChange}
-        />
+          })} />
+        </div>
+      )}
+      {pricedConversion == undefined && (
+        <div className="pt-10">
+          <h2 className="text-2xl font-bold mb-4">Potential Cap Table</h2>
+          <CapTableResults {...getSAFEOnlyCapTableSelector({
+            ...state,
+          })} />
+        </div>
       )}
     </div>
   );

@@ -1,8 +1,6 @@
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
-import ToolipComponent from "../../tooltip/Tooltip";
-import { QuestionMarkIcon } from "../../tooltip/Icons";
 
 export interface ExistingShareholderProps {
   id: string;

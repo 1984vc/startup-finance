@@ -9,7 +9,7 @@ export interface ShareholderRow {
   ownershipChange: number;
 }
 
-export interface ResultPropsData {
+export interface PricedRoundPropsData {
   preMoney: number;
   postMoney: number;
   shareholders: ShareholderRow[];
@@ -22,12 +22,12 @@ export interface ResultPropsData {
   investmentChange: number;
 }
 
-export interface ResultProps extends ResultPropsData {
+export interface PricedRoundProps extends PricedRoundPropsData {
   updateInvestmentChange: (change: number) => void;
   updatePreMoneyChange: (change: number) => void;
 }
 
-const Results: React.FC<ResultProps> = (props) => {
+const PricedRound: React.FC<PricedRoundProps> = (props) => {
   const {
     preMoney,
     pricedConversion,
@@ -74,7 +74,6 @@ const Results: React.FC<ResultProps> = (props) => {
 
   return (
     <div className="pt-10">
-      <h2 className="text-2xl font-bold mb-4">Priced Round Overview</h2>
       <div className="grid grid-cols-3 gap-4">
         <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg">
           <dt className="text-sm font-semibold leading-6 text-gray-600">
@@ -171,75 +170,8 @@ const Results: React.FC<ResultProps> = (props) => {
           </dd>
         </div>
       </div>
-      <div className="border border-gray-300 shadow-sm rounded-lg overflow-hidden w-full mx-auto mt-16">
-        <table className="w-full text-sm leading-5">
-          <thead className="bg-gray-300 font-bold">
-            <tr>
-              <th className="py-3 px-4 text-left">Shareholder / Investor</th>
-              <th className="py-3 px-4 text-left">Investment</th>
-              <th className="py-3 px-4 text-left">Shares</th>
-              <th className="py-3 px-4 text-right">Ownership %</th>
-              <th className="py-3 px-4 text-right">Change %</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shareholders.map((shareholder, idx) => (
-              <tr key={`shareholder-${idx}`}>
-                <td className="py-3 px-4 text-left font-medium text-gray-600">
-                  {shareholder.name}
-                </td>
-                <td className="py-3 px-4 text-left">
-                  {shareholder.investment
-                    ? "$" + formatNumberWithCommas(shareholder.investment)
-                    : ""}
-                </td>
-                <td className="py-3 px-4 text-left">
-                  {shareholder.shares
-                    ? formatNumberWithCommas(shareholder.shares)
-                    : ""}
-                </td>
-                <td className="py-3 px-4 text-right">
-                  {shareholder.ownershipPct.toFixed(2)}%
-                </td>
-                <td
-                  className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange, 2) < 0 ? "text-red-500" : "text-black"}`}
-                >
-                  {roundTo(shareholder.ownershipChange, 2).toFixed(2)}
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td className="py-3 px-4 text-left font-medium text-gray-600">
-                Refreshed Options Pool
-              </td>
-              <td className="py-3 px-4 text-left"></td>
-              <td className="py-3 px-4 text-left">
-                {formatNumberWithCommas(pricedConversion.totalOptions)}
-              </td>
-              <td className="py-3 px-4 text-right">
-                {(100 * (pricedConversion.totalOptions / totalShares)).toFixed(
-                  2,
-                )}
-                %
-              </td>
-              <td className="py-3 px-4 text-right"></td>
-            </tr>
-            <tr className="font-bold bg-gray-200">
-              <td className="py-3 px-4 text-left">Total</td>
-              <td className="py-3 px-4 text-left">
-                ${formatNumberWithCommas(totalInvestedToDate)}
-              </td>
-              <td className="py-3 px-4 text-left">
-                {formatNumberWithCommas(totalShares)}
-              </td>
-              <td className="py-3 px-4 text-right">{totalPct.toFixed(2)}%</td>
-              <td className="py-3 px-4 text-right"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };
 
-export default Results;
+export default PricedRound;

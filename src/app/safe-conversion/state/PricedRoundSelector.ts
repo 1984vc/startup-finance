@@ -7,18 +7,19 @@ import { ExistingShareholderProps } from "@/app/components/safe-conversion/Conve
 import { SAFEProps } from "@/app/components/safe-conversion/Conversion/SafeNoteList";
 import { SeriesProps } from "@/app/components/safe-conversion/Conversion/SeriesInvestorList";
 import {
-  ResultPropsData,
+  PricedRoundPropsData,
   ShareholderRow,
-} from "@/app/components/safe-conversion/Conversion/Results";
+} from "@/app/components/safe-conversion/Conversion/PricedRound";
+
 
 export type ResultSelectorState = IConversionStateData & {
-  preMoneyChange: number;
-  investmentChange: number;
+  preMoneyChange?: number;
+  investmentChange?: number;
 };
 
 // The goal is to build a result set for a priced round that allows the user to play around
 // with pre-money and investment changes to see how it affects the cap table
-export const getResultsPropsSelector = createSelector(
+export const getPriceRoundPropsSelector = createSelector(
   getExistingShareholderPropsSelector,
   getSAFERowPropsSelector,
   getSeriesPropsSelector,
@@ -28,6 +29,7 @@ export const getResultsPropsSelector = createSelector(
   (state: ResultSelectorState) => state.preMoney,
   (state: ResultSelectorState) => state.targetOptionsPool,
   (state: ResultSelectorState) => state.unusedOptions,
+  (state: ResultSelectorState) => state.hasNewRound,
   (
     existingShareholders,
     safeInvestors,
@@ -38,7 +40,10 @@ export const getResultsPropsSelector = createSelector(
     preMoney,
     targetOptionsPool,
     unusedOptions,
-  ): ResultPropsData => {
+    hasNewRound
+): PricedRoundPropsData => {
+    investmentChange = investmentChange ?? 0;
+    preMoneyChange = preMoneyChange ?? 0;
     // Get the Series Investments and distribute the investmentChange over the series investors pro rata
     const initialSeriesInvestment = rowData
       .filter((row) => row.type === "series")
@@ -108,15 +113,17 @@ export const getResultsPropsSelector = createSelector(
             shareholder.ownershipPct - currentShareholder.ownershipPct,
         });
       } else if (shareholder.type === "series") {
-        const currentShareholder = currentShareholders[idx] as SeriesProps;
-        shareholders.push({
-          name: shareholder.name,
-          shares: shareholder.shares,
-          investment: shareholder.investment,
-          ownershipPct: shareholder.ownershipPct,
-          ownershipChange:
-            shareholder.ownershipPct - currentShareholder.ownershipPct,
-        });
+        if (hasNewRound) {
+          const currentShareholder = currentShareholders[idx] as SeriesProps;
+          shareholders.push({
+            name: shareholder.name,
+            shares: shareholder.shares,
+            investment: shareholder.investment,
+            ownershipPct: shareholder.ownershipPct,
+            ownershipChange:
+              shareholder.ownershipPct - currentShareholder.ownershipPct,
+          });
+        }
       }
     });
 
