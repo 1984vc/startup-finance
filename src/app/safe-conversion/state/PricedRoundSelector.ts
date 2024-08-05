@@ -127,7 +127,8 @@ export const getPriceRoundPropsSelector = createSelector(
     });
 
     const additionalOptionsPct =
-      (trialPricedConversion.additionalOptions / trialPricedConversion.totalShares) *
+      (trialPricedConversion.additionalOptions /
+        trialPricedConversion.totalShares) *
       100;
 
     const totalPct = Math.round(

@@ -33,6 +33,13 @@ describe("Result Selector", () => {
       "23.28",
     );
     expect(resultSelector.totalShares).toEqual(12_886_615);
+    // Ensure the pricedConversion matches the expected shares from the entire cap table
+    expect(resultSelector.totalShares).toEqual(
+      resultSelector.shareholders.reduce(
+        (acc, val) => acc + (val.shares ?? 0),
+        0,
+      ) + resultSelector.pricedConversion.additionalOptions,
+    );
     expect(resultSelector.shareholders[0].ownershipChange.toFixed(2)).toEqual(
       "-0.85",
     );

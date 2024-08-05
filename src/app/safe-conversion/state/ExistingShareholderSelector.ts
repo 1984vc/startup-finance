@@ -8,7 +8,12 @@ export const getExistingShareholderPropsSelector = createSelector(
   getSAFERowPropsSelector,
   (state: IConversionStateData) => state.rowData,
   (state: IConversionStateData) => state.unusedOptions,
-  (pricedConversion, safes, rowData, unusedOptions): ExistingShareholderProps[] => {
+  (
+    pricedConversion,
+    safes,
+    rowData,
+    unusedOptions,
+  ): ExistingShareholderProps[] => {
     const safeTotalOwnershipPct = safes.reduce(
       (acc, val) => acc + val.ownershipPct,
       0,
@@ -24,13 +29,16 @@ export const getExistingShareholderPropsSelector = createSelector(
         : undefined;
 
     const existingShareholders = rowData.filter((row) => row.type === "common");
-    // Add in a row for Unused Options Pool
+
+    // Add the unused options pool to the existing shareholders
+    // This will be used to calculate the pre-conversion ownership
     existingShareholders.push({
       id: "UnusedOptionsPool",
       type: "common",
       name: "Unused Options Pool",
       shares: unusedOptions,
-    })
+    });
+
     const totalInitialShares = existingShareholders
       .map((row) => row.shares)
       .reduce((acc, val) => acc + val, 0);

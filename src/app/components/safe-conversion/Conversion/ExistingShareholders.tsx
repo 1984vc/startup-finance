@@ -75,7 +75,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         Delete
       </button>
       <div className="w-24 text-right">{data.ownershipPct?.toFixed(2)}%</div>
-      <div className="w-24 text-right">
+      <div className="w-36 text-right">
         {data.dilutedPctError ?? data.dilutedPct?.toFixed(2) + "%"}
       </div>
     </div>
@@ -85,6 +85,11 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
 const ExisingShareholderList: React.FC<
   RowsProps<ExistingShareholderProps> & { safePercent: number }
 > = ({ rows, onDelete, onUpdate, onAddRow }) => {
+  // Don't include the UnusedOptionsRow in the editable list since this is edited in a seperate field
+  const existingShareholders = rows.filter(
+    (row) => row.id !== "UnusedOptionsPool",
+  );
+
   return (
     <div>
       <div className="flex items-center space-x-4 mb-4">
@@ -94,7 +99,7 @@ const ExisingShareholderList: React.FC<
         <div className="w-24 text-right">Ownership %</div>
         <div className="w-36 text-right">Diluted % </div>
       </div>
-      {rows.map((note, idx) => (
+      {existingShareholders.map((note, idx) => (
         <ExistingShareholderRow
           key={idx}
           data={note}

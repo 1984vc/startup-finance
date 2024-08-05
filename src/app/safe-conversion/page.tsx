@@ -246,29 +246,34 @@ const Conversion: React.FC = () => {
             updateInvestmentChange={updateInvestmentChange}
             updatePreMoneyChange={updatePreMoneyChange}
           />
-          <CapTableResults {...getPriceRoundPropsSelector({
-            ...state,
-            preMoneyChange,
-            investmentChange,
-          })} />
+          <CapTableResults
+            {...getPriceRoundPropsSelector({
+              ...state,
+              preMoneyChange,
+              investmentChange,
+            })}
+          />
         </div>
       )}
       {pricedConversion == undefined && (
         <div className="pt-10">
           {/* If we have SAFE's use a tooltip, otherwise just the heading */}
-          { hasSAFEs ? 
+          {hasSAFEs ? (
             <ToolipComponent content="If SAFE's convert at their Cap">
-            <h2 className="text-2xl font-bold mb-4 inline">
-              Cap Table <sup>*</sup>
-            </h2>
-            </ToolipComponent> :
+              <h2 className="text-2xl font-bold mb-4 inline">
+                Cap Table <sup>*</sup>
+              </h2>
+            </ToolipComponent>
+          ) : (
             <h2 className="text-2xl font-bold mb-4 inline">
               Cap TableCaster Semenya
             </h2>
-          }
-          <CapTableResults {...getSAFEOnlyCapTableSelector({
-            ...state,
-          })} />
+          )}
+          <CapTableResults
+            {...getSAFEOnlyCapTableSelector({
+              ...state,
+            })}
+          />
         </div>
       )}
     </div>

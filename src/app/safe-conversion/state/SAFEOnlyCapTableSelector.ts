@@ -1,27 +1,29 @@
 import { createSelector } from "reselect";
-import { ExistingShareholderState, IConversionStateData } from "./ConversionState";
+import {
+  ExistingShareholderState,
+  IConversionStateData,
+} from "./ConversionState";
 import { getSAFERowPropsSelector } from "./SAFESelector";
 import { getExistingShareholderPropsSelector } from "./ExistingShareholderSelector";
 import { ShareholderRow } from "@/app/components/safe-conversion/Conversion/PricedRound";
 import { CapTableResultProps } from "@/app/components/safe-conversion/Conversion/CapTableResults";
 import { ExistingShareholderProps } from "@/app/components/safe-conversion/Conversion/ExistingShareholders";
 
-// The goal is to build a result set for a priced round that allows the user to play around
-// with pre-money and investment changes to see how it affects the cap table
+// Get a cap table with a guess at the conversion at the SAFE Cap. This is helpful to understand
+// the estimated ownership breakdown before a priced round.
 export const getSAFEOnlyCapTableSelector = createSelector(
   getExistingShareholderPropsSelector,
   getSAFERowPropsSelector,
-  (state: IConversionStateData) => state.rowData,
-  (state: IConversionStateData) => state.unusedOptions,
-  (existingShareholders, safeInvestors, rowData, unusedOptions): CapTableResultProps => {
+  (existingShareholders, safeInvestors): CapTableResultProps => {
     const totalInvestedToDate = safeInvestors
       .map((row) => row.investment)
       .reduce((acc, val) => acc + val, 0);
     const shareholders: ShareholderRow[] = [];
 
-    const totalShares = existingShareholders.reduce((acc, val) => acc + (val.shares ?? 0), 0) + unusedOptions;
-
-    // For this view, place the unused options in a common row
+    const totalShares = existingShareholders.reduce(
+      (acc, val) => acc + (val.shares ?? 0),
+      0,
+    );
 
     const currentShareholders = [...existingShareholders, ...safeInvestors];
     currentShareholders.forEach((shareholder, idx) => {

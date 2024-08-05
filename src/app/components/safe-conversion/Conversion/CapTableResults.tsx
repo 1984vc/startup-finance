@@ -81,7 +81,7 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                 )}
               </tr>
             ))}
-            {(pricedConversion && totalShares) &&
+            {pricedConversion && totalShares && (
               <tr>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">
                   Additional Options Refresh
@@ -99,7 +99,7 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                 </td>
                 {hasChanges && <td className="py-3 px-4 text-right"></td>}
               </tr>
-            }
+            )}
             <tr className="font-bold bg-gray-200">
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">
