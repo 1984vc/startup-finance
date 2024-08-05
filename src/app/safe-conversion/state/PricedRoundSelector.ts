@@ -126,14 +126,14 @@ export const getPriceRoundPropsSelector = createSelector(
       }
     });
 
-    const unusedOptionsPct =
-      (trialPricedConversion.totalOptions / trialPricedConversion.totalShares) *
+    const additionalOptionsPct =
+      (trialPricedConversion.additionalOptions / trialPricedConversion.totalShares) *
       100;
 
     const totalPct = Math.round(
       shareholders
         .map((shareholder) => shareholder.ownershipPct)
-        .reduce((acc, val) => acc + val, 0) + unusedOptionsPct,
+        .reduce((acc, val) => acc + val, 0) + additionalOptionsPct,
     );
 
     const totalInvestedToDate =

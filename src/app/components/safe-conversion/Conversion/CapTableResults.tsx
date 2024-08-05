@@ -12,7 +12,7 @@ export interface ShareholderRow {
 
 export interface CapTableResultProps {
   shareholders: ShareholderRow[];
-  totalShares?: number;
+  totalShares: number;
   totalPct: number;
   totalInvestedToDate: number;
   pricedConversion?: BestFit;
@@ -46,9 +46,7 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
             <tr>
               <th className="py-3 px-4 text-left">Shareholder / Investor</th>
               <th className="py-3 px-4 text-left">Investment</th>
-              {pricedConversion && (
-                <th className="py-3 px-4 text-left">Shares</th>
-              )}
+              <th className="py-3 px-4 text-left">Shares</th>
               <th className="py-3 px-4 text-right">Ownership %</th>
               {hasChanges && <th className="py-3 px-4 text-right">Change %</th>}
             </tr>
@@ -64,13 +62,11 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                     ? "$" + formatNumberWithCommas(shareholder.investment)
                     : ""}
                 </td>
-                {pricedConversion && (
-                  <td className="py-3 px-4 text-left">
-                    {shareholder.shares
-                      ? formatNumberWithCommas(shareholder.shares)
-                      : ""}
-                  </td>
-                )}
+                <td className="py-3 px-4 text-left">
+                  {shareholder.shares
+                    ? formatNumberWithCommas(shareholder.shares)
+                    : ""}
+                </td>
                 <td className="py-3 px-4 text-right">
                   {ownershipError
                     ? ownershipError
@@ -85,35 +81,33 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                 )}
               </tr>
             ))}
-            {pricedConversion && totalShares && (
+            {(pricedConversion && totalShares) &&
               <tr>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">
-                  Refreshed Options Pool
+                  Additional Options Refresh
                 </td>
                 <td className="py-3 px-4 text-left"></td>
                 <td className="py-3 px-4 text-left">
-                  {formatNumberWithCommas(pricedConversion.totalOptions)}
+                  {formatNumberWithCommas(pricedConversion.additionalOptions)}
                 </td>
                 <td className="py-3 px-4 text-right">
                   {(
                     100 *
-                    (pricedConversion.totalOptions / totalShares)
+                    (pricedConversion.additionalOptions / totalShares)
                   ).toFixed(2)}
                   %
                 </td>
                 {hasChanges && <td className="py-3 px-4 text-right"></td>}
               </tr>
-            )}
+            }
             <tr className="font-bold bg-gray-200">
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">
                 ${formatNumberWithCommas(totalInvestedToDate)}
               </td>
-              {pricedConversion && totalShares && (
-                <td className="py-3 px-4 text-left">
-                  {formatNumberWithCommas(totalShares)}
-                </td>
-              )}
+              <td className="py-3 px-4 text-left">
+                {formatNumberWithCommas(totalShares)}
+              </td>
               <td className="py-3 px-4 text-right">
                 {ownershipError ? ownershipError : totalPct.toFixed(2) + "%"}
               </td>

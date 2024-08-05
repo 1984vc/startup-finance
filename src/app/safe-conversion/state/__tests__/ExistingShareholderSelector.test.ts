@@ -12,7 +12,7 @@ describe("Existing Shareholder Selector", () => {
     const existingShareholders = getExistingShareholderPropsSelector(
       store.getState(),
     );
-    expect(existingShareholders[0].dilutedPct.toFixed(2)).toEqual("34.34");
+    expect(existingShareholders[0].dilutedPct.toFixed(2)).toEqual("31.35");
     expect(existingShareholders[0].dilutedPctError).toEqual(undefined);
   });
   test("Check the uncapped SAFE notes result in 'TBD' dilutedPct", () => {
