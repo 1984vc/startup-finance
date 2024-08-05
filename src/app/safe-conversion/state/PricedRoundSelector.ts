@@ -11,7 +11,6 @@ import {
   ShareholderRow,
 } from "@/app/components/safe-conversion/Conversion/PricedRound";
 
-
 export type ResultSelectorState = IConversionStateData & {
   preMoneyChange?: number;
   investmentChange?: number;
@@ -40,8 +39,8 @@ export const getPriceRoundPropsSelector = createSelector(
     preMoney,
     targetOptionsPool,
     unusedOptions,
-    hasNewRound
-): PricedRoundPropsData => {
+    hasNewRound,
+  ): PricedRoundPropsData => {
     investmentChange = investmentChange ?? 0;
     preMoneyChange = preMoneyChange ?? 0;
     // Get the Series Investments and distribute the investmentChange over the series investors pro rata
@@ -127,7 +126,9 @@ export const getPriceRoundPropsSelector = createSelector(
       }
     });
 
-    const unusedOptionsPct = (trialPricedConversion.totalOptions / trialPricedConversion.totalShares) * 100;
+    const unusedOptionsPct =
+      (trialPricedConversion.totalOptions / trialPricedConversion.totalShares) *
+      100;
 
     const totalPct = Math.round(
       shareholders

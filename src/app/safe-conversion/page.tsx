@@ -100,7 +100,7 @@ const Conversion: React.FC = () => {
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
 
-  const hasSAFEs = rowData.filter((row) => row.type === 'safe').length > 0
+  const hasSAFEs = rowData.filter((row) => row.type === "safe").length > 0;
 
   return (
     <div>
@@ -246,29 +246,32 @@ const Conversion: React.FC = () => {
             updateInvestmentChange={updateInvestmentChange}
             updatePreMoneyChange={updatePreMoneyChange}
           />
-          <CapTableResults {...getPriceRoundPropsSelector({
-            ...state,
-            preMoneyChange,
-            investmentChange,
-          })} />
+          <CapTableResults
+            {...getPriceRoundPropsSelector({
+              ...state,
+              preMoneyChange,
+              investmentChange,
+            })}
+          />
         </div>
       )}
       {pricedConversion == undefined && (
         <div className="pt-10">
           {/* If we have SAFE's use a tooltip, otherwise just the heading */}
-          { hasSAFEs ? 
+          {hasSAFEs ? (
             <ToolipComponent content="If SAFE's convert at their Cap">
-            <h2 className="text-2xl font-bold mb-4 inline">
-              Cap Table <sup>*</sup>
-            </h2>
-            </ToolipComponent> :
-            <h2 className="text-2xl font-bold mb-4 inline">
-              Cap Table
-            </h2>
-          }
-          <CapTableResults {...getSAFEOnlyCapTableSelector({
-            ...state,
-          })} />
+              <h2 className="text-2xl font-bold mb-4 inline">
+                Cap Table <sup>*</sup>
+              </h2>
+            </ToolipComponent>
+          ) : (
+            <h2 className="text-2xl font-bold mb-4 inline">Cap Table</h2>
+          )}
+          <CapTableResults
+            {...getSAFEOnlyCapTableSelector({
+              ...state,
+            })}
+          />
         </div>
       )}
     </div>

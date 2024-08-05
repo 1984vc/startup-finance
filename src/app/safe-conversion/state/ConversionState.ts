@@ -51,42 +51,47 @@ export interface IConversionState extends IConversionStateData {
 
 function getNextIdx(rowData: IRowState[]) {
   // get the highest id from rowData[] and return an increment
-  return (rowData.map((row) => parseInt(row.id)).reduce((a, b) => Math.max(a, b), 0) + 1).toString();
+  return (
+    rowData.map((row) => parseInt(row.id)).reduce((a, b) => Math.max(a, b), 0) +
+    1
+  ).toString();
 }
 
 function getRandomSeed(rowData: IRowState[]) {
-  const existingNames = rowData.filter((r) => r.type === "safe").map((r) => r.name);
+  const existingNames = rowData
+    .filter((r) => r.type === "safe")
+    .map((r) => r.name);
   const availableNames = randomSeed.filter((r) => !existingNames.includes(r));
   if (availableNames.length > 0) {
-    return availableNames[
-      Math.floor(Math.random() * availableNames.length)
-    ];
+    return availableNames[Math.floor(Math.random() * availableNames.length)];
   } else {
-    return "Another Seed Investor"
+    return "Another Seed Investor";
   }
 }
 
 function getRandomInvestor(rowData: IRowState[]) {
-  const existingNames = rowData.filter((r) => r.type === "series").map((r) => r.name);
+  const existingNames = rowData
+    .filter((r) => r.type === "series")
+    .map((r) => r.name);
   const availableNames = randomSeries.filter((r) => !existingNames.includes(r));
   if (availableNames.length > 0) {
-    return availableNames[
-      Math.floor(Math.random() * availableNames.length)
-    ];
+    return availableNames[Math.floor(Math.random() * availableNames.length)];
   } else {
-    return "Another Series Investor"
+    return "Another Series Investor";
   }
 }
 
 function getRandomFounder(rowData: IRowState[]) {
-  const existingNames = rowData.filter((r) => r.type === "common").map((r) => r.name);
-  const availableNames = randomFounders.filter((r) => !existingNames.includes(r));
+  const existingNames = rowData
+    .filter((r) => r.type === "common")
+    .map((r) => r.name);
+  const availableNames = randomFounders.filter(
+    (r) => !existingNames.includes(r),
+  );
   if (availableNames.length > 0) {
-    return availableNames[
-      Math.floor(Math.random() * availableNames.length)
-    ];
+    return availableNames[Math.floor(Math.random() * availableNames.length)];
   } else {
-    return "Another Founder"
+    return "Another Founder";
   }
 }
 
@@ -95,7 +100,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
     ...initialState,
 
     onAddRow: (type: "safe" | "series" | "common") => {
-      const idx = getNextIdx(get().rowData)
+      const idx = getNextIdx(get().rowData);
       if (type === "safe") {
         set((state) => ({
           ...state,

@@ -31,8 +31,12 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
     return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
   };
 
-  const hasChanges = shareholders.some((shareholder) => shareholder.ownershipChange !== 0);
-  const ownershipError = shareholders.find((shareholder) => shareholder.ownershipError !== undefined)?.ownershipError;
+  const hasChanges = shareholders.some(
+    (shareholder) => shareholder.ownershipChange !== 0,
+  );
+  const ownershipError = shareholders.find(
+    (shareholder) => shareholder.ownershipError !== undefined,
+  )?.ownershipError;
 
   return (
     <div className="">
@@ -42,9 +46,11 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
             <tr>
               <th className="py-3 px-4 text-left">Shareholder / Investor</th>
               <th className="py-3 px-4 text-left">Investment</th>
-              { pricedConversion && <th className="py-3 px-4 text-left">Shares</th> }
+              {pricedConversion && (
+                <th className="py-3 px-4 text-left">Shares</th>
+              )}
               <th className="py-3 px-4 text-right">Ownership %</th>
-              { hasChanges && <th className="py-3 px-4 text-right">Change %</th> }
+              {hasChanges && <th className="py-3 px-4 text-right">Change %</th>}
             </tr>
           </thead>
           <tbody>
@@ -58,25 +64,28 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                     ? "$" + formatNumberWithCommas(shareholder.investment)
                     : ""}
                 </td>
-                { pricedConversion &&
+                {pricedConversion && (
                   <td className="py-3 px-4 text-left">
                     {shareholder.shares
                       ? formatNumberWithCommas(shareholder.shares)
                       : ""}
                   </td>
-                }
+                )}
                 <td className="py-3 px-4 text-right">
-                  {ownershipError ? ownershipError : shareholder.ownershipPct.toFixed(2) + "%"}
+                  {ownershipError
+                    ? ownershipError
+                    : shareholder.ownershipPct.toFixed(2) + "%"}
                 </td>
-                { hasChanges && <td
-                  className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange, 2) < 0 ? "text-red-500" : "text-black"}`}
-                >
-                  {roundTo(shareholder.ownershipChange, 2).toFixed(2)}
-                </td>
-                }
+                {hasChanges && (
+                  <td
+                    className={`py-3 px-4 text-right ${roundTo(shareholder.ownershipChange, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange, 2) < 0 ? "text-red-500" : "text-black"}`}
+                  >
+                    {roundTo(shareholder.ownershipChange, 2).toFixed(2)}
+                  </td>
+                )}
               </tr>
             ))}
-            { pricedConversion && totalShares && (
+            {pricedConversion && totalShares && (
               <tr>
                 <td className="py-3 px-4 text-left font-medium text-gray-600">
                   Refreshed Options Pool
@@ -86,28 +95,29 @@ export const CapTableResults: React.FC<CapTableResultProps> = (props) => {
                   {formatNumberWithCommas(pricedConversion.totalOptions)}
                 </td>
                 <td className="py-3 px-4 text-right">
-                  {(100 * (pricedConversion.totalOptions / totalShares)).toFixed(
-                    2,
-                  )}
+                  {(
+                    100 *
+                    (pricedConversion.totalOptions / totalShares)
+                  ).toFixed(2)}
                   %
                 </td>
-                { hasChanges && <td className="py-3 px-4 text-right"></td> }
+                {hasChanges && <td className="py-3 px-4 text-right"></td>}
               </tr>
-            ) }
+            )}
             <tr className="font-bold bg-gray-200">
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">
                 ${formatNumberWithCommas(totalInvestedToDate)}
               </td>
-              { pricedConversion && totalShares &&
+              {pricedConversion && totalShares && (
                 <td className="py-3 px-4 text-left">
                   {formatNumberWithCommas(totalShares)}
                 </td>
-              }
-              <td className="py-3 px-4 text-right">{
-                ownershipError ? ownershipError : totalPct.toFixed(2) + "%"
-              }</td>
-              { hasChanges && <td className="py-3 px-4 text-right"></td> }
+              )}
+              <td className="py-3 px-4 text-right">
+                {ownershipError ? ownershipError : totalPct.toFixed(2) + "%"}
+              </td>
+              {hasChanges && <td className="py-3 px-4 text-right"></td>}
             </tr>
           </tbody>
         </table>

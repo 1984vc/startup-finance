@@ -1,6 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
-import { createConversionStore, IConversionStateData } from "../ConversionState";
-import fixtureData from "./fixtures/state_fixtures.json"
+import {
+  createConversionStore,
+  IConversionStateData,
+} from "../ConversionState";
+import fixtureData from "./fixtures/state_fixtures.json";
 
 describe("Basic ConversionState", () => {
   test("that it passes a sanity check", () => {
