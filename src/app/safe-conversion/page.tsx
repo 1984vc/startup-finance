@@ -27,6 +27,7 @@ import Share from "../components/safe-conversion/Conversion/Share";
 import { compressState, decompressState } from "@/utils/stateCompression";
 import { CapTableResults } from "../components/safe-conversion/Conversion/CapTableResults";
 import { getSAFEOnlyCapTableSelector } from "./state/SAFEOnlyCapTableSelector";
+import ToolipComponent from "../components/tooltip/Tooltip";
 
 const Conversion: React.FC = () => {
   const randomInvestors = useRef<ReturnType<typeof getRandomData>>();
@@ -98,6 +99,8 @@ const Conversion: React.FC = () => {
 
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
+
+  const hasSAFEs = rowData.filter((row) => row.type === 'safe').length > 0
 
   return (
     <div>
@@ -252,7 +255,17 @@ const Conversion: React.FC = () => {
       )}
       {pricedConversion == undefined && (
         <div className="pt-10">
-          <h2 className="text-2xl font-bold mb-4">Potential Cap Table</h2>
+          {/* If we have SAFE's use a tooltip, otherwise just the heading */}
+          { hasSAFEs ? 
+            <ToolipComponent content="If SAFE's convert at their Cap">
+            <h2 className="text-2xl font-bold mb-4 inline">
+              Cap Table <sup>*</sup>
+            </h2>
+            </ToolipComponent> :
+            <h2 className="text-2xl font-bold mb-4 inline">
+              Cap Table
+            </h2>
+          }
           <CapTableResults {...getSAFEOnlyCapTableSelector({
             ...state,
           })} />
