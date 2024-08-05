@@ -52,7 +52,7 @@ export interface IConversionState extends IConversionStateData {
 function getNextIdx(rowData: IRowState[]) {
   // get the highest id from rowData[] and return an increment
   return (
-    rowData.map((row) => parseInt(row.id)).reduce((a, b) => Math.max(a, b), 0) +
+    rowData.map((row) => row.id.match(/^[0-9]+$/) ? parseInt(row.id) : 0).reduce((a, b) => Math.max(a, b), 0) +
     1
   ).toString();
 }
