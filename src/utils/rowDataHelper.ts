@@ -2,7 +2,7 @@ import { BestFit } from "@/library/safe_conversion";
 import {
   IRowState,
   SAFEState,
-} from "../app/safe-conversion/state/ConversionState";
+} from "@/cap-table/state/ConversionState";
 
 const getMFNCapAter = (rows: SAFEState[], idx: number): number => {
   // For each safe after the idx, find the lowest number that's not 0
@@ -41,7 +41,7 @@ const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
 export const calcSAFEs = (
   rowData: IRowState[],
   pricedConversion?: BestFit,
-): [pct: number, cap: number, shares: number][] => {
+): [pct: number, cap: number, shares: number][][] => {
   const rows = rowData.filter((row) => row.type === "safe");
 
   const safeCaps = rows.map((safe) => {
@@ -49,18 +49,21 @@ export const calcSAFEs = (
   });
 
   return rows.map((data, idx) => {
-    if (!pricedConversion) {
-      if (safeCaps[idx] !== 0) {
-        return [(data.investment / safeCaps[idx]) * 100, safeCaps[idx], 0];
-      }
-      return [0, safeCaps[idx], 0];
-    }
-    const pps = pricedConversion.ppss[idx];
-    const shares = Math.floor(data.investment / pps);
-    return [
-      (shares / pricedConversion.totalShares) * 100,
+    const rowCalcs: [number, number, number][] = []
+    rowCalcs.push([
+      (data.investment / safeCaps[idx]) * 100,
       safeCaps[idx],
-      shares,
-    ];
+      0,
+    ]);
+    if (pricedConversion) {
+      const pps = pricedConversion.ppss[idx];
+      const shares = Math.floor(data.investment / pps);
+      rowCalcs.push([
+        (shares / pricedConversion.totalShares) * 100,
+        safeCaps[idx],
+        shares,
+      ]);
+    }
+    return rowCalcs;
   });
 };

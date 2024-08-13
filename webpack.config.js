@@ -1,7 +1,7 @@
 const GasPlugin = require("gas-webpack-plugin");
 const webpack = require("webpack");
 
-const entry = "./build/index.js";
+const entry = "./gas-build/index.js";
 const { version } = require("./package.json");
 
 console.log(`Building version ${version}`);

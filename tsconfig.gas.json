@@ -11,7 +11,11 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "gas-build",
     "lib": ["ESNext"],
-    "types": ["google-apps-script"]
+    "types": ["google-apps-script"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+    }
   },
   "include": ["src/library"],
   "files": ["src/library/index.ts"]

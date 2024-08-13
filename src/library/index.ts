@@ -39,7 +39,7 @@ function SAFE_CONVERSION(
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
-  roundDownShares: boolean = defaultRounding.roundDownShares,
+  roundDownShares: boolean = defaultRounding.roundDownShares ?? false,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
   try {
@@ -67,7 +67,7 @@ function SAFE_CONVERSION(
           return num;
         } catch (err) {
           throw new Error(
-            `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`,
+            `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}: ${err}`,
           );
         }
         // Check each element of the array to see if it's a number, if not throw an Error
@@ -77,7 +77,7 @@ function SAFE_CONVERSION(
         seriesInvestments = [toNumber(seriesInvestmentRanges)];
       } catch (err) {
         throw new Error(
-          `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`,
+          `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}: ${err}`,
         );
       }
     }
@@ -179,6 +179,7 @@ export { onOpen, onEdit, onInstall, doGet, doPost, SAFE_CONVERSION, VERSION };
 
 // Hack to get in custom function JSDOCS
 declare const global: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 };
 
@@ -210,7 +211,7 @@ global.SAFE_CONVERSION = (
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
-  roundDownShares: boolean = defaultRounding.roundDownShares,
+  roundDownShares: boolean = defaultRounding.roundDownShares ?? false,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ) => {
   return SAFE_CONVERSION(
