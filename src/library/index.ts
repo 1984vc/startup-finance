@@ -66,9 +66,8 @@ function SAFE_CONVERSION(
           const num = toNumber(e[0]);
           return num;
         } catch (err) {
-          console.error(err)
           throw new Error(
-            `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`,
+            `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}: ${err}`,
           );
         }
         // Check each element of the array to see if it's a number, if not throw an Error
@@ -77,9 +76,8 @@ function SAFE_CONVERSION(
       try {
         seriesInvestments = [toNumber(seriesInvestmentRanges)];
       } catch (err) {
-        console.error(err)
         throw new Error(
-          `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`,
+          `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}: ${err}`,
         );
       }
     }
