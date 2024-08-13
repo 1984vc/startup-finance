@@ -39,7 +39,7 @@ function SAFE_CONVERSION(
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
-  roundDownShares: boolean = defaultRounding.roundDownShares,
+  roundDownShares: boolean = defaultRounding.roundDownShares ?? false,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
   try {
@@ -210,7 +210,7 @@ global.SAFE_CONVERSION = (
   unusedOptions: number | string,
   targetOptionsPct: number | string,
   seriesInvestmentRanges: number[][] | string[][] | number | string,
-  roundDownShares: boolean = defaultRounding.roundDownShares,
+  roundDownShares: boolean = defaultRounding.roundDownShares ?? false,
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ) => {
   return SAFE_CONVERSION(
