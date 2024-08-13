@@ -63,7 +63,7 @@ const sumSafeConvertedShares = (
 ): number => {
   return sumArray(
     safes.map((safe) => {
-      let discountPPS = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), roundingStrategy.roundPPSPlaces);
+      const discountPPS = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), roundingStrategy.roundPPSPlaces);
       const postSafeShares = safe.investment / discountPPS;
       return roundShares(postSafeShares, roundingStrategy);
     }),
@@ -113,27 +113,27 @@ const calculatePreAndPostMoneyShares = (
 
   let optionsPool =
     roundShares(totalShares * targetOptionsPct, roundingStrategy);
-  
+
   // Don't let the options pool be less than the unused options. Assume the unused options are the minimum
   if (optionsPool < unusedOptions) {
     optionsPool = unusedOptions;
   }
-  
+
 
   const increaseInOptionsPool = optionsPool - unusedOptions;
 
-  let seriesInvestment = sumArray(seriesInvestments.map((seriesInvestment) => {
+  const seriesInvestment = sumArray(seriesInvestments.map((seriesInvestment) => {
     return seriesInvestment
   }))
 
-  let pps = roundPPSToPlaces((preMoneyValuation + seriesInvestment) / totalShares, roundingStrategy.roundPPSPlaces);
+  const pps = roundPPSToPlaces((preMoneyValuation + seriesInvestment) / totalShares, roundingStrategy.roundPPSPlaces);
 
   const seriesShares = sumArray(
     seriesInvestments.map((seriesInvestment) =>
       roundShares(seriesInvestment / pps, roundingStrategy),
     ),
   );
-  
+
   const preMoneyShares = commonShares + increaseInOptionsPool;
   const postMoneyShares = totalShares - seriesShares - increaseInOptionsPool;
 
@@ -164,18 +164,18 @@ const attemptFit = (
   const results = calculatePreAndPostMoneyShares(preMoneyValuation, commonShares, unusedOptions, targetOptionsPct, seriesInvestments, totalShares, roundingStrategy)
 
   // Use the pre and post money shares to calculate the new SAFE shares conversions
-  let safeShares = sumSafeConvertedShares(
-      safes,
-      results.pps,
-      results.preMoneyShares,
-      results.postMoneyShares,
-      roundingStrategy,
-    )
+  const safeShares = sumSafeConvertedShares(
+    safes,
+    results.pps,
+    results.preMoneyShares,
+    results.postMoneyShares,
+    roundingStrategy,
+  )
 
   // This changes the total shares based on how the SAFEs converted
-  
+
   // Determine the new total shares, this could be different than the original total shares
-  let newTotalShares = results.seriesShares + commonShares + results.optionsPool + safeShares;
+  const newTotalShares = results.seriesShares + commonShares + results.optionsPool + safeShares;
   return newTotalShares
 };
 

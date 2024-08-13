@@ -66,6 +66,7 @@ function SAFE_CONVERSION(
           const num = toNumber(e[0]);
           return num;
         } catch (err) {
+          console.error(err)
           throw new Error(
             `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`,
           );
@@ -76,6 +77,7 @@ function SAFE_CONVERSION(
       try {
         seriesInvestments = [toNumber(seriesInvestmentRanges)];
       } catch (err) {
+        console.error(err)
         throw new Error(
           `SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`,
         );
@@ -179,6 +181,7 @@ export { onOpen, onEdit, onInstall, doGet, doPost, SAFE_CONVERSION, VERSION };
 
 // Hack to get in custom function JSDOCS
 declare const global: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 };
 

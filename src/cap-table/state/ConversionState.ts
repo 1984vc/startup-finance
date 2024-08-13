@@ -162,40 +162,40 @@ export const createConversionStore = (initialState: IConversionStateData) =>
 
     onValueChange:
       (type: "number" | "percent") =>
-      (
-        value: string | undefined,
-        name: string | undefined,
-        values?: CurrencyInputOnChangeValues,
-      ) => {
-        if (type === "number") {
-          if (name) {
-            let val = values?.float ?? 0;
-            if (val < 0) {
-              return;
+        (
+          value: string | undefined,
+          name: string | undefined,
+          values?: CurrencyInputOnChangeValues,
+        ) => {
+          if (type === "number") {
+            if (name) {
+              const val = values?.float ?? 0;
+              if (val < 0) {
+                return;
+              }
+              // Get the value and replace anything that's not a number or period
+              const newValue = value?.replace(/[^0-9.]/g, "");
+              const newValueNumber = parseFloat(newValue ?? "0");
+              set((state) => ({
+                ...state,
+                [name]: newValueNumber,
+              }));
             }
-            // Get the value and replace anything that's not a number or period
-            const newValue = value?.replace(/[^0-9.]/g, "");
-            const newValueNumber = parseFloat(newValue ?? "0");
-            set((state) => ({
-              ...state,
-              [name]: newValueNumber,
-            }));
-          }
-        } else if (type === "percent") {
-          if (name) {
-            let val = values?.float ?? 0;
-            if (val > 99 || val < 0) {
-              return;
+          } else if (type === "percent") {
+            if (name) {
+              const val = values?.float ?? 0;
+              if (val > 99 || val < 0) {
+                return;
+              }
+              const newValue = value?.replace(/[^0-9.]/g, "");
+              const newValueNumber = parseFloat(newValue ?? "0");
+              set((state) => ({
+                ...state,
+                [name]: newValueNumber,
+              }));
             }
-            const newValue = value?.replace(/[^0-9.]/g, "");
-            const newValueNumber = parseFloat(newValue ?? "0");
-            set((state) => ({
-              ...state,
-              [name]: newValueNumber,
-            }));
           }
-        }
-      },
+        },
     togglePricedRound: (on?: boolean) => {
       set((state) => ({
         ...state,

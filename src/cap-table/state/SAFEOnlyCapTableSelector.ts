@@ -21,7 +21,7 @@ export const getSAFEOnlyCapTableSelector = createSelector(
     );
 
     const currentShareholders = [...existingShareholders, ...safeInvestors];
-    currentShareholders.forEach((shareholder, _idx) => {
+    currentShareholders.forEach((shareholder) => {
       if (shareholder.type === "common") {
         shareholders.push({
           name: shareholder.name,

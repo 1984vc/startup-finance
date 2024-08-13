@@ -37,7 +37,7 @@ const Conversion: React.FC = () => {
   if (!store.current) {
     // If first run, set the initial state to a default or the hash value
     const hash = window.location.hash?.slice(1);
-    let hashState: any | undefined = undefined;
+    let hashState: IConversionStateData | undefined = undefined;
     if (hash) {
       try {
         hashState = decompressState(hash);

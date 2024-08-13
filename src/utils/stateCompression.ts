@@ -1,3 +1,4 @@
+import { IConversionStateData } from "@/cap-table/state/ConversionState";
 import { compressToBase64, decompressFromBase64 } from "lz-string";
 
 // Allow for future changes to state compression and rehydration
@@ -21,15 +22,16 @@ const decodeVersionMagicCode = (
   return [version, b64str];
 };
 
-export const compressState = (state: any): string => {
+export const compressState = (state: IConversionStateData): string => {
   const hash = compressToBase64(JSON.stringify(state));
   return encodeURLSafeBase64(`${VERSION_MAGIC_CODE}${hash}`);
 };
 
-export const decompressState = (str: string): any => {
+export const decompressState = (str: string): IConversionStateData => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_version, b64str] = decodeVersionMagicCode(str);
   // for now, do nothing with the version
   const stateBuffer = decompressFromBase64(b64str);
   const stateJSON = JSON.parse(stateBuffer.toString());
-  return stateJSON;
+  return stateJSON as IConversionStateData;
 };
