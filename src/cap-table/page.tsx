@@ -26,6 +26,7 @@ import { compressState, decompressState } from "@/utils/stateCompression";
 import { CapTableResults } from "@/components/safe-conversion/Conversion/CapTableResults";
 import { getSAFEOnlyCapTableSelector } from "./state/SAFEOnlyCapTableSelector";
 import { getCapTablePropsSelector } from "./state/CapTableSelector";
+import { getLocalStorage, updateLocalStorage } from "./state/localstorage";
 
 const Conversion: React.FC = () => {
   const randomInvestors = useRef<ReturnType<typeof getRandomData>>();
@@ -48,9 +49,14 @@ const Conversion: React.FC = () => {
     if (hashState) {
       store.current = createConversionStore(hashState as IConversionStateData);
     } else {
-      store.current = createConversionStore(
-        initialState({ ...randomInvestors.current }),
-      );
+      const localstorage = getLocalStorage();
+      if (localstorage.length > 0) {
+        store.current = createConversionStore(localstorage[0]);
+      } else {
+        store.current = createConversionStore(
+          initialState({ ...randomInvestors.current }),
+        );
+      }
     }
   }
 
@@ -71,7 +77,6 @@ const Conversion: React.FC = () => {
 
   const hasNewRound = true
 
-
   const [saveURL, setSaveURL] = useState<string>(
     window.location.href + window.location.hash,
   );
@@ -83,6 +88,7 @@ const Conversion: React.FC = () => {
     const hash = compressState(state);
     const url = window.location.href + "#" + hash;
     window.location.hash = hash;
+    updateLocalStorage(state);
     setSaveURL(url);
   }, [state]);
 

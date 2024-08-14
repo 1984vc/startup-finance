@@ -1,5 +1,6 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
 import { compressToBase64, decompressFromBase64 } from "lz-string";
+import { generateUUID } from "./uuid";
 
 // Allow for future changes to state compression and rehydration
 const VERSION_MAGIC_CODE = "AA";
@@ -31,7 +32,11 @@ export const decompressState = (str: string): IConversionStateData => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_version, b64str] = decodeVersionMagicCode(str);
   // for now, do nothing with the version
+
   const stateBuffer = decompressFromBase64(b64str);
-  const stateJSON = JSON.parse(stateBuffer.toString());
-  return stateJSON as IConversionStateData;
+  const stateObj = JSON.parse(stateBuffer.toString());
+  // Ensure that our old state data is still compatible
+  const id = stateObj["id"] ?? ""
+  stateObj["id"] = id.length > 0 ? id : generateUUID(16)
+  return stateObj as IConversionStateData;
 };

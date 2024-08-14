@@ -75,22 +75,23 @@ export const getPriceRoundPropsSelector = createSelector(
   ): PricedRoundPropsData => {
     investmentChange = investmentChange ?? 0;
     preMoneyChange = preMoneyChange ?? 0;
+
+
     // Get the Series Investments and distribute the investmentChange over the series investors pro rata
     const initialSeriesInvestment = rowData
       .filter((row) => row.type === "series")
       .map((row) => row.investment)
       .reduce((acc, val) => acc + val, 0);
+
+    // Pro rata the investment change over the series investors
     const seriesInvestmentChanges = rowData.map((row) => {
       if (row.type === "series") {
         return investmentChange * (row.investment / initialSeriesInvestment);
       }
       return 0;
     });
-    const currentTotalInvestment = initialSeriesInvestment + investmentChange;
-    const previousTotalInvestment = initialSeriesInvestment;
-    const currentPreMoney = preMoney + preMoneyChange;
-    const previousPreMoney = preMoney;
 
+    // Update the series investments with the above pro rata changes
     const updatedRows = rowData.map((row, idx) => {
       if (row.type === "series") {
         return {
@@ -101,6 +102,14 @@ export const getPriceRoundPropsSelector = createSelector(
       return row;
     });
 
+
+    // Keep track of the changes before and after to calculate the effect on the cap table
+    const currentTotalInvestment = initialSeriesInvestment + investmentChange;
+    const previousTotalInvestment = initialSeriesInvestment;
+    const currentPreMoney = preMoney + preMoneyChange;
+    const previousPreMoney = preMoney;
+
+    // Before we made the changes
     const previousState: IConversionStateData = {
       preMoney: preMoney,
       targetOptionsPool,
@@ -108,6 +117,7 @@ export const getPriceRoundPropsSelector = createSelector(
       rowData,
     };
 
+    // With the changes
     const currentState: IConversionStateData = {
       preMoney: currentPreMoney,
       targetOptionsPool,

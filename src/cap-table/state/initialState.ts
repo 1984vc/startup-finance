@@ -1,3 +1,4 @@
+import { generateUUID } from "@/utils/uuid";
 import { IConversionStateData } from "./ConversionState";
 import { earlyStageInvestors, founders, seriesAInvestors } from "./data";
 
@@ -24,6 +25,7 @@ export const initialState = ({
   randomSeed,
   randomSeries,
 }: ReturnType<typeof getRandomData>): IConversionStateData => ({
+  id: generateUUID(16),
   rowData: [
     {
       id: getID(),

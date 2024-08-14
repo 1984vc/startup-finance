@@ -13,11 +13,11 @@ export type ResultSelectorState = IConversionStateData & {
 };
 
 const optionsPoolRefreshRow = (current: BestFit, previous: BestFit): CapTableRow => {
-  const currentOwnershipPct= (current.additionalOptions / current.totalShares) * 100
-  const previousOwnershipPct= (previous.additionalOptions / previous.totalShares) * 100
+  const currentOwnershipPct= (current.totalOptions / current.totalShares) * 100
+  const previousOwnershipPct= (previous.totalOptions / previous.totalShares) * 100
   return {
     name: "Options Pool Refresh",
-    shares: current.additionalOptions,
+    shares: current.totalOptions,
     ownershipPct: currentOwnershipPct,
     ownershipChange: currentOwnershipPct - previousOwnershipPct,
   }
