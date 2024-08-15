@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import { BookmarkIcon, BookmarkSquareIcon } from "@heroicons/react/24/outline";
 
 const Share: React.FC<{ url: string }> = ({ url }) => {
-  console.log("render");
   const [isCopied, setCopied] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -11,7 +10,6 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
   const isUpdatedRef = useRef<boolean>(false);
 
   if (urlRef.current !== url) {
-    console.log("url changed", url, urlRef.current);
     urlRef.current = url;
     isUpdatedRef.current = true;
   }

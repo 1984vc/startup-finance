@@ -2,7 +2,7 @@
   "name": "cap-table-worksheet",
   "private": true,
   "version": "1.0.0",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc -b && vite build",
@@ -16,8 +16,10 @@
     "gas-login": "clasp login"
   },
   "dependencies": {
+    "@types/object-hash": "^3.0.6",
     "gas-webpack-plugin": "^2.6.0",
     "lz-string": "^1.5.0",
+    "object-hash": "^3.0.0",
     "react": "^18.3.1",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18.3.1",

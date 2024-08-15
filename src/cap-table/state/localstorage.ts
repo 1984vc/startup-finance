@@ -1,20 +1,26 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
-import { compressState, decompressState } from "@/utils/stateCompression";
 import { generateUUID } from "@/utils/uuid";
+import hash  from "object-hash";
 
 
 const MAX_RECENT_STATES = 10;
+const RECENT_STATES_KEY = "recent_v1";
+
+const hashObject = (obj: any) => {
+  return hash(obj, { algorithm: "sha1" });
+}
 
 export type LocalStorageConversionStateData = {
   id: string;
-  hashState: string;
+  stateString: string;
+  hash: string;
   createdAt: number;
   updatedAt: number;
 }
 
 // Get the most recent states from local storage
 const getRecentStates = (): LocalStorageConversionStateData[] => {
-  const recentSerialized = window.localStorage.getItem("recent")
+  const recentSerialized = window.localStorage.getItem(RECENT_STATES_KEY)
   let recents: LocalStorageConversionStateData[] = [];
   if (recentSerialized !== null && recentSerialized.length > 0) {
     try {
@@ -30,32 +36,34 @@ const getRecentStates = (): LocalStorageConversionStateData[] => {
 // Update the most recent states in local storage by id
 export const updateRecentStates = (id:string, state:IConversionStateData) => {
   const recents = getRecentStates();
-  const hash = compressState(state);
+  const stateString = JSON.stringify(state);
   const idx = recents.findIndex((s) => s.id === id);
   if (idx !== -1) {
     recents[idx] = {
       ...recents[idx],
-      hashState: hash,
+      stateString,
+      hash: hashObject(state),
       updatedAt: Date.now(),
     }
-    window.localStorage.setItem("recent", JSON.stringify(recents));
+    window.localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
   } else {
     console.log("Could not find state to update, creating", id, state);
     recents.push({
       id,
-      hashState: hash,
+      stateString: JSON.stringify(state),
+      hash: hashObject(state),
       updatedAt: Date.now(),
       createdAt: Date.now(),
     })
-    window.localStorage.setItem("recent", JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
+    window.localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
   }
 }
 
 // The secret sauce here is that we only need create a new state IF it doesn't already exist (a state with the same hash)
 export const createRecentState = (state: IConversionStateData): [id: string, state: IConversionStateData] => {
   const recents = getRecentStates();
-  const hash = compressState(state);
-  const existingState = recents.find((s) => s.hashState === hash);
+  const hash = hashObject(state)
+  const existingState = recents.find((s) => s.hash === hash);
   if (existingState) {
     console.log("Found existing state", existingState.id, state);
     return [existingState.id, state]
@@ -64,7 +72,8 @@ export const createRecentState = (state: IConversionStateData): [id: string, sta
     console.log("Creating new state", id);
     recents.push({
       id,
-      hashState: hash,
+      hash,
+      stateString: JSON.stringify(state),
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -78,7 +87,7 @@ export const getRecentState = (): [id: string|undefined, state:IConversionStateD
   const recents = getRecentStates();
   if (recents.length > 0) {
     const mostRecent = recents.sort((a, b) => b.updatedAt - a.updatedAt)[0];
-    return [mostRecent.id, decompressState(mostRecent.hashState)]
+    return [mostRecent.id, JSON.parse(mostRecent.stateString)]
   }
   return [undefined, undefined];
 }
@@ -88,7 +97,7 @@ export const findRecentState = (id: string): IConversionStateData => {
   const recents = getRecentStates();
   const found = recents.find((s) => s.id === id);
   if (found) {
-    return decompressState(found?.hashState)
+    return JSON.parse(found.stateString);
   }
   throw new Error(`Could not find state with id ${id}`);
 }
