@@ -1,15 +1,23 @@
 import { IConversionStateData } from "./ConversionState";
 import { earlyStageInvestors, founders, seriesAInvestors } from "./data";
 
-export const randomFounders = founders.sort(() => Math.random() - 0.5);
-export const randomSeed = earlyStageInvestors.sort(() => Math.random() - 0.5);
-export const randomSeries = seriesAInvestors.sort(() => Math.random() - 0.5);
+export const randomSeries = () => {
+  return seriesAInvestors.sort(() => Math.random() - 0.5);
+}
+
+export const randomSeed = () => {
+  return earlyStageInvestors.sort(() => Math.random() - 0.5);
+}
+
+export const randomFounders = () => {
+  return founders.sort(() => Math.random() - 0.5);
+}
 
 export const getRandomData = () => {
   return {
-    randomFounders,
-    randomSeed,
-    randomSeries,
+    randomFounders: randomFounders(),
+    randomSeed: randomSeed(),
+    randomSeries: randomSeries(),
   };
 };
 
@@ -106,4 +114,5 @@ export const initialState = ({
   preMoney: 16_000_000,
   targetOptionsPool: 10,
   unusedOptions: 750_000,
+  pricedRoundsToShow: 1,
 });

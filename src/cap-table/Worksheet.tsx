@@ -20,12 +20,15 @@ import { CapTableResults } from "@/components/safe-conversion/Conversion/CapTabl
 import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } from "@/cap-table/state/CapTableSelector";
 import { getShareUrl } from "./state/ShareURLSelector";
 import { getErrorSelector } from "./state/ErrorSelector";
+import Finder from "@/components/safe-conversion/Conversion/Finder";
+import { FolderPlusIcon } from "@heroicons/react/24/outline";
 
 type WorksheetProps = {
   conversionState: IConversionState;
+  id: string
 } 
 
-const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
+const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
 
   const {
     rowData,
@@ -53,8 +56,15 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
 
   return (
     <div className={"not-prose"}>
-      <div className="w-full text-right">
+      <div className="w-full flex justify-end gap-2">
         <Share url={getShareUrl(conversionState)}></Share>
+        <Finder currentId={id}></Finder>
+        <a
+          href="#new"
+          className={`w-24 px-4 text-center cursor-pointer py-2 rounded-md focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+        >
+          New <FolderPlusIcon className="inline" width={20} />
+        </a>
       </div>
       <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
       <div>

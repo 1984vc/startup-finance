@@ -45,7 +45,7 @@ export const getExistingShareholderPropsSelector = createSelector(
       percent: number;
       error: boolean;
     }[][] =
-      existingShareholders.map((data) => {
+      existingShareholders.map((data): {shares: number, percent: number, error: boolean}[] => {
         const startingOwnership = {
           shares: data.shares,
           percent: data.shares / totalInitialShares * 100,

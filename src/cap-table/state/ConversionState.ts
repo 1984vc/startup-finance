@@ -30,6 +30,7 @@ export interface IConversionStateData {
   rowData: IRowState[];
   unusedOptions: number;
   preMoney: number;
+  pricedRoundsToShow?: number;
 }
 
 export type ConversionStore = ReturnType<typeof createConversionStore>;
@@ -59,7 +60,7 @@ function getRandomSeed(rowData: IRowState[]) {
   const existingNames = rowData
     .filter((r) => r.type === "safe")
     .map((r) => r.name);
-  const availableNames = randomSeed.filter((r) => !existingNames.includes(r));
+  const availableNames = randomSeed().filter((r) => !existingNames.includes(r));
   if (availableNames.length > 0) {
     return availableNames[Math.floor(Math.random() * availableNames.length)];
   } else {
@@ -71,7 +72,7 @@ function getRandomInvestor(rowData: IRowState[]) {
   const existingNames = rowData
     .filter((r) => r.type === "series")
     .map((r) => r.name);
-  const availableNames = randomSeries.filter((r) => !existingNames.includes(r));
+  const availableNames = randomSeries().filter((r) => !existingNames.includes(r));
   if (availableNames.length > 0) {
     return availableNames[Math.floor(Math.random() * availableNames.length)];
   } else {
@@ -83,7 +84,7 @@ function getRandomFounder(rowData: IRowState[]) {
   const existingNames = rowData
     .filter((r) => r.type === "common")
     .map((r) => r.name);
-  const availableNames = randomFounders.filter(
+  const availableNames = randomFounders().filter(
     (r) => !existingNames.includes(r),
   );
   if (availableNames.length > 0) {
@@ -92,6 +93,8 @@ function getRandomFounder(rowData: IRowState[]) {
     return "Another Founder";
   }
 }
+
+
 
 export const createConversionStore = (initialState: IConversionStateData) =>
   create<IConversionState>((set, get) => ({

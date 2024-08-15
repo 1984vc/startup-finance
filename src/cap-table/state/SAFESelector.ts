@@ -32,7 +32,7 @@ const determineRowNote = (
       // Unless with have priced round, we can't calculate an uncapped SAFE
       return {
         error: "TBD",
-        explanation: "Pre-money SAFEs are dependent on a priced round to calculate ownership pre-conversion ownership",
+        explanation: "Pre-money SAFEs are dependent on a priced round to calculate pre-conversion ownership",
       }
     }
   }

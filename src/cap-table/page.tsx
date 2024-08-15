@@ -6,91 +6,108 @@ import { useStore } from "zustand";
 import {
   ConversionStore,
   createConversionStore,
+  IConversionStateData,
 } from "./state/ConversionState";
 import { getRandomData, initialState } from "./state/initialState";
 import { decompressState } from "@/utils/stateCompression";
-import { createRecentState, getRecentState, updateRecentStates } from "./state/localstorage";
+import { createRecentState, findRecentState, getRecentState, updateRecentStates } from "./state/localstorage";
 import Worksheet from "./Worksheet";
+import { getSerializedSelector } from "./state/SerializeSelector";
 
 
 const Page: React.FC = () => {
-  const randomInvestors = useRef<ReturnType<typeof getRandomData>>();
-  if (!randomInvestors.current) {
-    randomInvestors.current = getRandomData();
-  }
-
   // Keep a state id to save/update the state to local storage
   // We keep multiple states in local storage, so we need to know which one to update
   // Eventually we will expose a way to save and load states
   const [stateId, setStateId] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const store = useRef<ConversionStore>();
-  if (!store.current) {
-    // On the first load, we need to check if there is a hash
-    const hash = window.location.hash?.slice(1);
-    window.location.hash = "";
+  const storeRef = useRef<ConversionStore>();
+  const hashChangeListenerSetRef = useRef<boolean>(false);
 
-    // If we have a hash, it's likely a share URL, so we need to decompress it
-    // Then we need to create a new state if it doesn't already exist
-    if (hash) {
-      try {
-        const state = decompressState(hash);
-        const [id, newState] = createRecentState(state)
-        setStateId(id)
-        store.current = createConversionStore(newState);
-      } catch (e) {
-        console.error("Failed to decompress state", e)
-        // Just use a clean state
-        const [id, state] = createRecentState(initialState({ ...randomInvestors.current }));
-        setStateId(id)
-        store.current = createConversionStore(state);
-      }
-    } else {
-      const [id, state] = getRecentState();
-      if (id && state) {
-        setStateId(id)
-        store.current = createConversionStore(state);
-      } else {
-        const [id, state] = createRecentState(initialState({ ...randomInvestors.current }));
-        setStateId(id)
-        store.current = createConversionStore(state);
-      }
-    }
-
+  const updatePageState = (state: IConversionStateData) => {
+    const store = createConversionStore(state);
+    storeRef.current = store
+    const [id] = createRecentState(getSerializedSelector(state));
+    setStateId(id)
+    window.location.hash = "I" + id;
   }
 
-
-  const state = useStore(store.current);
-
-  window.addEventListener('hashchange', () => {
-    // This is the only way to look for hash changes
-    const hash = window.location.hash?.slice(1);
-    if (hash) {
-      try {
-        const state = decompressState(hash);
-        const [id, newState] = createRecentState(state)
-        store.current = createConversionStore(newState);
+  const blankPageState = (findRecent: boolean) => {
+    if (findRecent) {
+      const [id, state] = getRecentState();
+      if (id && state) {
+        const store = createConversionStore(state);
+        storeRef.current = store
         setStateId(id)
-      } catch (e) {
-        console.error("Failed to decompress state", e)
+        window.location.hash = "I" + id;
+        return
       }
-      window.location.hash = "";
     }
-  });
+    console.log("Creating new state", initialState({ ...getRandomData() }));
+    const store = createConversionStore(initialState({ ...getRandomData() }));
+    storeRef.current = store
+    const [id] = createRecentState(getSerializedSelector(store.getState()));
+    setStateId(id)
+    window.location.hash = "I" + id;
+  }
+
+  // Called everytime we see a hash change and on first load
+  const handleHash = (hash: string) => {
+    if (hash.charAt(0) === "I") {
+      const id = hash.slice(1)
+      const state = findRecentState(id)
+      console.log("Found state", id, state);
+      if (state) {
+        storeRef.current = createConversionStore(state);
+        setStateId(id)
+        window.location.hash = "I" + id;
+      } else {
+        updatePageState(initialState({...getRandomData() }))
+      }
+    } else if (hash.charAt(0) === "A") {
+      const state = decompressState(hash);
+      updatePageState(state)
+    } else if (hash === "new") {
+      blankPageState(false)
+    } else {
+      blankPageState(true)
+    }
+    setLoading(false);
+  }
+
+  if (!storeRef.current) {
+    // On the first load, we need to check the hash (or lack thereof)
+    handleHash(window.location.hash.slice(1));
+  }
+
+  const worksheetState = useStore(storeRef.current!);
+
+  if (!hashChangeListenerSetRef.current) {
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash?.slice(1);
+      // This is the only way to look for hash changes
+      setLoading(true);
+      handleHash(hash);
+    });
+    hashChangeListenerSetRef.current = true
+  }
 
   useEffect(() => {
-    // Save the state to local storage
     if (stateId) {
-      updateRecentStates(stateId, state)
+      updateRecentStates(stateId, getSerializedSelector(worksheetState));
     }
-  }, [state, stateId]);
+  }, [worksheetState, stateId]);
+
 
 
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-between py-8 min-w-[1024px]">
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <Worksheet conversionState={state} />
+          { !loading && stateId && 
+            <Worksheet conversionState={worksheetState} id={stateId} />
+          }
         </div>
       </main>
     </div>

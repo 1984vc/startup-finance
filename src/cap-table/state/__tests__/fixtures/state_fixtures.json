@@ -78,5 +78,6 @@
   ],
   "preMoney": 16700000,
   "targetOptionsPool": 10,
-  "unusedOptions": 609272
+  "unusedOptions": 609272,
+  "pricedRoundsToShow": 1
 }

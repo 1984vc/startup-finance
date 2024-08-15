@@ -27,7 +27,7 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
     if (isUpdatedRef.current) {
       return (
         <span>
-          Save
+          Share
           <span className="inline">
             <BookmarkSquareIcon className="inline pl-2" width={20} />
           </span>
@@ -39,7 +39,7 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
     }
     return (
       <span>
-        Save
+        Share
         <span className="inline">
             <BookmarkIcon className="inline pl-2" width={20}/>
         </span>

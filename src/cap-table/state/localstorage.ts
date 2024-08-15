@@ -2,11 +2,10 @@ import { IConversionStateData } from "@/cap-table/state/ConversionState";
 import { generateUUID } from "@/utils/uuid";
 import hash  from "object-hash";
 
-
 // Simply store the most recent states in local storage
 
 const MAX_RECENT_STATES = 10;
-const RECENT_STATES_KEY = "recent_v1";
+const RECENT_STATES_KEY = "recent_v3";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hashObject = (obj: any) => {
@@ -22,12 +21,13 @@ export type LocalStorageConversionStateData = {
 }
 
 // Get the most recent states from local storage
-const getRecentStates = (): LocalStorageConversionStateData[] => {
+export const getRecentStates = (): LocalStorageConversionStateData[] => {
   const recentSerialized = window.localStorage.getItem(RECENT_STATES_KEY)
   let recents: LocalStorageConversionStateData[] = [];
   if (recentSerialized !== null && recentSerialized.length > 0) {
     try {
-      recents = JSON.parse(recentSerialized);
+      const items = JSON.parse(recentSerialized) as LocalStorageConversionStateData[];
+      recents = items.sort((a, b) => b.updatedAt - a.updatedAt);
     } catch (e) {
       console.error("Error parsing states from local storage", e);
     }
@@ -66,23 +66,17 @@ export const updateRecentStates = (id:string, state:IConversionStateData) => {
 export const createRecentState = (state: IConversionStateData): [id: string, state: IConversionStateData] => {
   const recents = getRecentStates();
   const hash = hashObject(state)
-  const existingState = recents.find((s) => s.hash === hash);
-  if (existingState) {
-    console.log("Found existing state", existingState.id, state);
-    return [existingState.id, state]
-  } else {
-    const id = generateUUID(16);
-    console.log("Creating new state", id);
-    recents.push({
-      id,
-      hash,
-      stateString: JSON.stringify(state),
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    });
-    updateRecentStates(id, state);
-    return [id, state];
-  }
+  const id = generateUUID(16);
+  console.log("Creating new state", id);
+  recents.push({
+    id,
+    hash,
+    stateString: JSON.stringify(state),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  });
+  updateRecentStates(id, state);
+  return [id, state];
 }
 
 // If we show up with nothing, find the most recent state, or return undefined
@@ -96,11 +90,12 @@ export const getRecentState = (): [id: string|undefined, state:IConversionStateD
 }
 
 // If we show up with nothing, find the most recent state, or return undefined
-export const findRecentState = (id: string): IConversionStateData => {
+export const findRecentState = (id: string): IConversionStateData | null => {
   const recents = getRecentStates();
   const found = recents.find((s) => s.id === id);
+  console.log("Found state local", id, JSON.parse(found?.stateString || "null"));
   if (found) {
     return JSON.parse(found.stateString);
   }
-  throw new Error(`Could not find state with id ${id}`);
+  return null
 }
