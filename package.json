@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc -b && vite build",
-    "build:hugo": "yarn build && cp dist/assets/index*.js ../static/cap-table-worksheet/index.js && cp dist/assets/index*.css ../static/cap-table-worksheet/index.css",
+    "build:hugo": "yarn build && cp dist/assets/index*.js ../assets/cap-table-worksheet/index.js && cp dist/assets/index*.css ../assets/cap-table-worksheet/index.css",
     "lint": "eslint .",
     "format": "prettier . --write",
     "preview": "vite preview",
