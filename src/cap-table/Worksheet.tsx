@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import CurrencyInput from "react-currency-input-field";
 
 import {
   getPricedConversion,
   IConversionState,
   SeriesState,
 } from "@/cap-table/state/ConversionState";
-import CurrencyInput from "react-currency-input-field";
 import ExisingShareholderList from "@/components/safe-conversion/Conversion/ExistingShareholders";
 import PricedRound from "@/components/safe-conversion/Conversion/PricedRound";
 import SeriesInvestorList from "@/components/safe-conversion/Conversion/SeriesInvestorList";

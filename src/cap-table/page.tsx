@@ -19,6 +19,9 @@ const Page: React.FC = () => {
     randomInvestors.current = getRandomData();
   }
 
+  // Keep a state id to save/update the state to local storage
+  // We keep multiple states in local storage, so we need to know which one to update
+  // Eventually we will expose a way to save and load states
   const [stateId, setStateId] = useState<string>();
 
   const store = useRef<ConversionStore>();
@@ -26,6 +29,9 @@ const Page: React.FC = () => {
     // On the first load, we need to check if there is a hash
     const hash = window.location.hash?.slice(1);
     window.location.hash = "";
+
+    // If we have a hash, it's likely a share URL, so we need to decompress it
+    // Then we need to create a new state if it doesn't already exist
     if (hash) {
       try {
         const state = decompressState(hash);
@@ -34,25 +40,30 @@ const Page: React.FC = () => {
         store.current = createConversionStore(newState);
       } catch (e) {
         console.error("Failed to decompress state", e)
+        // Just use a clean state
+        const [id, state] = createRecentState(initialState({ ...randomInvestors.current }));
+        setStateId(id)
+        store.current = createConversionStore(state);
       }
     } else {
       const [id, state] = getRecentState();
       if (id && state) {
         setStateId(id)
         store.current = createConversionStore(state);
+      } else {
+        const [id, state] = createRecentState(initialState({ ...randomInvestors.current }));
+        setStateId(id)
+        store.current = createConversionStore(state);
       }
     }
+
   }
-  if (!store.current) {
-    const [id, state] = createRecentState(initialState({ ...randomInvestors.current }));
-    setStateId(id)
-    store.current = createConversionStore(state);
-  }
+
 
   const state = useStore(store.current);
 
   window.addEventListener('hashchange', () => {
-    // On the first load, we need to check if there is a hash
+    // This is the only way to look for hash changes
     const hash = window.location.hash?.slice(1);
     if (hash) {
       try {

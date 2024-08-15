@@ -9,10 +9,17 @@ const getMFNCapAter = (rows: SAFEState[], idx: number): number => {
   // and return that number
   return (
     rows.slice(idx + 1).reduce((val, row) => {
+
       // Ignore anything that's in MFN
       if (row.conversionType === "mfn") {
         return val;
       }
+
+      // Ignore Pre-money safes for now. The assumption is that the MFN is Post-money (YC's is)
+      if (row.conversionType === "pre") {
+        return val;
+      }
+
       // if the value is 0, return the cap (this is the lowest possible value)
       if (val === 0) {
         return row.cap;

@@ -3,6 +3,8 @@ import { generateUUID } from "@/utils/uuid";
 import hash  from "object-hash";
 
 
+// Simply store the most recent states in local storage
+
 const MAX_RECENT_STATES = 10;
 const RECENT_STATES_KEY = "recent_v1";
 
