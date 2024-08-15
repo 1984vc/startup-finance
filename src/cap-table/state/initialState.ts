@@ -25,7 +25,6 @@ export const initialState = ({
   randomSeed,
   randomSeries,
 }: ReturnType<typeof getRandomData>): IConversionStateData => ({
-  id: generateUUID(16),
   rowData: [
     {
       id: getID(),
