@@ -12,7 +12,7 @@ import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList"
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 
 
-const buildShareholderProps = (
+const buildPricedRoundShareholderProps = (
   currentShareholders: (SAFEProps | SeriesProps | ExistingShareholderProps)[], previousShareholders: (SAFEProps | SeriesProps | ExistingShareholderProps)[]) => {
     const capTableRows: CapTableRow[] = [];
 
@@ -21,12 +21,16 @@ const buildShareholderProps = (
         const prevShareholder = previousShareholders[
           idx
         ] as ExistingShareholderProps;
-        capTableRows.push({
-          name: shareholder.name,
-          shares: shareholder.shares,
-          ownershipPct: shareholder.ownership[2].percent,
-          ownershipChange: shareholder.ownership[2].percent - prevShareholder.ownership[2].percent,
-        });
+        // Bit tacky, but for the priced round we want to see the full refresh at the bottom of the table
+        if (shareholder.name !== "Unused Options Pool") {
+          capTableRows.push({
+            name: shareholder.name,
+            shares: shareholder.shares,
+            ownershipPct: shareholder.ownership[2].percent,
+            ownershipChange: shareholder.ownership[2].percent - prevShareholder.ownership[2].percent,
+          });
+
+        }
       } else if (shareholder.type === "safe") {
         const prevShareholder = previousShareholders[idx] as SAFEProps;
         capTableRows.push({
@@ -139,7 +143,7 @@ export const getPriceRoundPropsSelector = createSelector(
       ...getSeriesPropsSelector(currentState),
     ];
 
-    const currentCapTable = buildShareholderProps(currentShareholderProps, previousShareholderProps);
+    const currentCapTable = buildPricedRoundShareholderProps(currentShareholderProps, previousShareholderProps);
 
     const additionalOptionsPct =
       (currentPricedConversion.additionalOptions /
