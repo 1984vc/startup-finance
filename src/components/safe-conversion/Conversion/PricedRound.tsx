@@ -1,15 +1,12 @@
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import { BestFit } from "@/library/safe_conversion";
 import QuestionMarkTooltipComponent from "@/components/tooltip/QuestionMarkTooltip";
+import { CapTableRow } from "./CapTableResults";
 
-export interface CapTableRow {
-  name: string;
-  shares?: number;
-  investment?: number;
-  ownershipPct: number;
-  ownershipError?: string;
-  ownershipChange?: number;
-}
+export type OwnershipPctNotes = {
+  error?: "TBD" | "Error";
+  explanation?: string;
+};
 
 interface PricedRoundData {
   preMoney: number;

@@ -17,11 +17,9 @@ import SafeNoteList from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { getPriceRoundPropsSelector } from "@/cap-table/state/PricedRoundSelector";
 import Share from "@/components/safe-conversion/Conversion/Share";
 import { CapTableResults } from "@/components/safe-conversion/Conversion/CapTableResults";
-import { getSAFEOnlyCapTableSelector } from "@/cap-table/state/SAFEOnlyCapTableSelector";
-import { getCapTablePropsSelector } from "@/cap-table/state/CapTableSelector";
+import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } from "@/cap-table/state/CapTableSelector";
 import { getShareUrl } from "./state/ShareURLSelector";
-
-
+import { getErrorSelector } from "./state/ErrorSelector";
 
 type WorksheetProps = {
   conversionState: IConversionState;
@@ -39,8 +37,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
     onValueChange,
   } = conversionState;
 
-  const hasNewRound = true
-
   const totalSeriesInvesment = (
     rowData.filter((row) => row.type === "series") as SeriesState[]
   )
@@ -52,7 +48,8 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
 
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
-  console.log("rendering conversion", conversionState);
+
+  const errors = getErrorSelector(conversionState);
 
   return (
     <div className={"not-prose"}>
@@ -90,13 +87,13 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
         </h2>
         <p>This assumes that all our SAFE's convert at their Cap</p>
         <CapTableResults
-          {...getSAFEOnlyCapTableSelector({
+          {...getSafeCapTablePropsSelector({
             ...conversionState,
           })}
         />
       </div>
 
-      <div style={{ display: hasNewRound ? "block" : "none" }}>
+      <div>
         <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round</h1>
         <div className="flex space-x-4 ml-10">
           <div className="flex-1">
@@ -176,25 +173,30 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
       </div>
       <div className="pt-10">
         <h2 className="text-2xl font-bold mb-4 not-prose">Priced Round Overview</h2>
-        <PricedRound
-          {...getPriceRoundPropsSelector({
-            ...conversionState,
-            preMoneyChange,
-            investmentChange,
-          })}
-          updateInvestmentChange={updateInvestmentChange}
-          updatePreMoneyChange={updatePreMoneyChange}
-        />
-        <h2 className="text-lg font-bold mb-4 mt-8 not-prose">
-          Cap Table after Priced Round
-        </h2>
-        <CapTableResults
-          {...getCapTablePropsSelector({
-            ...conversionState,
-            preMoneyChange,
-            investmentChange,
-          })}
-        />
+        { errors.safeError && <p className="text-red-500 text-xl">SAFE Conversion Error</p>}
+        { !errors.safeError &&
+          <div>
+            <PricedRound
+              {...getPriceRoundPropsSelector({
+                ...conversionState,
+                preMoneyChange,
+                investmentChange,
+              })}
+              updateInvestmentChange={updateInvestmentChange}
+              updatePreMoneyChange={updatePreMoneyChange}
+            />
+            <h2 className="text-lg font-bold mb-4 mt-8 not-prose">
+              Cap Table after Priced Round
+            </h2>
+            <CapTableResults
+              {...getPricedRoundCapTablePropsSelector({
+                ...conversionState,
+                preMoneyChange,
+                investmentChange,
+              })}
+            />
+          </div>
+        }
       </div>
     </div>
   );

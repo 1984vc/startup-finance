@@ -1,8 +1,9 @@
 import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
-import ToolipComponent from "@/components/tooltip/Tooltip";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { OwnershipPctNotes } from "./PricedRound";
+import PercentNote from "./PercentNote";
 
 export interface SAFEProps {
   id: string;
@@ -15,8 +16,7 @@ export interface SAFEProps {
   ownership: {
     shares?: number
     percent: number;
-    error?: string | undefined;
-    reason?: string | undefined;
+    note?: OwnershipPctNotes
   } [];
   allowDelete?: boolean;
   shares?: number;
@@ -123,14 +123,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="mfn">Uncapped MFN</option>
       </select>
       <div className="w-24 text-right">
-        {data.ownership[0].error ? (
-          <ToolipComponent content={data.ownership[0].reason ?? ""}>
-            {data.ownership[0].error}
-            <sup>*</sup>
-          </ToolipComponent>
-        ) : (
-          data.ownership[0].percent.toFixed(2) + "%"
-        )}
+        <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />
       </div>
     </div>
   );

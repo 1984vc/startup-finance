@@ -18,15 +18,12 @@ export const getExistingShareholderPropsSelector = createSelector(
       (acc, val) => acc + val.ownership[0].percent,
       0,
     );
+
     // Look through the SAFEs and find out if any have an OwnershipError
     // If so, we need to show an error on the dilutedPct
     const dilutedPctError = safes.some(
-      (safe) => safe.ownership[0].error === "Error",
+      (safe) => safe.ownership[0].note?.error === "Error",
     )
-      ? "Error"
-      : safes.some((safe) => safe.ownership[0].error === "TBD")
-        ? "TBD"
-        : undefined;
 
     const existingShareholders = rowData.filter((row) => row.type === "common");
 
@@ -46,21 +43,25 @@ export const getExistingShareholderPropsSelector = createSelector(
     const shareholdersPct: {
       shares: number;
       percent: number;
-      error?: string;
+      error: boolean;
     }[][] =
       existingShareholders.map((data) => {
         const startingOwnership = {
           shares: data.shares,
           percent: data.shares / totalInitialShares * 100,
+          error: false,
         }
         const preConversionOwnership = {
           shares: data.shares,
           percent: ((100 - safeTotalOwnershipPct) * (startingOwnership.percent / 100)),
+          // Any error in the SAFE will make this ownership invalid
           error: dilutedPctError,
         };
         const pricedRoundOwnership = {
           shares: data.shares,
           percent: 100 * (data.shares / (pricedConversion?.totalShares ?? data.shares)),
+          // Any error in the SAFE will make this ownership invalid
+          error: dilutedPctError,
         };
         return [
           startingOwnership,

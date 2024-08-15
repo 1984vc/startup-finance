@@ -3,13 +3,11 @@ import { getPricedConversion, IConversionStateData } from "./ConversionState";
 import { getSAFERowPropsSelector } from "./SAFESelector";
 import { getSeriesPropsSelector } from "./SeriesSelector";
 import { getExistingShareholderPropsSelector } from "./ExistingShareholderSelector";
-import {
-  CapTableRow,
-  PricedRoundPropsData,
-} from "@/components/safe-conversion/Conversion/PricedRound";
+import { PricedRoundPropsData, } from "@/components/safe-conversion/Conversion/PricedRound";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
+import { CapTableRow } from "@/components/safe-conversion/Conversion/CapTableResults";
 
 
 const buildPricedRoundShareholderProps = (

@@ -6,6 +6,7 @@ import hash  from "object-hash";
 const MAX_RECENT_STATES = 10;
 const RECENT_STATES_KEY = "recent_v1";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hashObject = (obj: any) => {
   return hash(obj, { algorithm: "sha1" });
 }

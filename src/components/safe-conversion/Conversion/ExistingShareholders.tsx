@@ -12,7 +12,7 @@ export interface ExistingShareholderProps {
   ownership: {
     shares: number;
     percent: number;
-    error?: string;
+    error?: boolean;
   }[];
   allowDelete?: boolean;
 }

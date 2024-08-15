@@ -26,7 +26,6 @@ export type IRowState = SAFEState | ExistingShareholderState | SeriesState;
 
 // The only thing we need to serialize
 export interface IConversionStateData {
-  hasNewRound?: boolean;
   targetOptionsPool: number;
   rowData: IRowState[];
   unusedOptions: number;
@@ -39,7 +38,6 @@ export interface IConversionState extends IConversionStateData {
   onAddRow: (type: "safe" | "series" | "common") => void;
   onDeleteRow: (id: string) => void;
   onUpdateRow: (data: IRowState) => void;
-  togglePricedRound: (on?: boolean) => void;
   onValueChange: (
     type: "number" | "percent",
   ) => (
@@ -196,12 +194,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             }
           }
         },
-    togglePricedRound: (on?: boolean) => {
-      set((state) => ({
-        ...state,
-        hasNewRound: on ?? false,
-      }));
-    },
   }));
 
 export const getPricedConversion = createSelector(
@@ -214,7 +206,7 @@ export const getPricedConversion = createSelector(
     preMoney,
     targetOptionsPool,
     unusedOptions,
-  ): BestFit | undefined => {
+  ): BestFit => {
     const commonStock = (
       rowData.filter(
         (row) => row.type === "common",

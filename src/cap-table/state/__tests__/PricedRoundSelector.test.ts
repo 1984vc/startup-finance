@@ -12,7 +12,6 @@ describe("Result Selector", () => {
     const store = createConversionStore(fixtureData as IConversionStateData);
     const resultSelector = getPriceRoundPropsSelector({
       ...store.getState(),
-      hasNewRound: true,
       preMoneyChange: 0,
       investmentChange: 0,
     });
@@ -22,7 +21,6 @@ describe("Result Selector", () => {
     const store = createConversionStore(fixtureData as IConversionStateData);
     const resultSelector = getPriceRoundPropsSelector({
       ...store.getState(),
-      hasNewRound: true,
       preMoneyChange: 0,
       investmentChange: 500_000,
     });
@@ -33,7 +31,6 @@ describe("Result Selector", () => {
     const store = createConversionStore(fixtureData as IConversionStateData);
     const resultSelector = getPriceRoundPropsSelector({
       ...store.getState(),
-      hasNewRound: true,
       preMoneyChange: 0,
       investmentChange: 500_000,
       targetOptionsPool: 0,

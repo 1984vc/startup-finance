@@ -38,9 +38,11 @@ const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
   return safe.cap;
 };
 
+
+// Calculate the ownership percentages for each safe, pre and post conversion
 export const calcSAFEs = (
   rowData: IRowState[],
-  pricedConversion?: BestFit,
+  pricedConversion: BestFit,
 ): [pct: number, cap: number, shares: number][][] => {
   const rows = rowData.filter((row) => row.type === "safe");
 
@@ -48,22 +50,41 @@ export const calcSAFEs = (
     return getCapForSafe(safe, rows);
   });
 
+  // Calculate the ownership percentages for each safe
+  // Both pre and post conversion
   return rows.map((data, idx) => {
+    const cap = safeCaps[idx];
     const rowCalcs: [number, number, number][] = []
+    const discountedConversionPPS = pricedConversion.pps * (1 - data.discount);
+
+    let safePPS = discountedConversionPPS
+
+    if (cap > 0) {
+      safePPS = Math.min(
+        discountedConversionPPS,
+        data.conversionType === 'pre' ?
+          // Pre-money conversion is base don pre-money shares
+          cap / pricedConversion.preMoneyShares :
+          cap / pricedConversion.postMoneyShares
+      );
+    }
+
+    const safeShares = Math.floor(data.investment / safePPS);
+    
     rowCalcs.push([
-      (data.investment / safeCaps[idx]) * 100,
-      safeCaps[idx],
+      (safeShares / pricedConversion.postMoneyShares) * 100,
+      cap,
       0,
     ]);
-    if (pricedConversion) {
-      const pps = pricedConversion.ppss[idx];
-      const shares = Math.floor(data.investment / pps);
-      rowCalcs.push([
-        (shares / pricedConversion.totalShares) * 100,
-        safeCaps[idx],
-        shares,
-      ]);
-    }
+
+    const pps = pricedConversion.ppss[idx];
+    const shares = Math.floor(data.investment / pps);
+    rowCalcs.push([
+      (shares / pricedConversion.totalShares) * 100,
+      cap,
+      shares,
+    ]);
+
     return rowCalcs;
   });
 };

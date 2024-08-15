@@ -1,6 +1,14 @@
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
-import { CapTableRow } from "./PricedRound";
 import { BestFit } from "@/library/safe_conversion";
+
+export interface CapTableRow {
+  name: string;
+  shares?: number;
+  investment?: number;
+  ownershipPct: number;
+  ownershipChange?: number;
+  error?: boolean
+}
 
 export type CapTableProps = {
     pricedConversion?: BestFit,
@@ -26,8 +34,8 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
     (shareholder) => shareholder.ownershipChange !== 0,
   );
   const ownershipError = capTable.find(
-    (shareholder) => shareholder.ownershipError !== undefined,
-  )?.ownershipError;
+    (shareholder) => shareholder.error
+  ) !== undefined;
 
   return (
     <div>
@@ -54,13 +62,16 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                     : ""}
                 </td>
                 <td className="py-3 px-4 text-left">
-                  {shareholder.shares
-                    ? formatNumberWithCommas(shareholder.shares)
-                    : ""}
+                  {ownershipError
+                    ? "Error"
+                    : shareholder.shares
+                      ? formatNumberWithCommas(shareholder.shares)
+                      : ""
+                  }
                 </td>
                 <td className="py-3 px-4 text-right">
                   {ownershipError
-                    ? ownershipError
+                    ? "Error"
                     : shareholder.ownershipPct.toFixed(2) + "%"}
                 </td>
                 {hasChanges && (
@@ -81,7 +92,7 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                 {formatNumberWithCommas(totalShares)}
               </td>
               <td className="py-3 px-4 text-right">
-                {ownershipError ? ownershipError : totalPct.toFixed(2) + "%"}
+                {ownershipError ? "Error" : totalPct.toFixed(2) + "%"}
               </td>
               {hasChanges && <td className="py-3 px-4 text-right"></td>}
             </tr>

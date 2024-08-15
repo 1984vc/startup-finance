@@ -6,24 +6,36 @@ import {
 } from "./ConversionState";
 import { calcSAFEs } from "@/utils/rowDataHelper";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
+import { OwnershipPctNotes } from "@/components/safe-conversion/Conversion/PricedRound";
 
-const determineRowError = (
+// Let's us handler error and things we should bring to the user's attention
+// Example: Pre-money ownership for a SAFE is dependent on a priced round, but post-money ownership is not
+const determineRowNote = (
   row: IRowState,
-): [error: string | undefined, reason: string | undefined] => {
+  cap: number,
+): OwnershipPctNotes | undefined => {
   if (row.type === "safe") {
     const safe = row as SAFEProps;
-    if (safe.cap === 0) {
+    if (cap === 0) {
       // Unless with have priced round, we can't calculate an uncapped SAFE
-      return [
-        "TBD",
-        "Can't estimate ownership of an uncapped SAFE until the priced round",
-      ];
-    } else if (safe.cap < safe.investment) {
+      return {
+        error: "TBD",
+        explanation: "Uncapped SAFEs are dependent on a priced round to calculate ownership pre-conversion ownership",
+      }
+    } else if (safe.conversionType === "pre") {
+      // Unless with have priced round, we can't calculate an uncapped SAFE
+      return {
+        error: "TBD",
+        explanation: "Pre-money SAFEs are dependent on a priced round to calculate ownership pre-conversion ownership",
+      }
+    } else if (cap < safe.investment) {
       // We shouldn't allow for this, as it makes no sense
-      return ["Error", "Cap must be greater than investment"];
+      return {
+        error: "Error",
+        explanation: "Cap must be greater than investment"
+      }
     }
   }
-  return [undefined, undefined];
 };
 
 export const getSAFERowPropsSelector = createSelector(
@@ -43,12 +55,13 @@ export const getSAFERowPropsSelector = createSelector(
         cap: safeCalcs[idx][0][1],
         discount: row.discount,
         ownership: [
-          // This is a guess at pre-conversion ownership
+          // This is pre-conversion ownership
           {
             percent: safeCalcs[idx][0][0],
             shares: 0,
+            note: determineRowNote(row, safeCalcs[idx][0][1]),
           },
-          // This is the post-conversion ownership
+          // This is the post-conversion ownership after the priced round
           {
             percent: safeCalcs[idx][1][0],
             shares: safeCalcs[idx][1][2],
@@ -58,17 +71,8 @@ export const getSAFERowPropsSelector = createSelector(
         disabledFields: row.conversionType === "mfn" ? ["cap"] : [],
         conversionType: row.conversionType,
       };
-      const [ownershipError, ownershipErrorReason] = determineRowError(
-        rowResult,
-      );
-      if (ownershipError) {
-        rowResult.ownership[0].error = ownershipError;
-        rowResult.ownership[0].reason = ownershipErrorReason;
-      }
       return {
         ...rowResult,
-        ownershipError,
-        ownershipErrorReason,
       };
     });
   },
