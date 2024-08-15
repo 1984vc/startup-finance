@@ -6,12 +6,11 @@ import { useStore } from "zustand";
 import {
   ConversionStore,
   createConversionStore,
-  IConversionStateData,
 } from "./state/ConversionState";
 import { getRandomData, initialState } from "./state/initialState";
 import { decompressState } from "@/utils/stateCompression";
 import { createRecentState, getRecentState, updateRecentStates } from "./state/localstorage";
-import Conversion from "@/components/safe-conversion/Conversion";
+import Worksheet from "./Worksheet";
 
 
 const Page: React.FC = () => {
@@ -26,6 +25,7 @@ const Page: React.FC = () => {
   if (!store.current) {
     // On the first load, we need to check if there is a hash
     const hash = window.location.hash?.slice(1);
+    window.location.hash = "";
     if (hash) {
       try {
         const state = decompressState(hash);
@@ -63,6 +63,7 @@ const Page: React.FC = () => {
       } catch (e) {
         console.error("Failed to decompress state", e)
       }
+      window.location.hash = "";
     }
   });
 
@@ -71,14 +72,14 @@ const Page: React.FC = () => {
     if (stateId) {
       updateRecentStates(stateId, state)
     }
-  }, [state]);
+  }, [state, stateId]);
 
 
   return (
     <div>
       <main className="flex min-h-screen flex-col items-center justify-between py-8 min-w-[1024px]">
         <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <Conversion conversionState={state} />
+          <Worksheet conversionState={state} />
         </div>
       </main>
     </div>

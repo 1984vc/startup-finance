@@ -3,14 +3,17 @@ import { useRef, useState } from "react";
 import { BookmarkIcon, BookmarkSquareIcon } from "@heroicons/react/24/outline";
 
 const Share: React.FC<{ url: string }> = ({ url }) => {
-  const [isUpdated, setIsUpdated] = useState(false);
+  console.log("render");
   const [isCopied, setCopied] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
   const urlRef = useRef<string>(url);
+  const isUpdatedRef = useRef<boolean>(false);
 
   if (urlRef.current !== url) {
+    console.log("url changed", url, urlRef.current);
     urlRef.current = url;
-    setIsUpdated(true);
+    isUpdatedRef.current = true;
   }
 
   const onClickCopy = () => {
@@ -19,11 +22,11 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
     }, 2500);
     copyTextToClipboard(url);
     setCopied(true);
-    setIsUpdated(false);
+    isUpdatedRef.current = false;
   };
 
   const buttonText = () => {
-    if (isUpdated) {
+    if (isUpdatedRef.current) {
       return (
         <span>
           Save
@@ -53,7 +56,7 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
   return (
     <div className="">
       <button
-        className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 text-white  ${isUpdated ? "bg-nt84orange hover:bg-nt84orangedarker focus:ring-nt84orangedarker" : "bg-gray-400 hover:bg-gray-500 focus:ring-gray-300"}`}
+        className={`w-24 px-4 py-2 rounded-md focus:outline-none focus:ring-2 text-white  ${isUpdatedRef.current ? "bg-nt84orange hover:bg-nt84orangedarker focus:ring-nt84orangedarker" : "bg-gray-400 hover:bg-gray-500 focus:ring-gray-300"}`}
         onClick={() => setShowModal(true)}
       >
         {buttonText()}

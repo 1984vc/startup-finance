@@ -3,22 +3,7 @@ import { compressState, decompressState } from "@/utils/stateCompression";
 import { generateUUID } from "@/utils/uuid";
 
 
-// This handles the most recent X states that have been created or used
-//
-// When user loads a page with a stateHash, we should save it to local storage as a new document
-// When a state is created or used, it should be added to the list of recent states
-// When we see a state that has been used, we should update the updatedAt timestamp
-
-// When a state
-
-
-// getRecentState() => [id, state]
-// updateRecentState(id, state) => void
-// findRecentState(id) => state
-
-// The secret sauce here is that we only need create a new state IF it doesn't already exist (a state with the same hash)
-// createRecentState(state) => [id, state]
-
+const MAX_RECENT_STATES = 10;
 
 export type LocalStorageConversionStateData = {
   id: string;
@@ -62,7 +47,7 @@ export const updateRecentStates = (id:string, state:IConversionStateData) => {
       updatedAt: Date.now(),
       createdAt: Date.now(),
     })
-    window.localStorage.setItem("recent", JSON.stringify(recents));
+    window.localStorage.setItem("recent", JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
   }
 }
 

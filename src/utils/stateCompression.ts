@@ -1,6 +1,5 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
 import { compressToBase64, decompressFromBase64 } from "lz-string";
-import { generateUUID } from "./uuid";
 
 // Allow for future changes to state compression and rehydration
 const VERSION_MAGIC_CODE = "AA";

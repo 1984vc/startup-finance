@@ -1,4 +1,3 @@
-import { generateUUID } from "@/utils/uuid";
 import { IConversionStateData } from "./ConversionState";
 import { earlyStageInvestors, founders, seriesAInvestors } from "./data";
 
