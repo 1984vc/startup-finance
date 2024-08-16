@@ -69,12 +69,12 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
         }
         <a
           href="#new"
-          className={`w-24 px-4 text-center cursor-pointer py-2 rounded-md focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+          className={`w-24 px-4 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
         >
           New <FolderPlusIcon className="inline" width={20} />
         </a>
       </div>
-      <h1 className="text-1xl font-bold mb-4 mt-5">1) Existing Cap Table</h1>
+      <h1 className="text-2xl font-bold mb-12 mt-24 pl-2">1 Existing Cap Table</h1>
       <div>
         <ExisingShareholderList
           rows={getExistingShareholderPropsSelector(conversionState)}
@@ -89,7 +89,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
           }}
         />
       </div>
-      <h1 className="text-1xl font-bold mb-4 mt-8">2) SAFE Investors</h1>
+      <h1 className="text-2xl font-bold mb-12 mt-24 pl-2">2 SAFE Investors</h1>
       <div>
         <SafeNoteList
           rows={getSAFERowPropsSelector(conversionState)}
@@ -99,7 +99,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
         />
       </div>
 
-      <div className="pt-10">
+      <div className="pt-10 ml-10">
         <h2 className="text-lg font-bold mb-4 inline not-prose">
           Cap Table Before Priced Round
         </h2>
@@ -112,7 +112,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
       </div>
 
       <button
-        className={`w-64 px-4 text-center cursor-pointer mt-4 py-2 rounded-md focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+        className={`w-64 px-4 text-center cursor-pointer mt-12 ml-10 py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
         onClick={() => togglepriceRounds()}
       >
         <span className="inline">
@@ -126,7 +126,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
       { pricedRounds > 0  &&
         <div>
           <div>
-            <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round </h1>
+            <h1 className="text-2xl font-bold mb-12 mt-12 pl-2">3 New Round </h1>
             <div className="flex space-x-4 ml-10">
               <div className="flex-1">
                 <h2 className="my-2 not-prose">Premoney Valuation</h2>
@@ -137,7 +137,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
                     value={preMoney}
                     onValueChange={onValueChange("number")}
                     placeholder="Investment"
-                    className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                     prefix="$"
                     decimalScale={0}
                     allowDecimals={false}
@@ -151,7 +151,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
                     type="text"
                     name="totalSeriesInvestment"
                     value={postMoney}
-                    className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                     prefix="$"
                     decimalScale={0}
                     allowDecimals={false}
@@ -169,7 +169,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
                   value={targetOptionsPool}
                   onValueChange={onValueChange("percent")}
                   placeholder="Target Options Pool %"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   prefix=""
                   suffix="%"
                   decimalScale={1}
@@ -183,7 +183,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
                   type="text"
                   name="additionalOptions"
                   value={pricedConversion?.additionalOptions}
-                  className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   prefix=""
                   decimalScale={0}
                   max={99}
@@ -193,7 +193,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
                 />
               </div>
             </div>
-            <h1 className="text-1xl font-bold mb-4 mt-5">3a) Series Investors</h1>
+            <h1 className="text-1xl font-bold mb-4 mt-12 ml-10">Series Investors</h1>
             <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
               <SeriesInvestorList
                 rows={getSeriesPropsSelector(conversionState)}

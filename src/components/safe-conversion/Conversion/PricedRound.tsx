@@ -79,7 +79,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
   return (
     <div className="pt-2">
       <div className="grid grid-cols-4 gap-4">
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker dark:text-nt84lightblue top-0 right-0 p-2">
             <QuestionMarkTooltipComponent>
               The number of outstanding shares after the round multiplied by the PPS.
@@ -100,7 +100,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             </span>
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker bottom-0 left-0 p-2 text-xl">
               <button
                 className="px-2 mr-2 text-nt84blue dark:text-gray-200"
@@ -134,7 +134,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             </span>
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker bottom-0 left-0 p-2 text-xl">
               <button
                 className="px-2 mr-2 text-nt84blue dark:text-gray-200"
@@ -168,7 +168,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             </span>
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker dark:text-nt84lightblue top-0 right-0 p-2">
             <QuestionMarkTooltipComponent>
               <div className="max-w-72">
@@ -189,7 +189,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             ${current.pricedConversion.pps}
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="text-sm text-gray-600 dark:text-gray-200 bottom-0 z-10 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             {changes.shares !== 0
               ? ` (${changes.shares > 0 ? "+" : ""
@@ -203,7 +203,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             {formatNumberWithCommas(current.pricedConversion.totalShares)}
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="text-sm text-gray-600 dark:text-gray-200 bottom-0 z-10 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             {changes.newSharesIssued !== 0
               ? ` (${changes.newSharesIssued > 0 ? "+" : ""
@@ -217,7 +217,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             {formatNumberWithCommas(current.pricedConversion.newSharesIssued)}
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker dark:text-nt84lightblue top-0 right-0 p-2">
             <QuestionMarkTooltipComponent>
               <div className="max-w-72">
@@ -238,7 +238,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             {formatNumberWithCommas(current.pricedConversion.additionalOptions)}
           </dd>
         </div>
-        <div className="flex flex-col bg-gray-100 p-8 text-center rounded-lg relative dark:bg-nt84blue dark:text-gray-100">
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker dark:text-nt84lightblue top-0 right-0 p-2">
             <QuestionMarkTooltipComponent>
               <div className="max-w-72">

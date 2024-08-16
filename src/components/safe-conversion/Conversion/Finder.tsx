@@ -75,7 +75,7 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
   return (
     <div className="">
       <button
-        className={`w-28 px-4 text-center cursor-pointer py-2 rounded-md focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+        className={`w-28 px-4 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
         onClick={() => setShowModal(true)}
       >
         {buttonText()}
@@ -86,7 +86,7 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
           </div>
 
-          <div className="rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+          <div className=" text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
             <div className="bg-white dark:bg-gray-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <h3 className="text-xl leading-6 font-medium text-gray-900 dark:text-gray-100 mb-4">
                 Recent Cap Tables
@@ -110,7 +110,7 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
             <div className="bg-gray-200 dark:bg-gray-800 px-4 py-3 sm:flex sm:flex-row-reverse">
               <button
                 type="button"
-                className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-500 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                className="inline-flex justify-center  border border-transparent shadow-sm px-4 py-2 bg-gray-500 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={() => setShowModal(false)}
               >
                 Close
