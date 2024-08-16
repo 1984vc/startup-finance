@@ -4,7 +4,8 @@ module.exports = {
   testEnvironment: "node",
   modulePathIgnorePatterns: ["build"],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/(.*)$': '<rootDir>/src/app/$1',
+    '^@library/(.*)$': '<rootDir>/src/library/$1',
   },
   transform: {
     // '^.+\\.[tj]sx?$' to process ts,js,tsx,jsx with `ts-jest`

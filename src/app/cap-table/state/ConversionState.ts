@@ -2,7 +2,7 @@ import { randomFounders, randomSeed, randomSeries } from "./initialState";
 import { create } from "zustand";
 import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
-import { BestFit, fitConversion } from "@/library/safe_conversion";
+import { BestFit, fitConversion } from "@library/safe_conversion";
 import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
