@@ -74,7 +74,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
           New <FolderPlusIcon className="inline" width={20} />
         </a>
       </div>
-      <h1 className="text-2xl font-bold mb-12 mt-24 pl-2">1 Existing Cap Table</h1>
+      <h1 className="text-2xl font-bold mb-12 pl-2">1 Existing Cap Table</h1>
       <div>
         <ExisingShareholderList
           rows={getExistingShareholderPropsSelector(conversionState)}
