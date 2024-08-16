@@ -36,9 +36,9 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
   });
 
   const describeCapTable = (state: IConversionStateData) => {
-    const investment = state.rowData.filter((row) => row.type === "series").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
-    const postMoney = state.preMoney + investment;
-    return `${shortenedUSD(state.preMoney)} on ${shortenedUSD(postMoney)}`;
+    const safeInvestments = state.rowData.filter((row) => row.type === "safe").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
+    const safeCount = state.rowData.filter((row) => row.type === "safe").length;
+    return `${safeCount} SAFE${ safeCount === 1 ? "" : "'s"} totaling ${shortenedUSD(safeInvestments)}`;
   }
 
   // Credit to https://www.builder.io/blog/relative-time
@@ -98,9 +98,9 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
                     <a
                       href={state.url}
                       onClick={() => setShowModal(false)}
-                      className="text-blue-500 hover:underline"
+                      className="text-blue-500 hover:underline dark:text-blue-200"
                     >
-                      { describeCapTable(state.state) } { getRelativeTimeString(state.updatedAt)}
+                      { describeCapTable(state.state) } <span className="text-xs text-gray-900 dark:text-gray-300">({ getRelativeTimeString(state.updatedAt)})</span>
                     </a>
                   </li>
                 ))
