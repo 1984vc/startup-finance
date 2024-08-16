@@ -3,7 +3,7 @@ import {
   createConversionStore,
   IConversionStateData,
 } from "@/cap-table/state/ConversionState";
-import { getPriceRoundPropsSelector } from "../PricedRoundSelector";
+import { getPriceRoundPropsSelector } from "../selectors/PricedRoundPropsSelector";
 import fixtureData from "./fixtures/state_fixtures.json";
 
 // Test our Result Selector, which handles both showing the resulting cap table and allow users to play around with the pre-money and investment changes

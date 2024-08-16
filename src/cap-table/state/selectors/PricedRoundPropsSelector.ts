@@ -1,8 +1,8 @@
 import { createSelector } from "reselect";
-import { getPricedConversion, IConversionStateData } from "./ConversionState";
-import { getSAFERowPropsSelector } from "./SAFESelector";
-import { getSeriesPropsSelector } from "./SeriesSelector";
-import { getExistingShareholderPropsSelector } from "./ExistingShareholderSelector";
+import { getPricedConversion, IConversionStateData } from "../ConversionState";
+import { getSAFERowPropsSelector } from "./SAFEPropsSelector";
+import { getSeriesPropsSelector } from "./SeriesPropsSelector";
+import { getExistingShareholderPropsSelector } from "./ExistingShareholderPropsSelector";
 import { PricedRoundPropsData, } from "@/components/safe-conversion/Conversion/PricedRound";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";

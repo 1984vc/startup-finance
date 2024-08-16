@@ -1,6 +1,6 @@
 import { compressState } from "@/utils/stateCompression";
 import { createSelector } from "reselect";
-import { IConversionStateData } from "./ConversionState";
+import { IConversionStateData } from "../ConversionState";
 import { getSerializedSelector } from "./SerializeSelector";
 
 

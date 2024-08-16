@@ -3,7 +3,7 @@ import {
   getPricedConversion,
   IConversionStateData,
   IRowState,
-} from "./ConversionState";
+} from "../ConversionState";
 import { calcSAFEs } from "@/utils/rowDataHelper";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { OwnershipPctNotes } from "@/components/safe-conversion/Conversion/PricedRound";

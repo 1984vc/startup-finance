@@ -1,13 +1,13 @@
 import { createSelector } from "reselect";
-import { IConversionStateData } from "./ConversionState";
+import { IConversionStateData } from "../ConversionState";
 import {
   CapTableProps,
   CapTableRow,
 } from "@/components/safe-conversion/Conversion/CapTableResults";
-import { getPriceRoundPropsSelector } from "./PricedRoundSelector";
+import { getPriceRoundPropsSelector } from "./PricedRoundPropsSelector";
 import { BestFit } from "@/library/safe_conversion";
-import { getExistingShareholderPropsSelector } from "./ExistingShareholderSelector";
-import { getSAFERowPropsSelector } from "./SAFESelector";
+import { getExistingShareholderPropsSelector } from "./ExistingShareholderPropsSelector";
+import { getSAFERowPropsSelector } from "./SAFEPropsSelector";
 
 export type ResultSelectorState = IConversionStateData & {
   preMoneyChange?: number;

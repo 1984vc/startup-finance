@@ -3,7 +3,7 @@ import {
   createConversionStore,
   IConversionStateData,
 } from "@/cap-table/state/ConversionState";
-import { getExistingShareholderPropsSelector } from "@/cap-table/state/ExistingShareholderSelector";
+import { getExistingShareholderPropsSelector } from "@/cap-table/state/selectors/ExistingShareholderPropsSelector";
 import fixtureData from "./fixtures/state_fixtures.json";
 
 describe("Existing Shareholder Selector", () => {

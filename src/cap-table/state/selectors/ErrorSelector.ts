@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { getSAFERowPropsSelector } from "./SAFESelector";
+import { getSAFERowPropsSelector } from "./SAFEPropsSelector";
 
 type ErrorSelectorState = {
   commonStockError: boolean;

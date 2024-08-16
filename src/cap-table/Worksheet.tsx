@@ -10,16 +10,16 @@ import ExisingShareholderList from "@/components/safe-conversion/Conversion/Exis
 import PricedRound from "@/components/safe-conversion/Conversion/PricedRound";
 import SeriesInvestorList from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { stringToNumber } from "@/utils/numberFormatting";
-import { getExistingShareholderPropsSelector } from "@/cap-table/state/ExistingShareholderSelector";
-import { getSAFERowPropsSelector } from "@/cap-table/state/SAFESelector";
-import { getSeriesPropsSelector } from "@/cap-table/state/SeriesSelector";
+import { getExistingShareholderPropsSelector } from "@/cap-table/state/selectors/ExistingShareholderPropsSelector";
+import { getSAFERowPropsSelector } from "@/cap-table/state/selectors/SAFEPropsSelector";
+import { getSeriesPropsSelector } from "@/cap-table/state/selectors/SeriesPropsSelector";
 import SafeNoteList from "@/components/safe-conversion/Conversion/SafeNoteList";
-import { getPriceRoundPropsSelector } from "@/cap-table/state/PricedRoundSelector";
+import { getPriceRoundPropsSelector } from "@/cap-table/state/selectors/PricedRoundPropsSelector";
 import Share from "@/components/safe-conversion/Conversion/Share";
 import { CapTableResults } from "@/components/safe-conversion/Conversion/CapTableResults";
-import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } from "@/cap-table/state/CapTableSelector";
-import { getShareUrl } from "./state/ShareURLSelector";
-import { getErrorSelector } from "./state/ErrorSelector";
+import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } from "@/cap-table/state/selectors/CapTablePropsSelector";
+import { getShareUrl } from "./state/selectors/ShareURLSelector";
+import { getErrorSelector } from "./state/selectors/ErrorSelector";
 import Finder from "@/components/safe-conversion/Conversion/Finder";
 import { FolderPlusIcon, MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 

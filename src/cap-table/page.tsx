@@ -12,7 +12,7 @@ import { getRandomData, initialState } from "./state/initialState";
 import { decompressState } from "@/utils/stateCompression";
 import { createRecentState, findRecentState, getRecentState, updateRecentStates } from "./state/localstorage";
 import Worksheet from "./Worksheet";
-import { getSerializedSelector } from "./state/SerializeSelector";
+import { getSerializedSelector } from "./state/selectors/SerializeSelector";
 
 
 const Page: React.FC = () => {

@@ -26,8 +26,14 @@ export const getRecentStates = (): LocalStorageConversionStateData[] => {
   let recents: LocalStorageConversionStateData[] = [];
   if (recentSerialized !== null && recentSerialized.length > 0) {
     try {
-      const items = JSON.parse(recentSerialized) as LocalStorageConversionStateData[];
-      recents = items.sort((a, b) => b.updatedAt - a.updatedAt);
+      try {
+        const items = JSON.parse(recentSerialized) as LocalStorageConversionStateData[];
+        recents = items.sort((a, b) => b.updatedAt - a.updatedAt);
+      } catch (e) {
+        // If we have an error parsing, we should remove the item in order to start fresh
+        console.error("Error parsing states from local storage", e);
+        window.localStorage.removeItem(RECENT_STATES_KEY);
+      }
     } catch (e) {
       console.error("Error parsing states from local storage", e);
     }
