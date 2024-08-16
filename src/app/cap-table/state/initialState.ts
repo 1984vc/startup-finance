@@ -1,3 +1,4 @@
+import { generateUUID } from "@/utils/uuid";
 import { IConversionStateData } from "./ConversionState";
 import { earlyStageInvestors, founders, seriesAInvestors } from "./data";
 
@@ -31,7 +32,7 @@ export const initialState = ({
   randomFounders,
   randomSeed,
   randomSeries,
-}: ReturnType<typeof getRandomData>): IConversionStateData => ({
+}: ReturnType<typeof getRandomData>, machinedId: string): IConversionStateData => ({
   rowData: [
     {
       id: getID(),
@@ -115,4 +116,6 @@ export const initialState = ({
   targetOptionsPool: 10,
   unusedOptions: 750_000,
   pricedRounds: 1,
+  id: generateUUID(16),
+  mId: machinedId,
 });

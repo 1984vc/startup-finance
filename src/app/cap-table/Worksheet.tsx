@@ -26,10 +26,9 @@ import { localStorageWorks } from "./state/localstorage";
 
 type WorksheetProps = {
   conversionState: IConversionState;
-  id: string
 } 
 
-const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
+const Worksheet: React.FC<WorksheetProps> = ({conversionState}) => {
 
   const {
     rowData,
@@ -41,6 +40,8 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
     onValueChange,
     togglepriceRounds
   } = conversionState;
+
+  console.log("Render", conversionState.id);
 
   const totalSeriesInvesment = (
     rowData.filter((row) => row.type === "series") as SeriesState[]
@@ -58,14 +59,13 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
   
   // Future plans to add more priced rounds. Right now, used to show or hider the priced rounds
   const pricedRounds = conversionState.pricedRounds ?? 0;
-  console.log("pricedRounds", pricedRounds);
 
   return (
     <div className={"not-prose"}>
       <div className="w-full flex justify-end gap-2">
         <Share url={getShareUrl(conversionState)}></Share>
         { localStorageWorks &&
-          <Finder currentId={id}></Finder>
+          <Finder currentId={conversionState.id}></Finder>
         }
         <a
           href="#new"

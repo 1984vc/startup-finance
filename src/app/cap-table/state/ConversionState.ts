@@ -26,6 +26,8 @@ export type IRowState = SAFEState | ExistingShareholderState | SeriesState;
 
 // The only thing we need to serialize
 export interface IConversionStateData {
+  id: string;
+  mId: string;
   targetOptionsPool: number;
   rowData: IRowState[];
   unusedOptions: number;

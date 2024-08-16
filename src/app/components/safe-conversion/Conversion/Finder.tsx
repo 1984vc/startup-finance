@@ -23,17 +23,19 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
 
   const url = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
-  const recentStates = getRecentStates().filter((state) => state.id !== currentId).map((state) => {
-    const hash = compressState(state.conversionState)
-    return {
-      id: state.id,
-      updatedAt: state.updatedAt,
-      createdAt: state.createdAt,
-      hash,
-      state: state.conversionState,
-      url: `${url}#I${state.id}`,
-    };
-  });
+  const recentStates = () => {
+    return getRecentStates().filter((state) => state.conversionState.id !== currentId).map((state) => {
+      const hash = compressState(state.conversionState)
+      return {
+        id: state.conversionState.id,
+        updatedAt: state.updatedAt,
+        createdAt: state.createdAt,
+        hash,
+        state: state.conversionState,
+        url: `${url}#${compressState(state.conversionState)}`,
+      };
+    })
+  };
 
   const describeCapTable = (state: IConversionStateData) => {
     const safeInvestments = state.rowData.filter((row) => row.type === "safe").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
@@ -93,7 +95,7 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
               </h3>
               <ul>
                 {
-                recentStates.map((state) => (
+                recentStates().map((state) => (
                   <li key={state.id}>
                     <a
                       href={state.url}
