@@ -137,7 +137,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="yc7p">YC 7%</option>
         <option value="ycmfn">YC MFN</option>
       </select>
-      <div className="w-24 text-right">
+      <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
         <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />
       </div>
     </div>
@@ -159,7 +159,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
         <div className="w-36">Cap</div>
         <div className="w-20">Discount</div>
         <div className="w-36">Type</div>
-        <div className="w-24 text-right">Ownership %</div>
+        <div className="w-24">Ownership %</div>
       </div>
 
       {rows.map((note, idx) => (

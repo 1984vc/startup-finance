@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input[type="text"] {
+  @apply border border-gray-800;
+}
+
+@media (prefers-color-scheme: dark) {
+  input[type="text"] {
+    @apply border border-gray-400;
+  }
+}

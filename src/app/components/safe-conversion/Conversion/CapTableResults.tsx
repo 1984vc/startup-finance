@@ -83,7 +83,7 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                 )}
               </tr>
             ))}
-            <tr className="font-bold bg-inherit border-2 border-gray-300">
+            <tr className="font-bold bg-inherit border-2 border-gray-700 dark:border-gray-300">
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">
                 ${formatNumberWithCommas(totalInvestedToDate)}

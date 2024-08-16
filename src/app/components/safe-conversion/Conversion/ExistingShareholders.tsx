@@ -115,7 +115,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         decimalScale={0}
         allowDecimals={false}
       />
-      <div className="w-24 text-right">{ownership?.percent.toFixed(2)}%</div>
+      <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">{ownership?.percent.toFixed(2)}%</div>
     </div>
   );
 };
@@ -137,7 +137,7 @@ const ExisingShareholderList: React.FC<
         <div className="w-6"></div>
         <div className="w-48">Name</div>
         <div className="w-36">Shares</div>
-        <div className="w-24 text-right">Ownership %</div>
+        <div className="w-24">Ownership %</div>
       </div>
       {existingShareholders.map((shareholder, idx) => (
         <ExistingShareholderRow
