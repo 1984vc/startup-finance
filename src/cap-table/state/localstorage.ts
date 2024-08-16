@@ -5,7 +5,7 @@ import hash  from "object-hash";
 // Simply store the most recent states in local storage
 
 const MAX_RECENT_STATES = 10;
-const RECENT_STATES_KEY = "recent_v3";
+const RECENT_STATES_KEY = "recent_v4";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hashObject = (obj: any) => {
@@ -14,7 +14,7 @@ const hashObject = (obj: any) => {
 
 export type LocalStorageConversionStateData = {
   id: string;
-  stateString: string;
+  conversionState: IConversionStateData;
   hash: string;
   createdAt: number;
   updatedAt: number;
@@ -39,12 +39,11 @@ export const getRecentStates = (): LocalStorageConversionStateData[] => {
 // Update the most recent states in local storage by id
 export const updateRecentStates = (id:string, state:IConversionStateData) => {
   const recents = getRecentStates();
-  const stateString = JSON.stringify(state);
   const idx = recents.findIndex((s) => s.id === id);
   if (idx !== -1) {
     recents[idx] = {
       ...recents[idx],
-      stateString,
+      conversionState: state,
       hash: hashObject(state),
       updatedAt: Date.now(),
     }
@@ -53,7 +52,7 @@ export const updateRecentStates = (id:string, state:IConversionStateData) => {
     console.log("Could not find state to update, creating", id, state);
     recents.push({
       id,
-      stateString: JSON.stringify(state),
+      conversionState: state,
       hash: hashObject(state),
       updatedAt: Date.now(),
       createdAt: Date.now(),
@@ -71,7 +70,7 @@ export const createRecentState = (state: IConversionStateData): [id: string, sta
   recents.push({
     id,
     hash,
-    stateString: JSON.stringify(state),
+    conversionState: state,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   });
@@ -84,7 +83,7 @@ export const getRecentState = (): [id: string|undefined, state:IConversionStateD
   const recents = getRecentStates();
   if (recents.length > 0) {
     const mostRecent = recents.sort((a, b) => b.updatedAt - a.updatedAt)[0];
-    return [mostRecent.id, JSON.parse(mostRecent.stateString)]
+    return [mostRecent.id, mostRecent.conversionState]
   }
   return [undefined, undefined];
 }
@@ -93,9 +92,8 @@ export const getRecentState = (): [id: string|undefined, state:IConversionStateD
 export const findRecentState = (id: string): IConversionStateData | null => {
   const recents = getRecentStates();
   const found = recents.find((s) => s.id === id);
-  console.log("Found state local", id, JSON.parse(found?.stateString || "null"));
   if (found) {
-    return JSON.parse(found.stateString);
+    return found.conversionState;
   }
   return null
 }

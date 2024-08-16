@@ -111,8 +111,8 @@ export const initialState = ({
       investment: 1_000_000,
     },
   ],
-  preMoney: 16_000_000,
+  preMoney: 36_000_000,
   targetOptionsPool: 10,
   unusedOptions: 750_000,
-  pricedRoundsToShow: 1,
+  priceRounds: 1,
 });

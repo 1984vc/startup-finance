@@ -70,7 +70,7 @@ export const calcSAFEs = (
       safePPS = Math.min(
         discountedConversionPPS,
         data.conversionType === 'pre' ?
-          // Pre-money conversion is base don pre-money shares
+          // Pre-money conversion is based on pre-money shares
           cap / pricedConversion.preMoneyShares :
           cap / pricedConversion.postMoneyShares
       );

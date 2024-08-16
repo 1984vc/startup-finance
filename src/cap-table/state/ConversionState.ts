@@ -30,7 +30,7 @@ export interface IConversionStateData {
   rowData: IRowState[];
   unusedOptions: number;
   preMoney: number;
-  pricedRoundsToShow?: number;
+  priceRounds?: number;
 }
 
 export type ConversionStore = ReturnType<typeof createConversionStore>;
@@ -46,6 +46,7 @@ export interface IConversionState extends IConversionStateData {
     name: string | undefined,
     values?: CurrencyInputOnChangeValues,
   ) => void;
+  togglepriceRounds: () => void;
 }
 
 function getNextIdx(rowData: IRowState[]) {
@@ -196,6 +197,13 @@ export const createConversionStore = (initialState: IConversionStateData) =>
               }));
             }
           }
+        },
+        togglepriceRounds: () => {
+          set((state) => ({
+            ...state,
+            priceRounds: (state.priceRounds ?? 0) === 0 ? 1 : 0,
+          }));
+
         },
   }));
 
