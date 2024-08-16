@@ -54,6 +54,10 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
   const [investmentChange, updateInvestmentChange] = useState(0);
 
   const errors = getErrorSelector(conversionState);
+  
+  // Future plans to add more priced rounds. Right now, used to show or hider the priced rounds
+  const pricedRounds = conversionState.pricedRounds ?? 0;
+  console.log("pricedRounds", pricedRounds);
 
   return (
     <div className={"not-prose"}>
@@ -109,14 +113,14 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
         onClick={() => togglepriceRounds()}
       >
         <span className="inline">
-          { conversionState.priceRounds === 0 ? "Show Priced Round" : "Hide Priced Round"}
-          { conversionState.priceRounds === 0 ?
+          { pricedRounds === 0 ? "Show Priced Round" : "Hide Priced Round"}
+          { pricedRounds === 0 ?
             <PlusCircleIcon className="inline ml-2" width={20}></PlusCircleIcon> :
             <MinusCircleIcon className="inline ml-2" width={20}></MinusCircleIcon>
           }
         </span>
       </button>
-      {(conversionState.priceRounds ?? 0) > 0  &&
+      { pricedRounds > 0  &&
         <div>
           <div>
             <h1 className="text-1xl font-bold mb-4 mt-8">3) New Round </h1>

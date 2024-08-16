@@ -30,7 +30,7 @@ export interface IConversionStateData {
   rowData: IRowState[];
   unusedOptions: number;
   preMoney: number;
-  priceRounds?: number;
+  pricedRounds?: number;
 }
 
 export type ConversionStore = ReturnType<typeof createConversionStore>;
@@ -201,7 +201,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
         togglepriceRounds: () => {
           set((state) => ({
             ...state,
-            priceRounds: (state.priceRounds ?? 0) === 0 ? 1 : 0,
+            pricedRounds: (state.pricedRounds ?? 0) === 0 ? 1 : 0,
           }));
 
         },
