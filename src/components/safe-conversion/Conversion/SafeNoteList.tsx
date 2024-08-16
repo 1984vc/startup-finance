@@ -68,7 +68,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       <button
         onClick={() => onDelete(data.id)}
         disabled={!data.allowDelete}
-        className={`w-6 rounded-md focus:outline-none focus:ring-2 ${
+        className={`w-6 focus:outline-none focus:ring-2 ${
           data.allowDelete
             ? "text-red-400 hover:text-red-500"
             : "text-gray-500 cursor-not-allowed"
@@ -83,7 +83,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Name"
-        className="w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-48 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -92,7 +92,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Investment"
         autoComplete="off"
-        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         allowDecimals={false}
       />
@@ -103,7 +103,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
         autoComplete="off"
-        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         decimalScale={0}
         allowDecimals={true}
@@ -115,7 +115,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className="w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+        className="w-20 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
         autoComplete="off"
         prefix=""
         suffix="%"
@@ -129,7 +129,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         name="conversionType"
         value={data.conversionType}
         onChange={handleDropDownChange}
-        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
@@ -172,7 +172,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
       ))}
       <button
         onClick={onAddRow}
-        className="ml-10 px-4 py-2 rounded-md bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
+        className="ml-10 px-4 py-2  bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
       >
         Add another SAFE note
       </button>

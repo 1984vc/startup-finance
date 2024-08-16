@@ -55,13 +55,13 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
       return (
         <button
           onClick={() => onDelete(data.id)}
-          className={"w-6 px-2 py-2 rounded-md focus:outline-none text-red-400 hover:text-red-500"}>
+          className={"w-6 text-left focus:outline-none text-red-400 hover:text-red-500"}>
           <XCircleIcon className="inline" width={20} />
         </button>
       );
     } else if (data.id === "UnusedOptionsPool") {
       return (
-        <div className="w-6 p-2 text-nt84bluedarker dark:text-nt84lightblue">
+        <div className="w-6 text-nt84bluedarker dark:text-nt84lightblue">
           <QuestionMarkTooltipComponent>
             <div className="max-w-72">
               <p>
@@ -77,7 +77,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
       );
     } else if (data.id === "IssuedOptions") {
       return (
-        <div className="w-6 p-2 text-nt84bluedarker dark:text-nt84lightblue">
+        <div className="w-6 text-left text-nt84bluedarker dark:text-nt84lightblue">
           <QuestionMarkTooltipComponent>
             <div className="max-w-72">
               Options or shares already issued to other employees, advisors, or shareholders in the company.
@@ -86,7 +86,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         </div>
       );
     } else {
-        <div className="w-6 p-2">
+        <div className="w-6">
         </div>
     }
   }
@@ -102,7 +102,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Common Shareholder Name"
-        className="w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-48 px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -110,7 +110,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         value={data.shares}
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
-        className="w-36 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-36 px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix=""
         decimalScale={0}
         allowDecimals={false}
@@ -168,7 +168,7 @@ const ExisingShareholderList: React.FC<
       )}
       <button
         onClick={onAddRow}
-        className="ml-10 px-4 py-2 rounded-md bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
+        className="ml-10 px-4 py-2 bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
       >
         Add another Shareholder
       </button>

@@ -12,7 +12,6 @@ const QuestionMarkTooltipComponent: React.FC<{
     <span className="inline">
       <span
         className="inline"
-        style={{ width: "20" }}
         data-tooltip-id={id.current}
         data-tooltip-content={content}
       >

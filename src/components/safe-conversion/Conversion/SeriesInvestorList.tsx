@@ -49,7 +49,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
       <button
         onClick={() => onDelete(data.id)}
         disabled={!data.allowDelete}
-        className={`w-6 p-2 rounded-md focus:outline-none focus:ring-2 ${
+        className={`w-6 focus:outline-none focus:ring-2 ${
           data.allowDelete
             ? "text-red-400 hover:text-red-500"
             : "text-gray-500 cursor-not-allowed"
@@ -64,7 +64,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Series Investor Name"
-        className="w-48 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-48 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -73,7 +73,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Investment"
         autoComplete="off"
-        className="w-32 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-32 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         decimalScale={0}
       />
@@ -106,7 +106,7 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesProps>> = ({
       ))}
       <button
         onClick={onAddRow}
-        className="ml-10 px-4 py-2 rounded-md bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
+        className="ml-10 px-4 py-2  bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
       >
         Add another Series Investor
       </button>
