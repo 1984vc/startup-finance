@@ -7,6 +7,31 @@ import hash  from "object-hash";
 const MAX_RECENT_STATES = 10;
 const RECENT_STATES_KEY = "recent_v4";
 
+// Some browsers don't support local storage with certain settings, so we need to mock it
+// This breaks the recent state functionality, but it's better than nothing
+// Safari, I'm looking at you
+const mockLocalStorageData: { [key: string]: string } = {};
+const mockLocalStorage = {
+  getItem: (key: string): string | null => {
+    return mockLocalStorageData[key] ?? null;
+  },
+  setItem: (key: string, value: string) => {
+    mockLocalStorageData[key] = value;
+  },
+  removeItem: (key: string) => {
+    delete mockLocalStorageData[key];
+  }
+};
+
+const hasLocalStorage = typeof window !== "undefined" && window.localStorage !== undefined;
+export const localStorageWorks = (() => {
+  if (!hasLocalStorage) return false
+  window.localStorage.setItem("safariTest", "1")
+  return window.localStorage.getItem("safariTest") === "1";
+})()
+
+const localStorage = localStorageWorks ? window.localStorage : mockLocalStorage;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const hashObject = (obj: any) => {
   return hash(obj, { algorithm: "sha1" });
@@ -22,7 +47,7 @@ export type LocalStorageConversionStateData = {
 
 // Get the most recent states from local storage
 export const getRecentStates = (): LocalStorageConversionStateData[] => {
-  const recentSerialized = window.localStorage.getItem(RECENT_STATES_KEY)
+  const recentSerialized = localStorage.getItem(RECENT_STATES_KEY)
   let recents: LocalStorageConversionStateData[] = [];
   if (recentSerialized !== null && recentSerialized.length > 0) {
     try {
@@ -32,7 +57,7 @@ export const getRecentStates = (): LocalStorageConversionStateData[] => {
       } catch (e) {
         // If we have an error parsing, we should remove the item in order to start fresh
         console.error("Error parsing states from local storage", e);
-        window.localStorage.removeItem(RECENT_STATES_KEY);
+        localStorage.removeItem(RECENT_STATES_KEY);
       }
     } catch (e) {
       console.error("Error parsing states from local storage", e);
@@ -53,7 +78,7 @@ export const updateRecentStates = (id:string, state:IConversionStateData) => {
       hash: hashObject(state),
       updatedAt: Date.now(),
     }
-    window.localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
+    localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
   } else {
     console.log("Could not find state to update, creating", id, state);
     recents.push({
@@ -63,7 +88,7 @@ export const updateRecentStates = (id:string, state:IConversionStateData) => {
       updatedAt: Date.now(),
       createdAt: Date.now(),
     })
-    window.localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
+    localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
   }
 }
 

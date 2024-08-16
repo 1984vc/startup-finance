@@ -22,6 +22,7 @@ import { getShareUrl } from "./state/selectors/ShareURLSelector";
 import { getErrorSelector } from "./state/selectors/ErrorSelector";
 import Finder from "@/components/safe-conversion/Conversion/Finder";
 import { FolderPlusIcon, MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { localStorageWorks } from "./state/localstorage";
 
 type WorksheetProps = {
   conversionState: IConversionState;
@@ -63,7 +64,9 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
     <div className={"not-prose"}>
       <div className="w-full flex justify-end gap-2">
         <Share url={getShareUrl(conversionState)}></Share>
-        <Finder currentId={id}></Finder>
+        { localStorageWorks &&
+          <Finder currentId={id}></Finder>
+        }
         <a
           href="#new"
           className={`w-24 px-4 text-center cursor-pointer py-2 rounded-md focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
@@ -113,7 +116,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
         onClick={() => togglepriceRounds()}
       >
         <span className="inline">
-          { pricedRounds === 0 ? "Show Priced Round" : "Hide Priced Round"}
+          { pricedRounds === 0 ? "Add Priced Round" : "Remove Priced Round"}
           { pricedRounds === 0 ?
             <PlusCircleIcon className="inline ml-2" width={20}></PlusCircleIcon> :
             <MinusCircleIcon className="inline ml-2" width={20}></MinusCircleIcon>
