@@ -14,7 +14,8 @@
     "types": ["google-apps-script"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/app/*"],
+      "@libray/*": ["./src/library/*"],
     }
   },
   "include": ["src/library"],

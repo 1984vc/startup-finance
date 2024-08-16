@@ -22,7 +22,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/app/*"],
+      "@library/*": ["./src/library/*"],
     }
   },
   "include": ["src"]
