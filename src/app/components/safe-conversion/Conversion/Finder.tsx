@@ -24,15 +24,15 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
   const url = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
   const recentStates = () => {
-    return getRecentStates().filter((state) => state.conversionState.id !== currentId).map((state) => {
+    return getRecentStates().filter((state) => state.id !== currentId).map((state) => {
       const hash = compressState(state.conversionState)
       return {
-        id: state.conversionState.id,
+        id: state.id,
         updatedAt: state.updatedAt,
         createdAt: state.createdAt,
         hash,
         state: state.conversionState,
-        url: `${url}#${compressState(state.conversionState)}`,
+        url: `${url}#I${compressState(state.conversionState)}`,
       };
     })
   };

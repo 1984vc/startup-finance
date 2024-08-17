@@ -26,8 +26,6 @@ export type IRowState = SAFEState | ExistingShareholderState | SeriesState;
 
 // The only thing we need to serialize
 export interface IConversionStateData {
-  id: string;
-  mId: string;
   targetOptionsPool: number;
   rowData: IRowState[];
   unusedOptions: number;
@@ -201,10 +199,13 @@ export const createConversionStore = (initialState: IConversionStateData) =>
           }
         },
         togglepriceRounds: () => {
-          set((state) => ({
-            ...state,
-            pricedRounds: (state.pricedRounds ?? 0) === 0 ? 1 : 0,
-          }));
+          set((state) => {
+            console.log(state.pricedRounds);
+            return {
+              ...state,
+              pricedRounds: state.pricedRounds === 0 ? 1 : 0,
+            }
+          });
 
         },
   }));

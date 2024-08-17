@@ -1,10 +1,9 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
-import { generateUUID } from "@/utils/uuid";
 
 // Simply store the most recent states in local storage
 
 const MAX_RECENT_STATES = 10;
-const RECENT_STATES_KEY = "recent_v5";
+const RECENT_STATES_KEY = "recent_v6";
 
 // Some browsers don't support local storage with certain settings, so we need to mock it
 // This breaks the recent state functionality, but it's better than nothing
@@ -32,19 +31,10 @@ export const localStorageWorks = (() => {
 const localStorage = localStorageWorks ? window.localStorage : mockLocalStorage;
 
 export type LocalStorageConversionStateData = {
+  id: string
   conversionState: IConversionStateData;
   createdAt: number;
   updatedAt: number;
-}
-
-// Prevents someone from "losing" their state when they share a link and someone shares it back with changes.
-export const getMachineId = (): string => {
-  let machineId = localStorage.getItem("machineId");
-  if (machineId === null) {
-    machineId = generateUUID(16);
-    localStorage.setItem("machineId", machineId);
-  }
-  return machineId;
 }
 
 // Get the most recent states from local storage
@@ -68,33 +58,10 @@ export const getRecentStates = (): LocalStorageConversionStateData[] => {
   return recents
 }
 
-// Get the most recent states from local storage
-export const updateOrCreatedRecentState = (state: IConversionStateData): IConversionStateData => {
+// Update or create a recent state in local storage
+export const updateRecentStates = (id: string, state:IConversionStateData) => {
   const recents = getRecentStates();
-  // See if we have a match, this is a worksheet from our machine
-  const match = recents.find((s) => state.id === s.conversionState.id && state.mId === s.conversionState.mId);
-  if (match) {
-    updateRecentStates(state)
-    return state;
-  }
-
-  // Otherwise, we need to create a new state and add it to the local storage
-  const id = generateUUID(16);
-  const mId = getMachineId();
-  const newState = {
-    ...state,
-    id,
-    mId,
-  }
-  updateRecentStates(newState);
-  return newState;
-}
-
-
-// Update the most recent states in local storage by id
-export const updateRecentStates = (state:IConversionStateData) => {
-  const recents = getRecentStates();
-  const idx = recents.findIndex((s) => state.id === s.conversionState.id && state.mId === s.conversionState.mId);
+  const idx = recents.findIndex((s) => id === s.id);
   if (idx !== -1) {
     recents[idx] = {
       ...recents[idx],
@@ -103,15 +70,27 @@ export const updateRecentStates = (state:IConversionStateData) => {
     }
     localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
   } else {
-    console.log("Could not find state to update, creating:", state.mId, state.id);
-    recents.push({
+    const newRecent = {
+      id,
       conversionState: state,
-      updatedAt: Date.now(),
       createdAt: Date.now(),
-    })
-    localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
+      updatedAt: Date.now(),
+    }
+    recents.push(newRecent);
+    if (recents.length > MAX_RECENT_STATES) {
+      recents.shift();
+    }
+    localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
   }
 }
+
+// If we show up with nothing, find the most recent state, or return undefined
+export const findRecentState = (id: string): IConversionStateData | undefined => {
+  const recents = getRecentStates();
+  const found = recents.find((s) => s.id === id);
+  return found?.conversionState;
+}
+
 
 // If we show up with nothing, find the most recent state, or return undefined
 export const getRecentState = (): IConversionStateData | undefined => {

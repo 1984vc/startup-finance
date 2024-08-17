@@ -1,7 +1,5 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
-import { stat } from "fs";
 import { compressToBase64, decompressFromBase64 } from "lz-string";
-import { generateUUID } from "./uuid";
 
 // Allow for future changes to state compression and rehydration
 const VERSION_MAGIC_CODE = "AA";
@@ -37,6 +35,5 @@ export const decompressState = (str: string): IConversionStateData => {
   const stateBuffer = decompressFromBase64(b64str);
   const stateObj = JSON.parse(stateBuffer.toString());
   // Ensure that our old state data is still compatible
-  stateObj["id"] = stateObj["id"] ?? generateUUID(16);
   return stateObj as IConversionStateData;
 };

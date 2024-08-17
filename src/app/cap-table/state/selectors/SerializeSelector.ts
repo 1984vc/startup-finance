@@ -5,10 +5,8 @@ import { IConversionStateData } from "../ConversionState";
 export const getSerializedSelector = createSelector(
   (state: IConversionStateData) => state,
   (state): IConversionStateData => {
-    const { id, mId, preMoney, targetOptionsPool, unusedOptions, rowData, pricedRounds } = state;
+    const { preMoney, targetOptionsPool, unusedOptions, rowData, pricedRounds } = state;
     return {
-      id,
-      mId,
       preMoney,
       targetOptionsPool,
       unusedOptions,
