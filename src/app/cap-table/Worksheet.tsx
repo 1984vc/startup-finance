@@ -27,9 +27,11 @@ import { localStorageWorks } from "./state/localstorage";
 type WorksheetProps = {
   conversionState: IConversionState;
   currentStateId: string
+  loadById: (id: string) => void;
+  createNewState: (findRecent: boolean) => void;
 } 
 
-const Worksheet: React.FC<WorksheetProps> = ({conversionState}, currentStateId) => {
+const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, loadById, createNewState}) => {
 
   const {
     rowData,
@@ -60,14 +62,14 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState}, currentStateId) 
       <div className="w-full flex justify-end gap-2">
         <Share url={getShareUrl(conversionState)}></Share>
         { localStorageWorks &&
-          <Finder currentId={currentStateId}></Finder>
+          <Finder currentId={currentStateId} loadById={loadById}></Finder>
         }
-        <a
-          href="#new"
+        <button
           className={`w-24 px-4 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+          onClick={() => createNewState(false)}
         >
           New <FolderPlusIcon className="inline" width={20} />
-        </a>
+        </button>
       </div>
       <h1 className="text-2xl font-bold mb-12 pl-2">1 Existing Cap Table</h1>
       <div>

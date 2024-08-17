@@ -60,7 +60,8 @@ export const getRecentStates = (): LocalStorageConversionStateData[] => {
 
 // Update or create a recent state in local storage
 export const updateRecentStates = (id: string, state:IConversionStateData) => {
-  const recents = getRecentStates();
+  // From oldest to newest
+  const recents = getRecentStates().sort((a, b) => a.updatedAt - b.updatedAt);
   const idx = recents.findIndex((s) => id === s.id);
   if (idx !== -1) {
     recents[idx] = {
