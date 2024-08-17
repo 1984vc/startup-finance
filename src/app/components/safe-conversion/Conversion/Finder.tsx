@@ -99,7 +99,7 @@ const Finder: React.FC<{currentId: string, loadById: (id: string) => void}> = ({
                   <li key={state.id}>
                     <a
                       onClick={() => { loadById(state.id); setShowModal(false) }}
-                      className={`text-blue-500 hover:underline dark:text-blue-200 ${state.id === currentId ? 'bg-yellow-200' : ''}`}
+                      className={`text-blue-500 hover:underline dark:text-blue-200 ${state.id === currentId ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
                     >
                       {state.id.slice(0,7)} - { describeCapTable(state.state) } <span className="text-xs text-gray-900 dark:text-gray-300">({ getRelativeTimeString(state.updatedAt)})</span>
                     </a>
