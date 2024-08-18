@@ -199,10 +199,13 @@ export const createConversionStore = (initialState: IConversionStateData) =>
           }
         },
         togglepriceRounds: () => {
-          set((state) => ({
-            ...state,
-            pricedRounds: (state.pricedRounds ?? 0) === 0 ? 1 : 0,
-          }));
+          set((state) => {
+            console.log(state.pricedRounds);
+            return {
+              ...state,
+              pricedRounds: state.pricedRounds === 0 ? 1 : 0,
+            }
+          });
 
         },
   }));

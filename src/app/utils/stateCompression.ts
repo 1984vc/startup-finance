@@ -35,6 +35,5 @@ export const decompressState = (str: string): IConversionStateData => {
   const stateBuffer = decompressFromBase64(b64str);
   const stateObj = JSON.parse(stateBuffer.toString());
   // Ensure that our old state data is still compatible
-  stateObj["id"] = ""
   return stateObj as IConversionStateData;
 };

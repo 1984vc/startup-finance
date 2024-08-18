@@ -1,11 +1,9 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
-import { generateUUID } from "@/utils/uuid";
-import hash  from "object-hash";
 
 // Simply store the most recent states in local storage
 
 const MAX_RECENT_STATES = 10;
-const RECENT_STATES_KEY = "recent_v4";
+const RECENT_STATES_KEY = "recent_v6";
 
 // Some browsers don't support local storage with certain settings, so we need to mock it
 // This breaks the recent state functionality, but it's better than nothing
@@ -32,15 +30,9 @@ export const localStorageWorks = (() => {
 
 const localStorage = localStorageWorks ? window.localStorage : mockLocalStorage;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hashObject = (obj: any) => {
-  return hash(obj, { algorithm: "sha1" });
-}
-
 export type LocalStorageConversionStateData = {
-  id: string;
+  id: string
   conversionState: IConversionStateData;
-  hash: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -66,65 +58,47 @@ export const getRecentStates = (): LocalStorageConversionStateData[] => {
   return recents
 }
 
-
-// Update the most recent states in local storage by id
-export const updateRecentStates = (id:string, state:IConversionStateData) => {
-  const recents = getRecentStates();
-  const idx = recents.findIndex((s) => s.id === id);
+// Update or create a recent state in local storage
+export const updateRecentStates = (id: string, state:IConversionStateData) => {
+  // From oldest to newest
+  const recents = getRecentStates().sort((a, b) => a.updatedAt - b.updatedAt);
+  const idx = recents.findIndex((s) => id === s.id);
   if (idx !== -1) {
     recents[idx] = {
       ...recents[idx],
       conversionState: state,
-      hash: hashObject(state),
       updatedAt: Date.now(),
     }
     localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
   } else {
-    console.log("Could not find state to update, creating", id, state);
-    recents.push({
+    const newRecent = {
       id,
       conversionState: state,
-      hash: hashObject(state),
-      updatedAt: Date.now(),
       createdAt: Date.now(),
-    })
-    localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, MAX_RECENT_STATES)));
+      updatedAt: Date.now(),
+    }
+    recents.push(newRecent);
+    if (recents.length > MAX_RECENT_STATES) {
+      recents.shift();
+    }
+    localStorage.setItem(RECENT_STATES_KEY, JSON.stringify(recents));
   }
 }
 
-// The secret sauce here is that we only need create a new state IF it doesn't already exist (a state with the same hash)
-export const createRecentState = (state: IConversionStateData): [id: string, state: IConversionStateData] => {
+// If we show up with nothing, find the most recent state, or return undefined
+export const findRecentState = (id: string): IConversionStateData | undefined => {
   const recents = getRecentStates();
-  const hash = hashObject(state)
-  const id = generateUUID(16);
-  console.log("Creating new state", id);
-  recents.push({
-    id,
-    hash,
-    conversionState: state,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-  });
-  updateRecentStates(id, state);
-  return [id, state];
+  const found = recents.find((s) => s.id === id);
+  return found?.conversionState;
 }
 
+
 // If we show up with nothing, find the most recent state, or return undefined
-export const getRecentState = (): [id: string|undefined, state:IConversionStateData | undefined] => {
+export const getRecentState = (): IConversionStateData | undefined => {
   const recents = getRecentStates();
   if (recents.length > 0) {
     const mostRecent = recents.sort((a, b) => b.updatedAt - a.updatedAt)[0];
-    return [mostRecent.id, mostRecent.conversionState]
+    return mostRecent.conversionState
   }
-  return [undefined, undefined];
-}
-
-// If we show up with nothing, find the most recent state, or return undefined
-export const findRecentState = (id: string): IConversionStateData | null => {
-  const recents = getRecentStates();
-  const found = recents.find((s) => s.id === id);
-  if (found) {
-    return found.conversionState;
-  }
-  return null
+  return undefined;
 }

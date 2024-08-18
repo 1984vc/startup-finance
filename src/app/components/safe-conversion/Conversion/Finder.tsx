@@ -7,7 +7,7 @@ import { shortenedUSD } from "@/utils/numberFormatting";
 
 // Get a list of recent states from local storage
 // Also allow for a reset of the recent states
-const Finder: React.FC<{currentId: string}> = ({currentId}) => {
+const Finder: React.FC<{currentId: string, loadById: (id: string) => void}> = ({currentId, loadById}) => {
   const [showModal, setShowModal] = useState(false);
 
   const buttonText = () => {
@@ -23,17 +23,19 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
 
   const url = window.location.protocol + "//" + window.location.host + window.location.pathname;
 
-  const recentStates = getRecentStates().filter((state) => state.id !== currentId).map((state) => {
-    const hash = compressState(state.conversionState)
-    return {
-      id: state.id,
-      updatedAt: state.updatedAt,
-      createdAt: state.createdAt,
-      hash,
-      state: state.conversionState,
-      url: `${url}#I${state.id}`,
-    };
-  });
+  const recentStates = () => {
+    return getRecentStates().map((state) => {
+      const hash = compressState(state.conversionState)
+      return {
+        id: state.id,
+        updatedAt: state.updatedAt,
+        createdAt: state.createdAt,
+        hash,
+        state: state.conversionState,
+        url: `${url}#I${compressState(state.conversionState)}`,
+      };
+    })
+  };
 
   const describeCapTable = (state: IConversionStateData) => {
     const safeInvestments = state.rowData.filter((row) => row.type === "safe").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
@@ -93,14 +95,13 @@ const Finder: React.FC<{currentId: string}> = ({currentId}) => {
               </h3>
               <ul>
                 {
-                recentStates.map((state) => (
+                recentStates().map((state) => (
                   <li key={state.id}>
                     <a
-                      href={state.url}
-                      onClick={() => setShowModal(false)}
-                      className="text-blue-500 hover:underline dark:text-blue-200"
+                      onClick={() => { loadById(state.id); setShowModal(false) }}
+                      className={`text-blue-500 hover:underline dark:text-blue-200 ${state.id === currentId ? 'bg-gray-100 dark:bg-gray-800' : ''}`}
                     >
-                      { describeCapTable(state.state) } <span className="text-xs text-gray-900 dark:text-gray-300">({ getRelativeTimeString(state.updatedAt)})</span>
+                      {state.id.slice(0,7)} - { describeCapTable(state.state) } <span className="text-xs text-gray-900 dark:text-gray-300">({ getRelativeTimeString(state.updatedAt)})</span>
                     </a>
                   </li>
                 ))

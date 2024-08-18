@@ -21,15 +21,17 @@ import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } fro
 import { getShareUrl } from "./state/selectors/ShareURLSelector";
 import { getErrorSelector } from "./state/selectors/ErrorSelector";
 import Finder from "@/components/safe-conversion/Conversion/Finder";
-import { FolderPlusIcon, MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
+import { FolderPlusIcon } from "@heroicons/react/24/outline";
 import { localStorageWorks } from "./state/localstorage";
 
 type WorksheetProps = {
   conversionState: IConversionState;
-  id: string
+  currentStateId: string
+  loadById: (id: string) => void;
+  createNewState: (findRecent: boolean) => void;
 } 
 
-const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
+const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, loadById, createNewState}) => {
 
   const {
     rowData,
@@ -39,7 +41,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
     onDeleteRow,
     onUpdateRow,
     onValueChange,
-    togglepriceRounds
   } = conversionState;
 
   const totalSeriesInvesment = (
@@ -56,23 +57,19 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
 
   const errors = getErrorSelector(conversionState);
   
-  // Future plans to add more priced rounds. Right now, used to show or hider the priced rounds
-  const pricedRounds = conversionState.pricedRounds ?? 0;
-  console.log("pricedRounds", pricedRounds);
-
   return (
     <div className={"not-prose"}>
       <div className="w-full flex justify-end gap-2">
         <Share url={getShareUrl(conversionState)}></Share>
         { localStorageWorks &&
-          <Finder currentId={id}></Finder>
+          <Finder currentId={currentStateId} loadById={loadById}></Finder>
         }
-        <a
-          href="#new"
+        <button
           className={`w-24 px-4 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+          onClick={() => createNewState(false)}
         >
           New <FolderPlusIcon className="inline" width={20} />
-        </a>
+        </button>
       </div>
       <h1 className="text-2xl font-bold mb-12 pl-2">1 Existing Cap Table</h1>
       <div>
@@ -111,19 +108,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
         />
       </div>
 
-      <button
-        className={`w-64 px-4 text-center cursor-pointer mt-12 ml-10 py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
-        onClick={() => togglepriceRounds()}
-      >
-        <span className="inline">
-          { pricedRounds === 0 ? "Add Priced Round" : "Remove Priced Round"}
-          { pricedRounds === 0 ?
-            <PlusCircleIcon className="inline ml-2" width={20}></PlusCircleIcon> :
-            <MinusCircleIcon className="inline ml-2" width={20}></MinusCircleIcon>
-          }
-        </span>
-      </button>
-      { pricedRounds > 0  &&
         <div>
           <div>
             <h1 className="text-2xl font-bold mb-12 mt-12 pl-2">3 New Round </h1>
@@ -231,7 +215,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, id}) => {
             }
           </div>
         </div>
-      }
     </div>
   );
 };
