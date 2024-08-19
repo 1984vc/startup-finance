@@ -10,7 +10,7 @@ export const getSeriesPropsSelector = createSelector(
     const seriesOwnershipPct = rows.map((data) => {
       if (!pricedConversion) return [0, 0];
       const shares = Math.floor(data.investment / pricedConversion.pps);
-      return [shares, (shares / pricedConversion.totalShares) * 100];
+      return [shares, (shares / pricedConversion.totalShares) * 100, pricedConversion.pps];
     });
 
     return rows.map((row, idx) => {
@@ -22,6 +22,7 @@ export const getSeriesPropsSelector = createSelector(
         ownership: [{
           shares: seriesOwnershipPct[idx][0] ?? 0,
           percent: seriesOwnershipPct[idx][1] ?? 0,
+          pps: seriesOwnershipPct[idx][2] ?? 0,
         }],
         allowDelete: rows.length > 1,
       };

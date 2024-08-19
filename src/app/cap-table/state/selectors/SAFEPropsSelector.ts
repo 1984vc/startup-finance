@@ -60,11 +60,13 @@ export const getSAFERowPropsSelector = createSelector(
             percent: safeCalcs[idx][0][0],
             shares: 0,
             note: determineRowNote(row, safeCalcs[idx][0][1]),
+            pps: safeCalcs[idx][0][2],
           },
           // This is the post-conversion ownership after the priced round
           {
             percent: safeCalcs[idx][1][0],
             shares: safeCalcs[idx][1][2],
+            pps: safeCalcs[idx][1][3],
           },
         ],
         allowDelete: true,

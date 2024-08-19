@@ -18,6 +18,7 @@ export interface SAFEProps {
     shares?: number
     percent: number;
     note?: OwnershipPctNotes
+    pps?: number
   } [];
   allowDelete?: boolean;
   shares?: number;

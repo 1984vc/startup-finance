@@ -5,6 +5,7 @@ export interface CapTableRow {
   name: string;
   shares?: number;
   investment?: number;
+  pps?: number;
   ownershipPct: number;
   ownershipChange?: number;
   error?: boolean
@@ -45,6 +46,7 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
             <tr className="text-gray-500">
               <th className="py-3 px-4 text-left font-thin">Shareholder / Investor</th>
               <th className="py-3 px-4 text-left font-thin">Investment</th>
+              <th className="py-3 px-4 text-left font-thin">PPS</th>
               <th className="py-3 px-4 text-left font-thin">Shares</th>
               <th className="py-3 px-4 text-left font-thin">Ownership %</th>
               {hasChanges && <th className="py-3 px-4 text-left font-thin">Change %</th>}
@@ -60,6 +62,14 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                   {shareholder.investment
                     ? "$" + formatNumberWithCommas(shareholder.investment)
                     : ""}
+                </td>
+                <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
+                {ownershipError
+                    ? "Error"
+                    : shareholder.pps
+                      ? "$" + formatNumberWithCommas(shareholder.pps)
+                      : ""
+                  }
                 </td>
                 <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
                   {ownershipError
@@ -87,6 +97,8 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-4 text-left">
                 ${formatNumberWithCommas(totalInvestedToDate)}
+              </td>
+              <td className="py-3 px-4 text-left">
               </td>
               <td className="py-3 px-4 text-left">
                 {formatNumberWithCommas(totalShares)}

@@ -18,8 +18,9 @@ const optionsPoolRefreshRow = (current: BestFit, previous: BestFit): CapTableRow
   const currentOwnershipPct= (current.totalOptions / current.totalShares) * 100
   const previousOwnershipPct= (previous.totalOptions / previous.totalShares) * 100
   return {
-    name: "Options Pool Refresh",
+    name: "Options Pool Available",
     shares: current.totalOptions,
+    pps: 0,
     ownershipPct: currentOwnershipPct,
     ownershipChange: currentOwnershipPct - previousOwnershipPct,
   }
@@ -43,6 +44,7 @@ export const getPricedRoundCapTablePropsSelector = createSelector(
         name: row.name,
         shares: row.shares,
         investment: row.investment,
+        pps: row.pps,
         ownershipPct: row.ownershipPct,
         ownershipChange: row.ownershipChange,
         error: hasError,
@@ -83,6 +85,7 @@ export const getSafeCapTablePropsSelector = createSelector(
           name: shareholder.name,
           shares: shareholder.shares,
           ownershipPct: shareholder.ownership[1].percent,
+          pps: 0,
           ownershipChange: 0,
         });
       } else if (shareholder.type === "safe") {
@@ -90,6 +93,7 @@ export const getSafeCapTablePropsSelector = createSelector(
           name: shareholder.name,
           shares: shareholder.shares,
           investment: shareholder.investment,
+          pps: shareholder.ownership[0].pps,
           ownershipPct: shareholder.ownership[0].percent,
           ownershipChange: 0,
           error: shareholder.ownership[0].note?.error === "Error",

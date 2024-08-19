@@ -11,6 +11,7 @@ export interface SeriesProps {
   ownership: {
     shares?: number;
     percent: number;
+    pps: number;
     error?: string | undefined;
     reason?: string | undefined;
   }[];
