@@ -65,7 +65,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           <Finder currentId={currentStateId} loadById={loadById}></Finder>
         }
         <button
-          className={`w-26 px-4 text-center cursor-pointer py-2 focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+          className={`w-28 px-2 text-center cursor-pointer py-2 focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
           onClick={() => createNewState(false)}
         >
           Reset<ArrowPathIcon className="inline pl-2" width={20} />

@@ -77,7 +77,7 @@ const Finder: React.FC<{currentId: string, loadById: (id: string) => void}> = ({
   return (
     <div className="">
       <button
-        className={`w-28 px-4 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+        className={`w-28 px-2 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
         onClick={() => setShowModal(true)}
       >
         {buttonText()}
