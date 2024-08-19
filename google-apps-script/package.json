@@ -3,8 +3,8 @@
   "version": "3.0.0",
   "scripts": {
     "build": "rm -rf build && tsc && webpack",
-    "push": "npm run build && clasp push -f",
-    "deploy": "npm run push && clasp deploy",
+    "push": "clasp push -f",
+    "deploy": "clasp deploy",
     "lint": "eslint",
     "format": "prettier . --write",
     "login": "clasp login"
