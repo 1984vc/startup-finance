@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: yarn install --frozen-lockfile
-      - run: yarn run build
+      - morerun: yarn run build
       - name: Deploy Apps Script
         uses: daikikatsuragawa/clasp-action@v1.1.0
         with:
@@ -36,6 +36,7 @@ jobs:
           clientId: ${{ secrets.CLIENT_ID }}
           clientSecret: ${{ secrets.CLIENT_SECRET }}
           scriptId: ${{ vars.SCRIPT_ID }}
+          rootDir: ./google-apps-script
           command: "push"
       - name: Link to deployment
         run:
