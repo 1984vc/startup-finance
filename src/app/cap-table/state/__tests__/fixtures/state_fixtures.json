@@ -25,7 +25,7 @@
       "investment": 125000,
       "discount": 0,
       "cap": 1785714.2857142854,
-      "conversionType": "post"
+      "conversionType": "yc7p"
     },
     {
       "id": "4",
@@ -34,7 +34,7 @@
       "investment": 375000,
       "discount": 0,
       "cap": 0,
-      "conversionType": "mfn"
+      "conversionType": "ycmfn"
     },
     {
       "id": "5",

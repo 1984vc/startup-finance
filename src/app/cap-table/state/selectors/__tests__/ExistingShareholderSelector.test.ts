@@ -4,7 +4,7 @@ import {
   IConversionStateData,
 } from "@/cap-table/state/ConversionState";
 import { getExistingShareholderPropsSelector } from "@/cap-table/state/selectors/ExistingShareholderPropsSelector";
-import fixtureData from "./fixtures/state_fixtures.json";
+import fixtureData from "../../__tests__/fixtures/state_fixtures.json";
 
 describe("Existing Shareholder Selector", () => {
   test("Basic sanity check of selector", () => {

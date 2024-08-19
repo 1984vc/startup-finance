@@ -15,7 +15,7 @@ export type ExistingShareholderState = Pick<
 >;
 export type SAFEState = Pick<
   SAFEProps,
-  "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType"
+  "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType" 
 >;
 export type SeriesState = Pick<
   SeriesProps,
@@ -239,7 +239,7 @@ export const getPricedConversion = createSelector(
             investment: stringToNumber(row.investment),
             cap: stringToNumber(row.cap),
             discount: stringToNumber(row.discount) / 100,
-            conversionType: row.conversionType,
+            conversionType: row.conversionType
           };
         },
       ),

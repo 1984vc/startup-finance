@@ -24,6 +24,7 @@ const buildPricedRoundShareholderProps = (
           capTableRows.push({
             name: shareholder.name,
             shares: shareholder.shares,
+            pps: 0,
             ownershipPct: shareholder.ownership[2].percent,
             ownershipChange: shareholder.ownership[2].percent - prevShareholder.ownership[2].percent,
           });
@@ -34,6 +35,7 @@ const buildPricedRoundShareholderProps = (
         capTableRows.push({
           name: shareholder.name,
           shares: shareholder.ownership[1].shares,
+          pps: shareholder.ownership[1].pps,
           investment: shareholder.investment,
           ownershipPct: shareholder.ownership[1].percent,
           ownershipChange: shareholder.ownership[1].percent - prevShareholder.ownership[1].percent,
@@ -43,6 +45,7 @@ const buildPricedRoundShareholderProps = (
         capTableRows.push({
           name: shareholder.name,
           shares: shareholder.ownership[0].shares,
+          pps: shareholder.ownership[0].pps,
           investment: shareholder.investment,
           ownershipPct: shareholder.ownership[0].percent,
           ownershipChange: shareholder.ownership[0].percent - prevShareholder.ownership[0].percent,

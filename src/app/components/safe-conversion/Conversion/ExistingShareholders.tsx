@@ -102,7 +102,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Common Shareholder Name"
-        className="w-48 px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={disableNameEdit ? "w-48 px-3 py-2 border-none border-b-1 pb-1 py-2 border-b-gray-300 dark:border-b-gray-700"  : "w-48 px-3 py-2 border focus:outline-none focus:ring-2 focus:ring-blue-500"}
       />
       <CurrencyInput
         type="text"

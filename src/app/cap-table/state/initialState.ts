@@ -59,7 +59,7 @@ export const initialState = ({
       investment: 125_000,
       discount: 0,
       cap: 125_000 / 0.07,
-      conversionType: "post",
+      conversionType: "yc7p",
     },
     // Uncapped YC MFN SAFE (Cap to best cap of all safes)
     {
@@ -69,7 +69,7 @@ export const initialState = ({
       investment: 375_000,
       discount: 0,
       cap: 0,
-      conversionType: "mfn",
+      conversionType: "ycmfn",
     },
     {
       id: getID(),

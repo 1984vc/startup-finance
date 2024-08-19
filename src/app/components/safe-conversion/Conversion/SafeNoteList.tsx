@@ -12,11 +12,12 @@ export interface SAFEProps {
   investment: number;
   cap: number;
   discount: number;
-  conversionType: "post" | "pre" | "mfn";
+  conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
   ownership: {
     shares?: number
     percent: number;
     note?: OwnershipPctNotes
+    pps?: number
   } [];
   allowDelete?: boolean;
   shares?: number;
@@ -46,11 +47,11 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   ) => {
     const { name, value } = e.target;
     if (value === "yc7p") {
-      onUpdate({ ...data, ["name"]: "YC 7%", ["investment"]: 125_000, ["cap"]: 125_000 / 0.07, ["conversionType"]: "post" });
+      onUpdate({ ...data, "name": "YC 7%", "investment": 125_000, "cap": 125_000 / 0.07, "conversionType": "yc7p"});
     } else if (value === "ycmfn") {
-      onUpdate({ ...data, ["name"]: "YC MFN", ["investment"]: 375_000, ["cap"]: 0, ["conversionType"]: "mfn" });
-    } else {
-      onUpdate({ ...data, [name]: value });
+      onUpdate({ ...data, "name": "YC MFN", "investment": 375_000, "cap": 0, "conversionType": "ycmfn"});
+    } else  {
+      onUpdate({ ...data, [name]: value})
     }
   };
 
@@ -92,7 +93,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Investment"
         autoComplete="off"
-        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={data.disabledFields?.includes("investment") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         prefix="$"
         allowDecimals={false}
       />
@@ -103,7 +104,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
         autoComplete="off"
-        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={data.disabledFields?.includes("cap") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         prefix="$"
         decimalScale={0}
         allowDecimals={true}
@@ -115,7 +116,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className="w-20 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+        className={data.disabledFields?.includes("discount") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         autoComplete="off"
         prefix=""
         suffix="%"
@@ -134,8 +135,8 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
         <option value="mfn">Uncapped MFN</option>
-        <option value="yc7p">YC 7%</option>
-        <option value="ycmfn">YC MFN</option>
+        <option value="yc7p">YC $125K/7%</option>
+        <option value="ycmfn">YC $375K/MFN</option>
       </select>
       <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
         <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />
