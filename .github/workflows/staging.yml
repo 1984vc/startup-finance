@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: yarn install --frozen-lockfile
-        run: yarn run build
+      - run: yarn run build
       - name: Deploy Apps Script
         uses: daikikatsuragawa/clasp-action@v1.1.0
         with:
