@@ -11,7 +11,7 @@ const getMFNCapAter = (rows: SAFEState[], idx: number): number => {
     rows.slice(idx + 1).reduce((val, row) => {
 
       // Ignore anything that's in MFN
-      if (row.conversionType === "mfn") {
+      if (row.conversionType === "mfn" || row.conversionType === "ycmfn") {
         return val;
       }
 
@@ -39,7 +39,7 @@ const getMFNCapAter = (rows: SAFEState[], idx: number): number => {
 // like MFN on safes and ownership percentages at various stages
 const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
   const idx = safes.findIndex((r) => r.id === safe.id);
-  if (safe.conversionType === "mfn") {
+  if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn") {
     return getMFNCapAter(safes, idx);
   }
   return safe.cap;

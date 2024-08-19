@@ -12,8 +12,7 @@ export interface SAFEProps {
   investment: number;
   cap: number;
   discount: number;
-  conversionType: "post" | "pre" | "mfn";
-  conversionDisplay: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
+  conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
   ownership: {
     shares?: number
     percent: number;
@@ -48,11 +47,11 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   ) => {
     const { name, value } = e.target;
     if (value === "yc7p") {
-      onUpdate({ ...data, ["name"]: "YC 7%", ["investment"]: 125_000, ["cap"]: 125_000 / 0.07, ["conversionType"]: "post" });
+      onUpdate({ ...data, ["name"]: "YC 7%", ["investment"]: 125_000, ["cap"]: 125_000 / 0.07, ["conversionType"]: "yc7p"});
     } else if (value === "ycmfn") {
-      onUpdate({ ...data, ["name"]: "YC MFN", ["investment"]: 375_000, ["cap"]: 0, ["conversionType"]: "mfn" });
-    } else if (value === "post" || value === "pre" || value === "mfn") {
-      onUpdate({ ...data, [name]: value, ["conversionType"]: value})
+      onUpdate({ ...data, ["name"]: "YC MFN", ["investment"]: 375_000, ["cap"]: 0 , ["conversionType"]: "ycmfn"});
+    } else  {
+      onUpdate({ ...data, [name]: value})
     }
   };
 
@@ -128,8 +127,8 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       />
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
-        name="conversionDisplay"
-        value={data.conversionDisplay}
+        name="conversionType"
+        value={data.conversionType}
         onChange={handleDropDownChange}
         className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
