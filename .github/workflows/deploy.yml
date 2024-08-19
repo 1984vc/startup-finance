@@ -1,15 +1,18 @@
-name: Run Deploy
+name: Run Deploy GAS Production
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - staging
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Build, Lint, Test and Deploy
-    environment: production
+    name: Build, Lint, Test and Deploy to Staging
+    environment: staging
+    defaults:
+      run:
+        working-directory: ./google-apps-script
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v1
@@ -23,11 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: yarn install --frozen-lockfile
-      - name: Lint
-        run: yarn run lint
-      - name: Test
-        run: yarn test
-      - name: Build
+      - name: Build for Apps Script
         run: yarn run build
       - name: Deploy Apps Script
         uses: daikikatsuragawa/clasp-action@v1.1.0

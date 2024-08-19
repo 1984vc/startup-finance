@@ -1,10 +1,8 @@
 const GasPlugin = require("gas-webpack-plugin");
 const webpack = require("webpack");
 
-const entry = "./gas-build/index.js";
+const entry = "./build/index.js";
 const { version } = require("./package.json");
-
-console.log(`Building version ${version}`);
 
 module.exports = {
   // we always use dev mode because bundle size is unimportant - code runs server-side
@@ -18,7 +16,6 @@ module.exports = {
   plugins: [
     new GasPlugin({
       autoGlobalExportsFiles: [entry],
-      comment: true,
     }),
     new webpack.DefinePlugin({
       "process.env.VERSION": JSON.stringify(version),
