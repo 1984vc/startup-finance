@@ -1,7 +1,7 @@
 {
   "name": "cap-table-worksheet",
   "private": true,
-  "version": "1.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -11,15 +11,13 @@
     "format": "prettier . --write",
     "preview": "vite preview",
     "test": "yarn jest --maxWorkers=1 --maxConcurrency=1",
-    "build-gas": "rm -rf build && tsc -p tsconfig.gas.json && webpack",
-    "deploy-gas": "npm run push && clasp deploy",
+    "build:gas": "rm -rf build && tsc -p tsconfig.gas.json && webpack",
+    "deploy:gas": "clasp deploy",
     "gas-login": "clasp login"
   },
   "dependencies": {
-    "@types/object-hash": "^3.0.6",
     "gas-webpack-plugin": "^2.6.0",
     "lz-string": "^1.5.0",
-    "object-hash": "^3.0.0",
     "react": "^18.3.1",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18.3.1",
