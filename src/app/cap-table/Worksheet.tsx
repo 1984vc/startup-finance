@@ -21,7 +21,7 @@ import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } fro
 import { getShareUrl } from "./state/selectors/ShareURLSelector";
 import { getErrorSelector } from "./state/selectors/ErrorSelector";
 import Finder from "@/components/safe-conversion/Conversion/Finder";
-import { ArrowPathIcon, FolderPlusIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { localStorageWorks } from "./state/localstorage";
 
 type WorksheetProps = {
