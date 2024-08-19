@@ -3,6 +3,7 @@ import {
   getPricedConversion,
   IConversionStateData,
   IRowState,
+  SAFEState,
 } from "../ConversionState";
 import { calcSAFEs } from "@/utils/rowDataHelper";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
@@ -38,6 +39,14 @@ const determineRowNote = (
   }
 };
 
+const determineRowDisabledFields = (row: SAFEState) => {
+  if (row.conversionType === "mfn") return ["cap"]
+  if (row.conversionType === "ycmfn") return ["cap", "discount", "investment"]
+  if (row.conversionType === "yc7p") return ["cap", "discount", "investment"]
+  return []
+}
+
+
 export const getSAFERowPropsSelector = createSelector(
   getPricedConversion,
   (state: IConversionStateData) => state.rowData,
@@ -70,7 +79,7 @@ export const getSAFERowPropsSelector = createSelector(
           },
         ],
         allowDelete: true,
-        disabledFields: (row.conversionType === "mfn" || row.conversionType === "ycmfn") ? ["cap"] : [],
+        disabledFields: determineRowDisabledFields(row),
         conversionType: row.conversionType
       };
       return {

@@ -47,9 +47,9 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   ) => {
     const { name, value } = e.target;
     if (value === "yc7p") {
-      onUpdate({ ...data, ["name"]: "YC 7%", ["investment"]: 125_000, ["cap"]: 125_000 / 0.07, ["conversionType"]: "yc7p"});
+      onUpdate({ ...data, "name": "YC 7%", "investment": 125_000, "cap": 125_000 / 0.07, "conversionType": "yc7p"});
     } else if (value === "ycmfn") {
-      onUpdate({ ...data, ["name"]: "YC MFN", ["investment"]: 375_000, ["cap"]: 0 , ["conversionType"]: "ycmfn"});
+      onUpdate({ ...data, "name": "YC MFN", "investment": 375_000, "cap": 0, "conversionType": "ycmfn"});
     } else  {
       onUpdate({ ...data, [name]: value})
     }
@@ -93,7 +93,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Investment"
         autoComplete="off"
-        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={data.disabledFields?.includes("investment") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         prefix="$"
         allowDecimals={false}
       />
@@ -116,7 +116,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className="w-20 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+        className={data.disabledFields?.includes("discount") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         autoComplete="off"
         prefix=""
         suffix="%"
