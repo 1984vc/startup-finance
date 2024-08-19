@@ -1,11 +1,6 @@
-<img src="https://raw.githubusercontent.com/1984vc/.github/main/assets/hello.svg" width="150">
-
-    
-      
-  
-
-
 # 1984 Startup Finance
+
+<img src="https://raw.githubusercontent.com/1984vc/.github/main/assets/hello.svg" width="150">
 
 This repository builds a set of startup finance applications and libraries:
 

@@ -95,6 +95,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         autoComplete="off"
         className={data.disabledFields?.includes("investment") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         prefix="$"
+        disabled={data.disabledFields?.includes("investment")}
         allowDecimals={false}
       />
       <CurrencyInput
@@ -117,6 +118,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Discount %"
         className={data.disabledFields?.includes("discount") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
+        disabled={data.disabledFields?.includes("discount")}
         autoComplete="off"
         prefix=""
         suffix="%"
