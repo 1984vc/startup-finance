@@ -1,3 +1,10 @@
+<img src="https://raw.githubusercontent.com/1984vc/.github/main/assets/hello.svg" width="150">
+
+    
+      
+  
+
+
 # 1984 Startup Finance
 
 This repository builds a set of startup finance applications and libraries:
@@ -23,7 +30,7 @@ with co-founders or other investors.
 ### How data is stored
 
 We don't store any data in the backend. Instead we serialize the state of the worksheet and hold it in the URL hash.
-This allows you to quickly share a spreadsheet, but not worry about permissions (people you share this with get a snapshot of
+This allows you to quickly share a spreadsheet, without worrying about permissions (people you share this with get a snapshot of
 the current state but won't recieve updates)
 
 # SAFE Conversion Google Sheet
@@ -49,7 +56,7 @@ easy for anyone to use.
 1. Run the development server - `yarn dev`
 1. Visit the localhost server at http://localhost:3000/startup-finance/safe-conversion
 
-## Testing / Linting / Staging
+### Testing / Linting / Staging
 
 This library is tested using Jest, which you can run with `yarn test`
 
@@ -73,6 +80,13 @@ Github Actions handle the deployment, which consists of the following steps
 2. Test
 3. Build
 4. Deploy via the Google [Clasp CLI](https://developers.google.com/apps-script/guides/clasp)
+
+# License
+
+The code located at `src/library` is licensed under MIT, feel free to do with it as you please. Because the React app is very styled to the 1984 brand we are not licensing it, but providing the code as open source for anyone to look through.
+
+The bulk of the calculations and work happens under the library, and we will happily accept PR's and Issues for things you run into.
+
 
 ## Credit
 
