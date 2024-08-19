@@ -13,7 +13,7 @@ const Finder: React.FC<{currentId: string, loadById: (id: string) => void}> = ({
   const buttonText = () => {
     return (
       <span>
-        Recent
+        History
         <span className="inline">
           <ClockIcon className="inline pl-2" width={20} />
         </span>

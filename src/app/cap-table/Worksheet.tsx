@@ -21,7 +21,7 @@ import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } fro
 import { getShareUrl } from "./state/selectors/ShareURLSelector";
 import { getErrorSelector } from "./state/selectors/ErrorSelector";
 import Finder from "@/components/safe-conversion/Conversion/Finder";
-import { FolderPlusIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, FolderPlusIcon } from "@heroicons/react/24/outline";
 import { localStorageWorks } from "./state/localstorage";
 
 type WorksheetProps = {
@@ -65,10 +65,10 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           <Finder currentId={currentStateId} loadById={loadById}></Finder>
         }
         <button
-          className={`w-24 px-4 text-center cursor-pointer py-2  focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
+          className={`w-26 px-4 text-center cursor-pointer py-2 focus:outline-none focus:ring-2 text-white bg-nt84blue hover:bg-nt84bluedarker inline`}
           onClick={() => createNewState(false)}
         >
-          New <FolderPlusIcon className="inline" width={20} />
+          Reset<ArrowPathIcon className="inline pl-2" width={20} />
         </button>
       </div>
       <h1 className="text-2xl font-bold mb-12 pl-2">1 Existing Cap Table</h1>
