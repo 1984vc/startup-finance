@@ -13,6 +13,7 @@ export interface SAFEProps {
   cap: number;
   discount: number;
   conversionType: "post" | "pre" | "mfn";
+  conversionDisplay: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
   ownership: {
     shares?: number
     percent: number;
@@ -49,8 +50,8 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       onUpdate({ ...data, ["name"]: "YC 7%", ["investment"]: 125_000, ["cap"]: 125_000 / 0.07, ["conversionType"]: "post" });
     } else if (value === "ycmfn") {
       onUpdate({ ...data, ["name"]: "YC MFN", ["investment"]: 375_000, ["cap"]: 0, ["conversionType"]: "mfn" });
-    } else {
-      onUpdate({ ...data, [name]: value });
+    } else if (value === "post" || value === "pre" || value === "mfn") {
+      onUpdate({ ...data, [name]: value, ["conversionType"]: value})
     }
   };
 
@@ -103,7 +104,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
         autoComplete="off"
-        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className={data.disabledFields?.includes("cap") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
         prefix="$"
         decimalScale={0}
         allowDecimals={true}
@@ -126,16 +127,16 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       />
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
-        name="conversionType"
-        value={data.conversionType}
+        name="conversionDisplay"
+        value={data.conversionDisplay}
         onChange={handleDropDownChange}
         className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
         <option value="mfn">Uncapped MFN</option>
-        <option value="yc7p">YC 7%</option>
-        <option value="ycmfn">YC MFN</option>
+        <option value="yc7p">YC $125K/7%</option>
+        <option value="ycmfn">YC $375K/MFN</option>
       </select>
       <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
         <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />

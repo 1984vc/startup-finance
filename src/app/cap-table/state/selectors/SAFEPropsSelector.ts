@@ -70,6 +70,7 @@ export const getSAFERowPropsSelector = createSelector(
         allowDelete: true,
         disabledFields: row.conversionType === "mfn" ? ["cap"] : [],
         conversionType: row.conversionType,
+        conversionDisplay: row.conversionDisplay,
       };
       return {
         ...rowResult,

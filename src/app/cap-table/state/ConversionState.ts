@@ -15,7 +15,7 @@ export type ExistingShareholderState = Pick<
 >;
 export type SAFEState = Pick<
   SAFEProps,
-  "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType"
+  "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType" | "conversionDisplay" 
 >;
 export type SeriesState = Pick<
   SeriesProps,
@@ -116,6 +116,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
               cap: 0,
               discount: 0,
               conversionType: "post",
+              conversionDisplay: "post"
             },
           ],
         }));
@@ -240,6 +241,7 @@ export const getPricedConversion = createSelector(
             cap: stringToNumber(row.cap),
             discount: stringToNumber(row.discount) / 100,
             conversionType: row.conversionType,
+            conversionDisplay: row.conversionDisplay
           };
         },
       ),
