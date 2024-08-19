@@ -34,7 +34,7 @@ function SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targ
                     return num;
                 }
                 catch (err) {
-                    throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}`);
+                    throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${e[0]}: ${err}`);
                 }
                 // Check each element of the array to see if it's a number, if not throw an Error
             });
@@ -44,7 +44,7 @@ function SAFE_CONVERSION(preMoney, commonShares, safeRanges, unusedOptions, targ
                 seriesInvestments = [toNumber(seriesInvestmentRanges)];
             }
             catch (err) {
-                throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}`);
+                throw new Error(`SAFE_CONVERSION: Invalid input for seriesInvestmentRanges, expected number, got ${seriesInvestmentRanges}: ${err}`);
             }
         }
         if (typeof preMoney !== "number") {

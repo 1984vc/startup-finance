@@ -2,22 +2,21 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "esModuleInterop": true,
     "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "outDir": "gas-build",
+    "typeRoots": ["./src/library/types/global.d.ts", "./node_modules/@types"],
     "lib": ["ESNext"],
     "types": ["google-apps-script"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/app/*"],
       "@libray/*": ["./src/library/*"],
     }
   },
   "include": ["src/library"],
+  "exclude": ["src/library/__tests__"],
   "files": ["src/library/index.ts"]
 }

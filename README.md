@@ -3,7 +3,7 @@
 This repository builds a set of startup finance applications and libraries:
 
 1. The [SAFE Conversion Worksheet App](https://1984.vc/docs/cap-table-worksheet)
-2. The scripts used by our [SAFE Conversion Google Sheet](https://docs.google.com/spreadsheets/d/1eunUazlR9qeNVkH29ihF9MCrLtmBNAANByzck2HceX4/edit?usp=sharing)
+2. The scripts used by our SAFE Conversion Google sheet [SAFE Conversion Google Sheet](https://docs.google.com/spreadsheets/d/1eunUazlR9qeNVkH29ihF9MCrLtmBNAANByzck2HceX4/edit?usp=sharing)
 
 # SAFE Conversion worksheet (React app)
 
