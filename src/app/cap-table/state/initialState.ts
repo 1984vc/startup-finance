@@ -68,7 +68,7 @@ export const initialState = ({
       name: "YC MFN",
       investment: 375_000,
       discount: 0,
-      cap: 0,
+      cap: 10_000_000,
       conversionType: "ycmfn",
     },
     {
