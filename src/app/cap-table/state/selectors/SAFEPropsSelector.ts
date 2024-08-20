@@ -21,7 +21,7 @@ const determineRowNote = (
       // Unless with have priced round, we can't calculate an uncapped SAFE
       return {
         error: "TBD",
-        explanation: "Uncapped SAFEs are dependent on a priced round to calculate ownership pre-conversion ownership",
+        explanation: "Uncapped SAFEs are dependent on a priced round to calculate pre-conversion ownership",
       }
     } else if (cap < safe.investment) {
       // We shouldn't allow for this, as it makes no sense
@@ -33,7 +33,7 @@ const determineRowNote = (
       // Unless with have priced round, we can't calculate an uncapped SAFE
       return {
         error: "TBD",
-        explanation: "Pre-money SAFEs are dependent on a priced round to calculate pre-conversion ownership",
+        explanation: "Pre-money SAFEs are dependent the option pool increase from the priced round to calculate pre-conversion ownership",
       }
     }
   }
