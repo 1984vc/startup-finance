@@ -39,16 +39,15 @@ describe("converting safe investments with existing common stock", () => {
   test("matches our Google Sheet", () => {
     const preMoneyValuation = 16_700_000;
     const common = 9_390_728;
-    const unusedOptions = { name: "Unused options", amount: 609_272 };
+    const unusedOptions = 609_272;
     const safes: ISafeInvestment[] = [
-      // YC 7% on $125k is $1,785,714.28571429 cap
       {
         investment: 125_000,
         discount: 0,
         cap: 125_000 / 0.07,
         conversionType: "post",
       },
-      { investment: 375_000, discount: 0, cap: 0, conversionType: "post" },
+      { investment: 375_000, discount: 0, cap: 10_000_000, conversionType: "post" },
       {
         investment: 475_000,
         discount: 0,
@@ -68,24 +67,30 @@ describe("converting safe investments with existing common stock", () => {
         conversionType: "post",
       },
     ];
-    const seriesInvestments = [4_000_000];
+    const seriesInvestments = [3_000_000, 1_000_000];
 
-    const expectedValuation = 20_700_000;
-    const exptectedTotalShares = 20_606_916;
-    const exptectedTotalOptions = 2_060_692;
+    const expectedValuation = 20_700_117;
+    const expectedTotalShares = 21_040_767;
+    const expectedPostMoneyShares = 15_480_138;
+    const expectedPreMoneyShares = 11_494_804;
+    const expectedAdditionalOptions = 1_494_804;
+    const exptectedTotalOptions = 2_104_076;
     const fit = fitConversion(
       preMoneyValuation,
       common,
       safes,
-      unusedOptions.amount,
+      unusedOptions,
       0.1,
       seriesInvestments,
-      { roundPPSPlaces: -1 },
+      { roundPPSPlaces: 5, roundDownShares: true },
     );
 
     expect(Math.round(fit.totalShares * fit.pps)).toEqual(expectedValuation);
-    expect(Math.round(fit.totalShares)).toEqual(exptectedTotalShares);
+    expect(Math.round(fit.totalShares)).toEqual(expectedTotalShares);
     expect(Math.round(fit.totalOptions)).toEqual(exptectedTotalOptions);
+    expect(Math.round(fit.additionalOptions)).toEqual(expectedAdditionalOptions);
+    expect(Math.round(fit.postMoneyShares)).toEqual(expectedPostMoneyShares);
+    expect(Math.round(fit.preMoneyShares)).toEqual(expectedPreMoneyShares);
   });
   test("matches our known truth", () => {
     const preMoneyValuation = 49_800_000;

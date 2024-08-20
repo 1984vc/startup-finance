@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "json.schemas": [
+    {
+      "fileMatch": ["appsscript.json"],
+      "url": "https://json.schemastore.org/appsscript.json"
+    },
+    {
+      "fileMatch": [".clasp.json"],
+      "url": "https://json.schemastore.org/clasp.json"
+    }
+  ]
+}
