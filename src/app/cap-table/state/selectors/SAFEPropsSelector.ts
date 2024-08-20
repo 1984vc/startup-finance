@@ -8,6 +8,7 @@ import {
 import { calcSAFEs } from "@/utils/rowDataHelper";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { OwnershipPctNotes } from "@/components/safe-conversion/Conversion/PricedRound";
+import { ModuleFilenameHelpers } from "webpack";
 
 // Let's us handler error and things we should bring to the user's attention
 // Example: Pre-money ownership for a SAFE is dependent on a priced round, but post-money ownership is not
@@ -17,11 +18,18 @@ const determineRowNote = (
 ): OwnershipPctNotes | undefined => {
   if (row.type === "safe") {
     const safe = row as SAFEProps;
-    if (cap === 0) {
+
+    if ((safe.conversionType === "mfn" || safe.conversionType === "ycmfn") && cap === 0) {
+      //  An MFN but the cap hasn't been set 
+      return {
+        error: "TBD",
+        explanation: "For an MFN SAFE, the CAP is set to the lowest CAP on safes occuring after (below as we assume chronological order)",
+      }
+    }else if (cap === 0) {
       // Unless with have priced round, we can't calculate an uncapped SAFE
       return {
         error: "TBD",
-        explanation: "Uncapped SAFEs are dependent on a priced round to calculate pre-conversion ownership",
+        explanation: "We consider $0 cap an uncapped SAFEs--which are dependent on a priced round to calculate pre-conversion ownership",
       }
     } else if (cap < safe.investment) {
       // We shouldn't allow for this, as it makes no sense
@@ -33,9 +41,9 @@ const determineRowNote = (
       // Unless with have priced round, we can't calculate an uncapped SAFE
       return {
         error: "TBD",
-        explanation: "Pre-money SAFEs are dependent the option pool increase from the priced round to calculate pre-conversion ownership",
+        explanation: "Pre-money SAFEs are dependent on the option pool increase from the priced round to calculate pre-conversion ownership",
       }
-    }
+    } 
   }
 };
 
