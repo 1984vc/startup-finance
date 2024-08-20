@@ -1,6 +1,6 @@
 {
   "name": "cap-table-worksheet-gas",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "scripts": {
     "build": "rm -rf build && tsc && webpack",
     "push": "clasp push -f",
