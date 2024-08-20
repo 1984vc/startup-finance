@@ -87,6 +87,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         placeholder="Name"
         className="w-48 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+
       {data.disabledFields?.includes("investment") ? (
         <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(data.investment)}</div>
       ) : (
@@ -105,6 +106,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       {data.disabledFields?.includes("cap") ? (
         <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(Math.round(data.cap))}</div>
       ) : (
+
       <CurrencyInput
         type="text"
         name="cap"

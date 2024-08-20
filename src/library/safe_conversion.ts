@@ -134,7 +134,7 @@ const calculatePreAndPostMoneyShares = (
     ),
   );
 
-  const preMoneyShares = commonShares + increaseInOptionsPool;
+  const preMoneyShares = commonShares + unusedOptions + increaseInOptionsPool;
   const postMoneyShares = totalShares - seriesShares - increaseInOptionsPool;
 
   return {
