@@ -7,7 +7,7 @@ import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
-import { calcSAFEs, getCapForSafe } from "@/utils/rowDataHelper";
+import { getCapForSafe } from "@/utils/rowDataHelper";
 
 // Only the state that we need to serialize
 export type ExistingShareholderState = Pick<
@@ -239,11 +239,15 @@ export const getPricedConversion = createSelector(
         (row) => {
           // Handles MFN and YC MFN safes, finds the best cap
           const calculatedCap = getCapForSafe(row, safeInvestors);
+          // We have numerous conversion types, but we need to boil it down to pre or post
+          // The YC7P and YCMFN are both post-money safes
+          // Just set the conversion type to post if it's not pre
+          const conversionType = row.conversionType === "pre" ? "pre" : "post"
           return {
             investment: stringToNumber(row.investment),
             cap: calculatedCap,
             discount: stringToNumber(row.discount) / 100,
-            conversionType: row.conversionType
+            conversionType,
           };
         },
       ),
