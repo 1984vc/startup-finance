@@ -119,7 +119,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       />
       )}
       {data.disabledFields?.includes("discount") ? (
-        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">{data.discount}%</div>
+        <div className="w-28 px-3 border-b py-2 border-gray-300 dark:border-gray-700">{data.discount}%</div>
       ) : (
       <CurrencyInput
         type="text"
@@ -127,7 +127,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-28 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
         autoComplete="off"
         prefix=""
         suffix="%"
@@ -170,7 +170,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
         <div className="w-48">Name</div>
         <div className="w-36">Investment</div>
         <div className="w-36">Cap</div>
-        <div className="w-20">Discount</div>
+        <div className="w-28">Discount</div>
         <div className="w-36">Type</div>
         <div className="w-24">Ownership %</div>
       </div>
