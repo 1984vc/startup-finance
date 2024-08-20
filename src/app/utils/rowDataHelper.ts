@@ -62,7 +62,7 @@ export const calcSAFEs = (
   return rows.map((data, idx) => {
     const cap = safeCaps[idx];
     const rowCalcs: [number, number, number, number][] = []
-    const discountedConversionPPS = pricedConversion.pps * (1 - data.discount);
+    const discountedConversionPPS = pricedConversion.pps * (1 - data.discount/100);
 
     let safePPS = discountedConversionPPS
 
