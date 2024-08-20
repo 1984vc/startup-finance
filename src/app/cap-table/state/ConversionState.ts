@@ -7,6 +7,7 @@ import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
+import { calcSAFEs, getCapForSafe } from "@/utils/rowDataHelper";
 
 // Only the state that we need to serialize
 export type ExistingShareholderState = Pick<
@@ -230,14 +231,17 @@ export const getPricedConversion = createSelector(
       .reduce((acc, val) => acc + val, 0);
 
     const totalShares = commonStock;
+    const safeInvestors = rowData.filter((row) => row.type === "safe") as SAFEProps[];
     const pricedConversion = fitConversion(
       stringToNumber(preMoney),
       totalShares,
-      (rowData.filter((row) => row.type === "safe") as SAFEProps[]).map(
+      (safeInvestors).map(
         (row) => {
+          // Handles MFN and YC MFN safes, finds the best cap
+          const calculatedCap = getCapForSafe(row, safeInvestors);
           return {
             investment: stringToNumber(row.investment),
-            cap: stringToNumber(row.cap),
+            cap: calculatedCap,
             discount: stringToNumber(row.discount) / 100,
             conversionType: row.conversionType
           };

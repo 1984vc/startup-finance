@@ -37,7 +37,7 @@ const getMFNCapAter = (rows: SAFEState[], idx: number): number => {
 
 // Do all the complex work here of handling row data and doing some complex calculations
 // like MFN on safes and ownership percentages at various stages
-const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
+export const getCapForSafe = (safe: SAFEState, safes: SAFEState[]): number => {
   const idx = safes.findIndex((r) => r.id === safe.id);
   if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn") {
     return getMFNCapAter(safes, idx);
