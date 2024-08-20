@@ -2,8 +2,8 @@ name: Run Deploy GAS Production
 
 on:
   push:
-    branches:
-      - staging
+    tags:
+      - 'v*'
 
 jobs:
   deploy:
@@ -28,6 +28,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - name: Build for Apps Script
         run: yarn run build
+      - run: cp appsscript.json ../.
       - name: Deploy Apps Script
         uses: daikikatsuragawa/clasp-action@v1.1.0
         with:
@@ -37,6 +38,7 @@ jobs:
           clientId: ${{ secrets.CLIENT_ID }}
           clientSecret: ${{ secrets.CLIENT_SECRET }}
           scriptId: ${{ vars.SCRIPT_ID }}
+          rootDir: ./google-apps-script
           command: "push"
       - name: Link to deployment
         run:
