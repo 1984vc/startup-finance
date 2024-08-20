@@ -48,9 +48,9 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   ) => {
     const { name, value } = e.target;
     if (value === "yc7p") {
-      onUpdate({ ...data, "name": "YC 7%", "investment": 125_000, "cap": 125_000 / 0.07, "conversionType": "yc7p"});
+      onUpdate({ ...data, "name": "Y Combinator ES20", "investment": 125_000, "cap": 125_000 / 0.07, "conversionType": "yc7p"});
     } else if (value === "ycmfn") {
-      onUpdate({ ...data, "name": "YC MFN", "investment": 375_000, "cap": 0, "conversionType": "ycmfn"});
+      onUpdate({ ...data, "name": "YC ESP22", "investment": 375_000, "cap": 0, "conversionType": "ycmfn"});
     } else  {
       onUpdate({ ...data, [name]: value})
     }
