@@ -1,4 +1,5 @@
 import React from "react";
+import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { XCircleIcon } from "@heroicons/react/24/outline";
@@ -86,18 +87,24 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         placeholder="Name"
         className="w-48 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <CurrencyInput
-        type="text"
-        name="investment"
-        value={data.investment}
-        onValueChange={onValueChange}
-        placeholder="Investment"
-        autoComplete="off"
-        className={data.disabledFields?.includes("investment") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
-        prefix="$"
-        disabled={data.disabledFields?.includes("investment")}
-        allowDecimals={false}
-      />
+      {data.disabledFields?.includes("investment") ? (
+        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(data.investment)}</div>
+      ) : (
+        <CurrencyInput
+          type="text"
+          name="investment"
+          value={data.investment}
+          onValueChange={onValueChange}
+          placeholder="Investment"
+          autoComplete="off"
+          className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+          prefix="$"
+          allowDecimals={false}
+        />
+      )}
+      {data.disabledFields?.includes("cap") ? (
+        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(Math.round(data.cap))}</div>
+      ) : (
       <CurrencyInput
         type="text"
         name="cap"
@@ -105,20 +112,22 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         onValueChange={onValueChange}
         placeholder="Valuation Cap"
         autoComplete="off"
-        className={data.disabledFields?.includes("cap") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
+        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
         prefix="$"
         decimalScale={0}
         allowDecimals={true}
-        disabled={data.disabledFields?.includes("cap")}
       />
+      )}
+      {data.disabledFields?.includes("discount") ? (
+        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">{data.discount}%</div>
+      ) : (
       <CurrencyInput
         type="text"
         name="discount"
         value={data.discount ?? "0"}
         onValueChange={onValueChange}
         placeholder="Discount %"
-        className={data.disabledFields?.includes("discount") ? "w-36 px-3 py-2 border-b border-b-gray border-none" : "w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"}
-        disabled={data.disabledFields?.includes("discount")}
+        className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
         autoComplete="off"
         prefix=""
         suffix="%"
@@ -127,6 +136,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         maxLength={2}
         allowDecimals={false}
       />
+      )}
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
         name="conversionType"

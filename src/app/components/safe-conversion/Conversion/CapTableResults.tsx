@@ -44,10 +44,14 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
         <table className="w-full text-sm border-seperate border-spacing-2">
           <thead className="bg-inherit">
             <tr className="text-gray-500">
-              <th className="py-3 px-4 text-left font-thin">Shareholder / Investor</th>
+              <th className="py-3 px-2 text-left font-thin">Shareholder / Investor</th>
+              <th className="py-3 px-2 w-2 border-none"></th>
               <th className="py-3 px-4 text-left font-thin">Investment</th>
+              <th className="py-3 px-2 w-2 border-none"></th>
               <th className="py-3 px-4 text-left font-thin">PPS</th>
+              <th className="py-3 px-2 w-2 border-none"></th>
               <th className="py-3 px-4 text-left font-thin">Shares</th>
+              <th className="py-3 px-2 w-2 border-none"></th>
               <th className="py-3 px-4 text-left font-thin">Ownership %</th>
               {hasChanges && <th className="py-3 px-4 text-left font-thin">Change %</th>}
             </tr>
@@ -55,15 +59,17 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
           <tbody className="not-prose font-bold">
             {capTable.map((shareholder, idx) => (
               <tr className="" key={`shareholder-${idx}`}>
-                <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
+                <td className="py-3 px-2 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
                   {shareholder.name}
                 </td>
-                <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
+                <td className="py-3 px-2 w-2 border-none"></td>
+                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
                   {shareholder.investment
                     ? "$" + formatNumberWithCommas(shareholder.investment)
                     : ""}
                 </td>
-                <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
+                <td className="py-3 px-2 w-2 border-none"></td>
+                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
                 {ownershipError
                     ? "Error"
                     : shareholder.pps
@@ -71,7 +77,8 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                       : ""
                   }
                 </td>
-                <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
+                <td className="py-3 px-2 w-2 border-none"></td>
+                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
                   {ownershipError
                     ? "Error"
                     : shareholder.shares
@@ -79,30 +86,46 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                       : ""
                   }
                 </td>
-                <td className="py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700">
+                <td className="py-3 px-2 w-2 border-none"></td>
+                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
                   {ownershipError
                     ? "Error"
                     : shareholder.ownershipPct.toFixed(2) + "%"}
                 </td>
                 {hasChanges && (
                   <td
-                    className={`py-3 px-4 text-left border-b border-gray-300 dark:border-gray-700 ${roundTo(shareholder.ownershipChange ?? 0, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange ?? 0, 2) < 0 ? "text-red-500" : "text-black"}`}
+                    className={`py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700 ${roundTo(shareholder.ownershipChange ?? 0, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange ?? 0, 2) < 0 ? "text-red-500" : "text-black"}`}
                   >
                     {roundTo(shareholder.ownershipChange ?? 0, 2).toFixed(2)}
                   </td>
                 )}
               </tr>
             ))}
+            <tr className="h-4">
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+              <td className="py-0 px-0"></td>
+            </tr>
             <tr className="font-bold bg-inherit border-2 border-gray-700 dark:border-gray-300">
               <td className="py-3 px-4 text-left">Total</td>
+              <td className="py-3 px-2 w-2 border-none"></td>              
               <td className="py-3 px-4 text-left">
                 ${formatNumberWithCommas(totalInvestedToDate)}
               </td>
+              <td className="py-3 px-2 w-2 border-none"></td>              
               <td className="py-3 px-4 text-left">
               </td>
+              <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">
                 {formatNumberWithCommas(totalShares)}
               </td>
+              <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">
                 {ownershipError ? "Error" : totalPct.toFixed(2) + "%"}
               </td>

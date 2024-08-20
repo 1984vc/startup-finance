@@ -54,7 +54,7 @@ const Share: React.FC<{ url: string }> = ({ url }) => {
   return (
     <div className="">
       <button
-        className={`w-24 px-4 py-2  focus:outline-none focus:ring-2 text-white  ${isUpdatedRef.current ? "bg-nt84orange hover:bg-nt84orangedarker focus:ring-nt84orangedarker" : "bg-gray-400 hover:bg-gray-500 focus:ring-gray-300"}`}
+        className={`w-28 px-4 py-2  focus:outline-none focus:ring-2 text-white  ${isUpdatedRef.current ? "bg-nt84orange hover:bg-nt84orangedarker focus:ring-nt84orangedarker" : "bg-gray-400 hover:bg-gray-500 focus:ring-gray-300"}`}
         onClick={() => setShowModal(true)}
       >
         {buttonText()}
