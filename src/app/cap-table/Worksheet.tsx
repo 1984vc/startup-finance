@@ -97,10 +97,9 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
       </div>
 
       <div className="pt-10 ml-10">
-        <h2 className="text-lg font-bold mb-4 inline not-prose">
+        <div className="ml-2 mb-4 inline not-prose">
           Cap Table Before Priced Round
-        </h2>
-        <p>This assumes that all our SAFE's convert at their Cap</p>
+        </div>
         <CapTableResults
           {...getSafeCapTablePropsSelector({
             ...conversionState,
@@ -188,10 +187,10 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
             </div>
           </div>
           <div className="pt-10">
-            <h2 className="text-2xl font-bold mb-4 not-prose">Priced Round Overview</h2>
+            <h2 className="text-2xl ml-10 font-bold mb-4 not-prose">Priced Round Overview</h2>
             {errors.safeError && <p className="text-red-500 text-xl">SAFE Conversion Error</p>}
             {!errors.safeError &&
-              <div>
+              <div className="ml-10">
                 <PricedRound
                   {...getPriceRoundPropsSelector({
                     ...conversionState,
@@ -201,15 +200,15 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                   updateInvestmentChange={updateInvestmentChange}
                   updatePreMoneyChange={updatePreMoneyChange}
                 />
-                <h2 className="text-lg font-bold mb-4 mt-8 not-prose">
-                  Cap Table after Priced Round
-                </h2>
-                <CapTableResults
-                  {...getPricedRoundCapTablePropsSelector({
-                    ...conversionState,
-                    preMoneyChange,
-                    investmentChange,
-                  })}
+                  <h2 className="text-lg font-bold mb-4 mt-8 not-prose">
+                   Cap Table after Priced Round
+                  </h2>
+                  <CapTableResults
+                    {...getPricedRoundCapTablePropsSelector({
+                     ...conversionState,
+                     preMoneyChange,
+                     investmentChange,
+                    })}
                 />
               </div>
             }
