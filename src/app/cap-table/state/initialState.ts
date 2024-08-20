@@ -55,7 +55,7 @@ export const initialState = ({
     {
       id: getID(),
       type: "safe",
-      name: "YC 7%",
+      name: "Y Combinator ES20",
       investment: 125_000,
       discount: 0,
       cap: 125_000 / 0.07,
@@ -65,7 +65,7 @@ export const initialState = ({
     {
       id: getID(),
       type: "safe",
-      name: "YC MFN",
+      name: "YC ESP22",
       investment: 375_000,
       discount: 0,
       cap: 0,
