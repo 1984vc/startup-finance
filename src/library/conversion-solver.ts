@@ -1,9 +1,6 @@
-export interface ISafeInvestment {
-  investment: number;
-  discount: number;
-  cap: number;
-  conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
-}
+import { ISafeNote } from "./cap-table";
+import { sumSafeConvertedShares, safeConvert } from "./safe-calcs";
+import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
 export type BestFit = {
   pps: number;
@@ -18,75 +15,13 @@ export type BestFit = {
   totalOptions: number;
 };
 
-export type RoundingStrategy = {
-  roundDownShares?: boolean;
-  roundShares?: boolean;
-  // If no rounding, set to -1
-  roundPPSPlaces: number;
-};
-
 export const DEFAULT_ROUNDING_STRATEGY: RoundingStrategy = {
   roundShares: false,
   roundPPSPlaces: 5,
 };
 
-// Legal spreadsheets tend to round down shares, allow for this to be configurable
-const roundShares = (num: number, strategy: RoundingStrategy): number => {
-  if (strategy.roundDownShares) {
-    return Math.floor(num);
-  } else if (strategy.roundShares) {
-    return Math.round(num);
-  }
-  return num
-}
-
-// Legal spreadsheets tend to round to 5 decimal places, allow for this to be configurable
-const roundPPSToPlaces = (num: number, places: number): number => {
-  if (places < 0) {
-    return num;
-  }
-  const factor = Math.pow(10, places);
-  return Math.ceil(num * factor) / factor;
-};
-
-
 // Quick utility to sum an array of numbers
 const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b, 0);
-
-// Sum the shares of the safes after conversion
-const sumSafeConvertedShares = (
-  safes: ISafeInvestment[],
-  pps: number,
-  preMoneyShares: number,
-  postMoneyShares: number,
-  roundingStrategy: RoundingStrategy,
-): number => {
-  return sumArray(
-    safes.map((safe) => {
-      const discountPPS = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), roundingStrategy.roundPPSPlaces);
-      const postSafeShares = safe.investment / discountPPS;
-      return roundShares(postSafeShares, roundingStrategy);
-    }),
-  );
-};
-
-// Returns the PPS of a conversion given the amount of shares and the price of the shares
-export const safeConvert = (
-  safe: ISafeInvestment,
-  preShares: number,
-  postShares: number,
-  pps: number,
-): number => {
-  if (safe.cap === 0) {
-    return (1 - safe.discount) * pps;
-  }
-  const discountPPS = (1 - safe.discount) * pps;
-
-  const shares = safe.conversionType === "pre" ? preShares : postShares;
-  const capPPS = safe.cap / shares;
-  return Math.min(discountPPS, capPPS);
-};
-
 type PreAndPostMoneyCalculation = {
   preMoneyShares: number;
   postMoneyShares: number;
@@ -155,7 +90,7 @@ const attemptFit = (
   commonShares: number,
   unusedOptions: number,
   targetOptionsPct: number,
-  safes: ISafeInvestment[],
+  safes: ISafeNote[],
   seriesInvestments: number[],
   totalShares: number, // This is only number that changes
   roundingStrategy: RoundingStrategy = DEFAULT_ROUNDING_STRATEGY,
@@ -179,19 +114,21 @@ const attemptFit = (
   return newTotalShares
 };
 
-// Takes in common shares and safe investments and returns the pps in the same order
+// Takes in mininum information and returns the best fit for a conversion of SAFEs and the new target option pool
 export const fitConversion = (
   // The premoney valuation of the round
   preMoneyValuation: number,
   // Existing shareholders (doesn't include unused options)
   commonShares: number,
   // The SAFE's we wish to convert
-  safes: ISafeInvestment[],
+  safes: ISafeNote[],
   // Our unused options - This plus existing is the total shares we currently have
   unusedOptions: number,
   // Our new target option pool size
   targetOptionsPct: number,
   // The series investors on the priced round
+  // We split this out because we need to know how much each invested since we'll be rounding shares
+  // per investor. This is the only way to get a truly accurate representation of the total shares
   seriesInvestments: number[],
   roundingStrategy: RoundingStrategy = DEFAULT_ROUNDING_STRATEGY,
 ): BestFit => {

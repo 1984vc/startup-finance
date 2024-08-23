@@ -5,7 +5,7 @@ import {
   CapTableRow,
 } from "@/components/safe-conversion/Conversion/CapTableResults";
 import { getPriceRoundPropsSelector } from "./PricedRoundPropsSelector";
-import { BestFit } from "@library/safe_conversion";
+import { BestFit } from "@library/conversion-solver";
 import { getExistingShareholderPropsSelector } from "./ExistingShareholderPropsSelector";
 import { getSAFERowPropsSelector } from "./SAFEPropsSelector";
 

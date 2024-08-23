@@ -1,11 +1,11 @@
 // You can access any of the global GAS objects in this file. You can also
 // import local files or external dependencies:
+import { ISafeNote } from "./cap-table";
 import {
   DEFAULT_ROUNDING_STRATEGY,
-  ISafeInvestment,
-  RoundingStrategy,
   fitConversion,
-} from "./safe_conversion";
+} from "./conversion-solver";
+import { RoundingStrategy } from "./utils/rounding";
 
 type SAFE_CONVERSION_RESULT = [
   ["Result", string],
@@ -43,7 +43,7 @@ function SAFE_CONVERSION(
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
   try {
-    const safes: ISafeInvestment[] = safeRanges.map((e) => {
+    const safes: ISafeNote[] = safeRanges.map((e) => {
       // Check each element of the array to see if it's a number, if not throw an Error
       if ([e[0], e[1], e[2]].some((el) => typeof el !== "number")) {
         throw new Error(
@@ -54,6 +54,7 @@ function SAFE_CONVERSION(
         investment: e[0],
         cap: e[1],
         discount: e[2],
+        type: "safe",
         conversionType: e[3].match(/^pre/i) ? "pre" : "post",
       };
     });

@@ -1,15 +1,17 @@
 import { describe, expect, test } from "@jest/globals";
-import { fitConversion, ISafeInvestment } from "@library/safe_conversion";
+import { ISafeNote } from "@library/cap-table";
+import { fitConversion } from "@library/conversion-solver";
 
 describe("converting safe investments with existing common stock", () => {
   test("Sanity check our baseline", () => {
     const preMoneyValuation = 32_000_000;
     const common = 2_000_000;
     const unusedOptions = { name: "Unused options", amount: 0 };
-    const safes: ISafeInvestment[] = [
+    const safes: ISafeNote[] = [
       {
         investment: 2_000_000,
         discount: 0,
+        type: "safe",
         cap: 10_000_000,
         conversionType: "post",
       },
@@ -40,29 +42,33 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 16_700_000;
     const common = 9_390_728;
     const unusedOptions = 609_272;
-    const safes: ISafeInvestment[] = [
+    const safes: ISafeNote[] = [
       {
         investment: 125_000,
         discount: 0,
+        type: "safe",
         cap: 125_000 / 0.07,
         conversionType: "post",
       },
-      { investment: 375_000, discount: 0, cap: 10_000_000, conversionType: "post" },
+      { investment: 375_000, discount: 0, cap: 10_000_000, conversionType: "post", type: "safe" },
       {
         investment: 475_000,
         discount: 0,
+        type: "safe",
         cap: 10_000_000,
         conversionType: "post",
       },
       {
         investment: 28_500,
         discount: 0,
+        type: "safe",
         cap: 13_000_000,
         conversionType: "post",
       },
       {
         investment: 2_997_500,
         discount: 0,
+        type: "safe",
         cap: 30_000_000,
         conversionType: "post",
       },
@@ -96,66 +102,76 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 49_800_000;
     const common = 10_000_000 + 1_694_118;
     const unusedOptions = 0;
-    const safes: ISafeInvestment[] = [
+    const safes: ISafeNote[] = [
       {
         investment: 50_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 1_000_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 25_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 175_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 150_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 50_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 5_000,
         discount: 0,
         cap: 20_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 50_000,
         discount: 0,
         cap: 20_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 311_147.8,
         discount: 0,
         cap: 20_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 250_000,
         discount: 0,
         cap: 20_000_000,
         conversionType: "post",
+        type: "safe",
       },
     ];
     const seriesInvestments = [10_199_995.29];
@@ -182,32 +198,36 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 16_700_000;
     const common = 9_390_728;
     const unusedOptions = { name: "Unused options", amount: 609_272 };
-    const safes: ISafeInvestment[] = [
+    const safes: ISafeNote[] = [
       // YC 7% on $125k is $1,785,714.28571429 cap
       {
         investment: 125_000,
         discount: 0,
         cap: 125_000 / 0.07,
         conversionType: "post",
+        type: "safe",
       },
-      { investment: 375_000, discount: 0, cap: 0, conversionType: "post" },
+      { investment: 375_000, discount: 0, cap: 0, conversionType: "post", type: "safe" },
       {
         investment: 475_000,
         discount: 0,
         cap: 10_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 28_500,
         discount: 0,
         cap: 13_000_000,
         conversionType: "post",
+        type: "safe",
       },
       {
         investment: 2_997_500,
         discount: 0,
         cap: 30_000_000,
         conversionType: "post",
+        type: "safe",
       },
     ];
     const seriesInvestments = [4_000_000];

@@ -1,5 +1,5 @@
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
-import { BestFit } from "@library/safe_conversion";
+import { BestFit } from "@library/conversion-solver";
 
 export interface CapTableRow {
   name: string;

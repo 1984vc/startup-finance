@@ -1,0 +1,80 @@
+import { ISafeNote } from "./cap-table";
+import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
+
+const getMFNCapAter = (rows: ISafeNote[], idx: number): number => {
+  // For each safe after the idx, find the lowest number that's not 0
+  // and return that number
+  return (
+    rows.slice(idx + 1).reduce((val, row) => {
+
+      // Ignore anything that's in MFN
+      if (row.conversionType === "mfn" || row.conversionType === "ycmfn") {
+        return val;
+      }
+
+      // Ignore Pre-money safes for now. The assumption is that the MFN is Post-money (YC's is)
+      if (row.conversionType === "pre") {
+        return val;
+      }
+
+      // if the value is 0, return the cap (this is the lowest possible value)
+      if (val === 0) {
+        return row.cap;
+      }
+      // If the value is greater than 0 and the cap is greater than 0 and less than the value
+      // This is our new MFN
+      if (val > 0 && row.cap > 0 && row.cap < val) {
+        return row.cap;
+      }
+      // Just return the current value
+      return val;
+    }, 0) ?? 0
+  );
+};
+
+// Do all the complex work here of handling row data and doing some complex calculations
+// like MFN on safes and ownership percentages at various stages
+export const getCapForSafe = (idx: number, safes: ISafeNote[]): number => {
+  const safe = safes[idx];
+  if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
+    return getMFNCapAter(safes, idx);
+  }
+  return safe.cap;
+};
+
+// Sum the shares of the safes after conversion
+export const sumSafeConvertedShares = (
+  safes: ISafeNote[],
+  pps: number,
+  preMoneyShares: number,
+  postMoneyShares: number,
+  roundingStrategy: RoundingStrategy,
+): number => {
+  return sumArray(
+    safes.map((safe) => {
+      const discountPPS = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), roundingStrategy.roundPPSPlaces);
+      const postSafeShares = safe.investment / discountPPS;
+      return roundShares(postSafeShares, roundingStrategy);
+    }),
+  );
+};
+
+// Returns the PPS of a conversion given the amount of shares and the price of the shares
+export const safeConvert = (
+  safe: ISafeNote,
+  preShares: number,
+  postShares: number,
+  pps: number,
+): number => {
+  if (safe.cap === 0) {
+    return (1 - safe.discount) * pps;
+  }
+  const discountPPS = (1 - safe.discount) * pps;
+
+  const shares = safe.conversionType === "pre" ? preShares : postShares;
+  const capPPS = safe.cap / shares;
+  return Math.min(discountPPS, capPPS);
+};
+
+// Quick utility to sum an array of numbers
+const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b, 0);

@@ -1,4 +1,4 @@
-import { BestFit } from "@library/safe_conversion";
+import { BestFit } from "@library/conversion-solver";
 import {
   IRowState,
   SAFEState,
