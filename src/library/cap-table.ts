@@ -93,7 +93,7 @@ export const getCapTableOwnership = (commonStockholders: ICommonStockholder[]): 
   })
 }
 
-export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {rows: CapTableRow[], total: CapTableRow} => {
+export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow, error?: CapTableOwnershipError} => {
   const commonStockholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common") as ICommonStockholder[];
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
 
@@ -110,7 +110,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {rows: CapTa
   })
 
   // This math is pre-round math, so it's just the ownership percentage
-  const safeCapTable: CapTableRow[] = safeNotes.map((safe) => {
+  const safeCapTable: SafeCapTableRow[] = safeNotes.map((safe) => {
     let ownershipPct = -1
     if (safe.cap === 0) {
       return {
@@ -134,7 +134,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {rows: CapTa
       }
     }
     if (safe.conversionType === "pre") {
-      ownershipPct = safe.investment / safe.cap + totalSafeInvestment;
+      ownershipPct = safe.investment / (safe.cap + totalSafeInvestment);
 
     } else {
       ownershipPct = safe.investment / safe.cap;
@@ -150,7 +150,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {rows: CapTa
   })
 
   const totalSafeOwnershipPct = safeCapTable.reduce((acc, safe) => acc + (safe.ownershipPct ?? 0), 0);
-  const commonCapTable: CapTableRow[] = commonStockholders.map((stockholder) => {
+  const commonCapTable: CommonCapTableRow[] = commonStockholders.map((stockholder) => {
     return {
       name: stockholder.name,
       shares: stockholder.shares,
@@ -161,7 +161,8 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {rows: CapTa
   })
 
   return {
-    rows: [...commonCapTable, ...safeCapTable],
+    common: commonCapTable,
+    safes: safeCapTable,
     total: {
       name: "Total",
       // In a pre-round cap table, the total shares are just the common shares since we can't know the PPS yet
@@ -169,6 +170,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {rows: CapTa
       investment: totalSafeInvestment,
       ownershipPct: 1,
       type: "total",
-    }
+    },
+    error: undefined
   }
 }
