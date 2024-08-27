@@ -2,7 +2,7 @@ export interface ISafeInvestment {
   investment: number;
   discount: number;
   cap: number;
-  conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
+  conversionType: "post" | "pre" | "mfn";
 }
 
 export type BestFit = {

@@ -13,6 +13,7 @@ export interface SAFEProps {
   investment: number;
   cap: number;
   discount: number;
+  // Legacy where we used to allow specific version of SAFE
   conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
   ownership: {
     shares?: number
@@ -57,13 +58,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
     e: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    if (value === "yc7p") {
-      onUpdate({ ...data, "name": "YC 7%", "investment": 125_000, "cap": 125_000 / 0.07, "conversionType": "yc7p"});
-    } else if (value === "ycmfn") {
-      onUpdate({ ...data, "name": "YC MFN", "investment": 375_000, "cap": 0, "conversionType": "ycmfn"});
-    } else  {
-      onUpdate({ ...data, [name]: value})
-    }
+    onUpdate({ ...data, [name]: value})
   };
 
   const onValueChange = (
@@ -74,6 +69,12 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       onUpdate({ ...data, [name]: parseFloat(value ?? "0") });
     }
   };
+
+  const conversionType = () => {
+    if (data.conversionType === "yc7p") return "post";
+    if (data.conversionType === "ycmfn") return "mfn";
+    else return data.conversionType;
+  }
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
     console.log("drag start", data.name, " - ", data.id);
@@ -179,15 +180,13 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
       {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
         name="conversionType"
-        value={data.conversionType}
+        value={conversionType()}
         onChange={handleDropDownChange}
         className="w-36 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="post">Post Money</option>
         <option value="pre">Pre Money</option>
         <option value="mfn">Uncapped MFN</option>
-        <option value="yc7p">YC $125K/7%</option>
-        <option value="ycmfn">YC $375K/MFN</option>
       </select>
       <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
         <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />
