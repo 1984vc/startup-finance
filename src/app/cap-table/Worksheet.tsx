@@ -64,6 +64,8 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
 
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
+  const [targetOptionsChange, updateTargetOptionsChange] = useState(0);
+  console.log(targetOptionsChange)
 
   const errors = getErrorSelector(conversionState);
   
@@ -222,9 +224,11 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                     ...conversionState,
                     preMoneyChange,
                     investmentChange,
+                    targetOptionsChange,
                   })}
                   updateInvestmentChange={updateInvestmentChange}
                   updatePreMoneyChange={updatePreMoneyChange}
+                  updateTargetOptionsChange={updateTargetOptionsChange}
                 />
                   <h2 className="text-lg font-bold mb-4 mt-8 not-prose">
                    Cap Table after Priced Round
@@ -234,6 +238,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                      ...conversionState,
                      preMoneyChange,
                      investmentChange,
+                     targetOptionsChange
                     })}
                 />
               </div>
