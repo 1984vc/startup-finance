@@ -139,31 +139,16 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           <div>
             <h1 className="text-2xl font-bold mb-12 mt-12 pl-2">3 New Round </h1>
             <div className="flex space-x-4 ml-10">
-              <div className="flex-1">
+              <div className="w-1/4">
                 <h2 className="my-2 not-prose">Premoney Valuation</h2>
-                <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+                <div className="z-10 max-w-5xl items-center justify-between font-mono text-sm">
                   <CurrencyInput
                     type="text"
                     name="preMoney"
                     value={preMoney}
                     onValueChange={onValueChange("number")}
                     placeholder="Investment"
-                    className="flex-1 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    prefix="$"
-                    decimalScale={0}
-                    allowDecimals={false}
-                  />
-                </div>
-              </div>
-              <div className="flex-1">
-                <h2 className="my-2 not-prose">Post Money Valuation</h2>
-                <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-                  <CurrencyInput
-                    type="text"
-                    name="totalSeriesInvestment"
-                    value={postMoney}
-                    onValueChange={onPostMoneyChange}
-                    className="flex-1 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 w-full px-3 py-2 mr-4 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                     prefix="$"
                     decimalScale={0}
                     allowDecimals={false}
@@ -172,7 +157,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
               </div>
             </div>
             <div className="flex space-x-4 ml-10">
-              <div className="flex-1">
+              <div className="w-1/4">
                 <h2 className="my-2 not-prose">Target Options Pool</h2>
                 <CurrencyInput
                   type="text"
@@ -180,7 +165,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                   value={targetOptionsPool}
                   onValueChange={onValueChange("percent")}
                   placeholder="Target Options Pool %"
-                  className="w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   prefix=""
                   suffix="%"
                   decimalScale={1}
@@ -188,13 +173,13 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                   allowDecimals={true}
                 />
               </div>
-              <div className="flex-1">
+              <div className="w-1/4">
                 <h2 className="my-2 not-prose">Additional Options</h2>
                 <CurrencyInput
                   type="text"
                   name="additionalOptions"
                   value={pricedConversion?.additionalOptions}
-                  className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 w-full px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   prefix=""
                   decimalScale={0}
                   max={99}
@@ -212,6 +197,23 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                 onDelete={onDeleteRow}
                 onUpdate={onUpdateRow}
               />
+            </div>
+            <div className="flex space-x-4 ml-10 mt-8">
+              <div className="w-1/4">
+                <h2 className="my-2 not-prose">Post Money Valuation</h2>
+                <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+                  <CurrencyInput
+                    type="text"
+                    name="totalSeriesInvestment"
+                    value={postMoney}
+                    onValueChange={onPostMoneyChange}
+                    className="flex-1 w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    prefix="$"
+                    decimalScale={0}
+                    allowDecimals={false}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className="pt-10">
