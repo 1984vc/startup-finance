@@ -2,8 +2,8 @@ export const stringToNumber = (value: string | number): number => {
   if (typeof value === "number") {
     return value;
   } else {
-    // Remove anything that's not a digit or a period
-    const cleanedValue = value.replace(/[^\d.]/g, "");
+    // Remove anything that's not a digit or a period or negative sign
+    const cleanedValue = value.replace(/[^-\d.]/g, "");
     // if it has a period, parseFloat, otherwise parseInt
     return cleanedValue.includes(".")
       ? parseFloat(cleanedValue)

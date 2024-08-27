@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+import { Bars4Icon, XCircleIcon } from "@heroicons/react/24/outline";
 import { OwnershipPctNotes } from "./PricedRound";
 import PercentNote from "./PercentNote";
 
@@ -27,14 +27,24 @@ export interface SAFEProps {
 
 interface SAFEInputRowProps {
   data: SAFEProps;
+  isHovered?: boolean;
+  isDragging?: boolean;
   onDelete: (id: string) => void;
   onUpdate: (data: SAFEProps) => void;
+  onDragStart: (event: React.DragEvent<HTMLDivElement>, index: string) => void;
+  onDragOver: (event: React.DragEvent<HTMLDivElement>, index: string) => void;
+  onDrop: (event: React.DragEvent<HTMLDivElement>, dropIndex: string) => void;
 }
 
 const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   data,
+  isHovered = false,
+  isDragging = false,
   onDelete,
   onUpdate,
+  onDragStart,
+  onDragOver,
+  onDrop,
 }) => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -65,8 +75,37 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
     }
   };
 
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
+    console.log("drag start", data.name, " - ", data.id);
+    event.dataTransfer.setData('text/plain', data.id)
+    onDragStart(event, data.id);
+  }
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
+    event.preventDefault();
+    console.log("drag over", data.name, " - ", data.id);
+    onDragOver(event, data.id);
+  };
+
+
   return (
-    <div className="flex items-center space-x-4 mb-4">
+    <div
+      className={`flex items-center space-x-4 mb-4 ${isHovered ? 'mb-16' : ''} ${isDragging ? 'opacity-50' : ''}`}
+      draggable={true}
+      // Without this "dataTransfer" event, the drag and drop will not work
+      onDragStart={ handleDragStart }
+      onDragOver={ handleDragOver }
+      onDragEnd={(e) => { onDrop(e, data.id)} }
+      onDrop={(e) => {
+        const dropIndex = e.dataTransfer.getData('text/plain');
+        onDrop(e, dropIndex)
+      } }
+    >
+      <button
+        className={`w-6 focus:outline-none focus:ring-2 cursor-move`}
+      >
+        <Bars4Icon className="inline" width={20} />
+      </button>
       <button
         onClick={() => onDelete(data.id)}
         disabled={!data.allowDelete}
@@ -162,7 +201,42 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   onDelete,
   onUpdate,
   onAddRow,
+  onMoveRow,
 }) => {
+
+  const [dragStartId, setDragStartId] = useState<string|null>(null);
+  const [dragOverId, setDragOverId] = useState<string|null>(null);
+
+  const onDragStart = (_event: React.DragEvent<HTMLDivElement>, index: string) => {
+    setDragStartId(index);
+  }
+
+  const onDragOver = (_event: React.DragEvent<HTMLDivElement>, index: string) => {
+    setDragOverId(index);
+  }
+
+  const onDrop = () => {
+    if (dragStartId && dragOverId && dragStartId !== dragOverId) {
+      onMoveRow?.(dragStartId, dragOverId);
+    }
+  }
+
+  // Handle issue with dragend event not firing
+  useEffect(() => {
+    // Add global dragend listener
+    const handleGlobalDragEnd = () => {
+      setDragOverId(null); // Reset drag over state
+      setDragStartId(null); // Reset drag start state
+    };
+
+    window.addEventListener('dragend', handleGlobalDragEnd);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('dragend', handleGlobalDragEnd);
+    };
+  }, []);
+
   return (
     <div>
       <div className="flex items-center space-x-4 mb-4">
@@ -179,8 +253,13 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
         <SAFEInputRow
           key={idx}
           data={note}
+          isDragging={ dragStartId === note.id }
+          isHovered={dragOverId === note.id && dragStartId !== note.id}
           onUpdate={onUpdate}
           onDelete={onDelete}
+          onDragStart={onDragStart}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
         />
       ))}
       <button

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 import {
@@ -31,6 +31,14 @@ type WorksheetProps = {
   createNewState: (findRecent: boolean) => void;
 } 
 
+function usePrevious<T>(value: T) {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, loadById, createNewState}) => {
 
   const {
@@ -40,6 +48,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
     onAddRow,
     onDeleteRow,
     onUpdateRow,
+    onMoveRow,
     onValueChange,
   } = conversionState;
 
@@ -49,13 +58,29 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
     .map((row) => row.investment)
     .reduce((acc, val) => acc + val, 0);
 
-  const postMoney = stringToNumber(preMoney) + totalSeriesInvesment;
+  const [postMoney, setPostMoney] = useState(stringToNumber(preMoney) + totalSeriesInvesment);
+  const previousPostMoney = usePrevious(postMoney);
   const pricedConversion = getPricedConversion(conversionState);
 
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
 
   const errors = getErrorSelector(conversionState);
+  
+  useEffect(() => {
+    // Lots of work here to get around a circular dependency of pre-money and post-money
+    if (previousPostMoney !== postMoney) {
+      onValueChange("number")((postMoney - totalSeriesInvesment).toString(), "preMoney");
+    } else {
+      setPostMoney(stringToNumber(preMoney) + totalSeriesInvesment);
+    }
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [postMoney, preMoney, totalSeriesInvesment])
+
+  const onPostMoneyChange = (val: string | undefined) => {
+    setPostMoney(stringToNumber(val ?? 0));
+  }
   
   return (
     <div className={"not-prose"}>
@@ -93,6 +118,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
+          onMoveRow={onMoveRow}
         />
       </div>
 
@@ -134,11 +160,11 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                     type="text"
                     name="totalSeriesInvestment"
                     value={postMoney}
-                    className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onValueChange={onPostMoneyChange}
+                    className="flex-1 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                     prefix="$"
                     decimalScale={0}
                     allowDecimals={false}
-                    disabled={true}
                   />
                 </div>
               </div>

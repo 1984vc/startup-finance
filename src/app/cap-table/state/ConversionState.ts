@@ -47,6 +47,7 @@ export interface IConversionState extends IConversionStateData {
     name: string | undefined,
     values?: CurrencyInputOnChangeValues,
   ) => void;
+  onMoveRow: (rowId: string, afterId: string) => void;
   togglepriceRounds: () => void;
 }
 
@@ -163,6 +164,22 @@ export const createConversionStore = (initialState: IConversionStateData) =>
       }));
     },
 
+    onMoveRow: (rowId: string, afterId: string) => {
+      console.log("moving", rowId, afterId);
+      const updatedRows = [...get().rowData];
+      const rowIndex = updatedRows.findIndex((row) => row.id === rowId);
+      const afterIndex = updatedRows.findIndex((row) => row.id === afterId);
+      if (rowIndex !== -1 && afterIndex !== -1) {
+        const [movedRow] = updatedRows.splice(rowIndex, 1);
+        const insertIndex = afterIndex + (rowIndex < afterIndex ? 0 : 1);
+        updatedRows.splice(insertIndex, 0, movedRow);
+        set((state) => ({
+          ...state,
+          rowData: updatedRows,
+        }));
+      }
+    },
+
     onValueChange:
       (type: "number" | "percent") =>
         (
@@ -176,8 +193,8 @@ export const createConversionStore = (initialState: IConversionStateData) =>
               if (val < 0) {
                 return;
               }
-              // Get the value and replace anything that's not a number or period
-              const newValue = value?.replace(/[^0-9.]/g, "");
+              // Get the value and replace anything that's not a number or period or negative sign, strip errant dashes
+              const newValue = value?.replace(/[^-0-9.]/g, "").replace(/(?!^)-/g, "")
               const newValueNumber = parseFloat(newValue ?? "0");
               set((state) => ({
                 ...state,
