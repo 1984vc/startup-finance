@@ -91,7 +91,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
 
   return (
     <div
-      className={`flex items-center space-x-4 mb-4 ${isHovered ? 'mb-16' : ''} ${isDragging ? 'opacity-50' : ''}`}
+      className={`flex items-center space-x-4 ${isHovered ? 'mb-16' : 'mb-4'} ${isDragging ? 'opacity-50' : ''}`}
       draggable={true}
       // Without this "dataTransfer" event, the drag and drop will not work
       onDragStart={ handleDragStart }
