@@ -1,6 +1,8 @@
 // These are all the input types we need to build a cap table
 
+import { BestFit } from "./conversion-solver";
 import { getCapForSafe } from "./safe-calcs";
+import { roundShares } from "./utils/rounding";
 
 export interface IStake {
   name?: string;
@@ -40,26 +42,22 @@ export type CapTableOwnershipError = {
 
 export type BaseCapTableRow = {
   name?: string;
-  cap?: number;
-  shares?: number;
-  investment?: number;
-  pps?: number;
 }
 
-type TotalCapTableRow = Omit<BaseCapTableRow, 'type' | 'pps'> & {
+export type TotalCapTableRow = BaseCapTableRow & {
   type: "total";
   investment: number;
   shares: number;
   ownershipPct: number;
 };
 
-type CommonCapTableRow = Omit<BaseCapTableRow, 'type' | 'pps'> & {
+export type CommonCapTableRow = BaseCapTableRow & {
   type: "common";
   shares: number;
   ownershipPct: number;
 };
 
-type SafeCapTableRow = Omit<BaseCapTableRow, 'type' | 'pps'> & {
+export type SafeCapTableRow = BaseCapTableRow & {
   type: "safe";
   investment: number;
   cap?: number;
@@ -70,17 +68,24 @@ type SafeCapTableRow = Omit<BaseCapTableRow, 'type' | 'pps'> & {
   ownershipNotes?: string;
 };
 
-type SeriesCapTableRow = Omit<BaseCapTableRow, 'type' | 'pps'> & {
+export type SeriesCapTableRow = BaseCapTableRow & {
   type: "series";
   investment: number;
   shares: number;
   ownershipPct: number;
 };
 
-export type CapTableRow = TotalCapTableRow | SafeCapTableRow | SeriesCapTableRow | CommonCapTableRow;
+export type RefreshedOptionsCapTableRow = BaseCapTableRow & {
+  type: "refreshedOptions";
+  shares: number;
+  ownershipPct: number;
+};
 
-// Very basic implementation of the ownership calculation before any rounds
-export const getCapTableOwnership = (commonStockholders: ICommonStockholder[]): CapTableRow[] => {
+
+export type CapTableRow = TotalCapTableRow | SafeCapTableRow | SeriesCapTableRow | CommonCapTableRow | RefreshedOptionsCapTableRow;
+
+// Very basic implementation of the ownership calculation before any rounds, including SAFE Notes
+export const getCapTableOwnership = (commonStockholders: ICommonStockholder[]): CommonCapTableRow[] => {
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
   return commonStockholders.map((stockholder) => {
     return {
@@ -174,3 +179,79 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
     error: undefined
   }
 }
+
+export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders: StakeHolder[]): 
+  {
+    common: CommonCapTableRow[],
+    safes: SafeCapTableRow[],
+    series: SeriesCapTableRow[],
+    refreshedOptionsPool: RefreshedOptionsCapTableRow,
+    total: TotalCapTableRow,
+    error?: CapTableOwnershipError
+  } => {
+  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common" && stakeHolder.commonType !== 'unusedOptions') as ICommonStockholder[];
+  const safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as ISafeNote[];
+  const seriesInvestors = stakeHolders.filter((stakeHolder) => stakeHolder.type === "series") as SeriesInvestor[];
+  const totalShares = pricedConversion.totalShares;
+
+  const totalInvestment = [...seriesInvestors, ...safeNotes].reduce((acc, investor) => acc + investor.investment, 0);
+
+  const commonCapTable: CommonCapTableRow[] = commonShareholders.map((stockholder) => {
+    return {
+      name: stockholder.name,
+      shares: stockholder.shares,
+      ownershipPct: stockholder.shares / totalShares,
+      type: "common",
+      pps: -1
+    }
+  })
+
+  const safeCapTable: SafeCapTableRow[] = safeNotes.map((safe, idx) => {
+    const pps = pricedConversion.ppss[idx];
+    const shares = roundShares(safe.investment / pps, pricedConversion.roundingStrategy);
+    const ownershipPct = shares / totalShares;
+    return {
+      name: safe.name,
+      investment: safe.investment,
+      ownershipPct,
+      shares,
+      type: "safe",
+      pps,
+    }
+  })
+
+  const seriesCapTable: SeriesCapTableRow[] = seriesInvestors.map((seriesInvestor) => {
+    const shares = roundShares(seriesInvestor.investment / pricedConversion.pps, pricedConversion.roundingStrategy);
+    return {
+      name: seriesInvestor.name,
+      investment: seriesInvestor.investment,
+      shares: shares,
+      ownershipPct: shares / totalShares,
+      type: "series",
+    }
+  })
+  
+  const refreshedOptionsPool: RefreshedOptionsCapTableRow = {
+    name: "Refreshed Options Pool",
+    shares: pricedConversion.totalOptions,
+    ownershipPct: pricedConversion.totalOptions / totalShares,
+    type: "refreshedOptions"
+  }
+
+  return {
+    common: commonCapTable,
+    safes: safeCapTable,
+    series: seriesCapTable,
+    refreshedOptionsPool,
+    total: {
+      name: "Total",
+      // In a pre-round cap table, the total shares are just the common shares since we can't know the PPS yet
+      shares: totalShares,
+      investment: totalInvestment,
+      ownershipPct: 1,
+      type: "total",
+    },
+    error: undefined
+  }
+}
+

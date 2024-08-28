@@ -1,5 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
-import { buildPreRoundCapTable, CapTableRow, ICommonStockholder, ISafeNote } from "@library/cap-table";
+import { buildPreRoundCapTable, buildPricedRoundCapTable, CapTableRow, ICommonStockholder, ISafeNote, SeriesInvestor, TotalCapTableRow } from "@library/cap-table";
+import { DEFAULT_ROUNDING_STRATEGY, fitConversion } from "@library/conversion-solver";
+import { roundPPSToPlaces } from "@library/utils/rounding";
 
 const commonFixture: ICommonStockholder[] = [
   {
@@ -47,11 +49,12 @@ const safeFixture: ISafeNote[] = [
   },
 ]
 
-const crossCheckCapTableResults = (rows: CapTableRow[], total: CapTableRow) => {
-  const investedTotal = rows.reduce((acc, row) => acc + (row.investment ?? 0), 0);
+const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTableRow) => {
+  const investors = rows.filter(row => ['safe','series'].includes(row.type)) as (ISafeNote | SeriesInvestor)[];
+  const investedTotal = investors.reduce((acc, row) => acc + (row.investment ?? 0), 0);
   expect(investedTotal).toEqual(total.investment);
 
-  const pctTotal = rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0);
+  const pctTotal = roundPPSToPlaces(rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0), 5);
   expect(pctTotal).toEqual(1);
   expect(total.ownershipPct).toEqual(1);
 
@@ -122,5 +125,39 @@ describe("Building a pre-round cap table with common shareholders and SAFE notes
     // Pre-money conversion assumes the cap is pre-money, so the ownership percentage is (investment / (cap + totalSafeInvestment))
     expect(safes[2].type === 'safe' && safes[2].ownershipPct).toEqual(1_000_000/(10_000_000 + 3_000_000));
 
+  });
+});
+
+const seriesFixture: SeriesInvestor[] = [
+  {
+    name: "1984",
+    investment: 3_000_000,
+    type: "series",
+    round: 1,
+  },
+  {
+    name: "Venture Fund 2",
+    investment: 1_000_000,
+    type: "series",
+    round: 1,
+  },
+]
+
+describe("Building a priced-round cap table with common shareholders, SAFE notes, and priced round investors", () => {
+  test("Sanity check our baseline", () => {
+    const premoney = 25_000_000;
+    const commonShares = commonFixture.filter(row => row.type === "common" && row.commonType === 'shareholder').reduce((acc, row) => acc + row.shares, 0);
+    const unusedOptions = commonFixture.filter(row => row.type === "common" && row.commonType === 'unusedOptions').reduce((acc, row) => acc + row.shares, 0);
+
+    const pricedConversion = fitConversion(premoney, commonShares, safeFixture, unusedOptions, 0.1, [
+      seriesFixture[0].investment,
+      seriesFixture[1].investment,
+    ], DEFAULT_ROUNDING_STRATEGY);
+    const {common, safes, series, refreshedOptionsPool, total} = buildPricedRoundCapTable(pricedConversion, [...commonFixture, ...safeFixture, ...seriesFixture]);
+    expect(common.length).toEqual(3); // We drop unused options from the common stockholders and add it back as Refreshed Options
+    expect(safes.length).toEqual(2);
+    expect(series.length).toEqual(2);
+    
+    crossCheckCapTableResults([...common, ...safes, ...series, refreshedOptionsPool], total);
   });
 });

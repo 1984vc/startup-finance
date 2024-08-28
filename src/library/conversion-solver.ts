@@ -13,10 +13,11 @@ export type BestFit = {
   totalShares: number;
   additionalOptions: number;
   totalOptions: number;
+  roundingStrategy: RoundingStrategy;
 };
 
 export const DEFAULT_ROUNDING_STRATEGY: RoundingStrategy = {
-  roundShares: false,
+  roundDownShares: true,
   roundPPSPlaces: 5,
 };
 
@@ -176,7 +177,7 @@ export const fitConversion = (
   // Get a list of the PPS's for each SAFE
   const ppss: number[] = Array(safes.length).fill(pps);
   for (const [idx, safe] of Array.from(safes.entries())) {
-    ppss[idx] = safeConvert(safe, preMoneyShares, postMoneyShares, pps)
+    ppss[idx] = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), roundingStrategy.roundPPSPlaces);
   }
 
   return {
@@ -190,5 +191,6 @@ export const fitConversion = (
     seriesShares,
     additionalOptions: increaseInOptionsPool,
     totalOptions: increaseInOptionsPool + unusedOptions,
+    roundingStrategy,
   };
 };
