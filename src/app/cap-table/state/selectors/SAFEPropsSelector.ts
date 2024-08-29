@@ -41,8 +41,7 @@ const determineRowNote = (
 
 const determineRowDisabledFields = (row: SAFEState) => {
   if (row.conversionType === "mfn") return ["cap"]
-  if (row.conversionType === "ycmfn") return ["cap", "discount", "investment"]
-  if (row.conversionType === "yc7p") return ["cap", "discount", "investment"]
+  if (row.conversionType === "ycmfn") return ["cap"]
   return []
 }
 

@@ -65,7 +65,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         value={data.name}
         onChange={handleInputChange}
         placeholder="Series Investor Name"
-        className="w-48 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-72 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <CurrencyInput
         type="text"
@@ -93,7 +93,7 @@ const SeriesInvestorList: React.FC<RowsProps<SeriesProps>> = ({
     <div>
       <div className="flex items-center space-x-4 mb-4">
         <div className="w-6"></div>
-        <div className="w-48">Name</div>
+        <div className="w-72">Name</div>
         <div className="w-32">Investment</div>
         <div className="w-24 text-right">Ownership %</div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 
 import {
@@ -31,6 +31,14 @@ type WorksheetProps = {
   createNewState: (findRecent: boolean) => void;
 } 
 
+function usePrevious<T>(value: T) {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, loadById, createNewState}) => {
 
   const {
@@ -40,6 +48,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
     onAddRow,
     onDeleteRow,
     onUpdateRow,
+    onMoveRow,
     onValueChange,
   } = conversionState;
 
@@ -49,13 +58,31 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
     .map((row) => row.investment)
     .reduce((acc, val) => acc + val, 0);
 
-  const postMoney = stringToNumber(preMoney) + totalSeriesInvesment;
+  const [postMoney, setPostMoney] = useState(stringToNumber(preMoney) + totalSeriesInvesment);
+  const previousPostMoney = usePrevious(postMoney);
   const pricedConversion = getPricedConversion(conversionState);
 
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
+  const [targetOptionsChange, updateTargetOptionsChange] = useState(0);
+  console.log(targetOptionsChange)
 
   const errors = getErrorSelector(conversionState);
+  
+  useEffect(() => {
+    // Lots of work here to get around a circular dependency of pre-money and post-money
+    if (previousPostMoney !== postMoney) {
+      onValueChange("number")((postMoney - totalSeriesInvesment).toString(), "preMoney");
+    } else {
+      setPostMoney(stringToNumber(preMoney) + totalSeriesInvesment);
+    }
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  [postMoney, preMoney, totalSeriesInvesment])
+
+  const onPostMoneyChange = (val: string | undefined) => {
+    setPostMoney(stringToNumber(val ?? 0));
+  }
   
   return (
     <div className={"not-prose"}>
@@ -93,6 +120,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           onAddRow={() => onAddRow("safe")}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
+          onMoveRow={onMoveRow}
         />
       </div>
 
@@ -111,40 +139,25 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           <div>
             <h1 className="text-2xl font-bold mb-12 mt-12 pl-2">3 New Round </h1>
             <div className="flex space-x-4 ml-10">
-              <div className="flex-1">
+              <div className="w-1/4">
                 <h2 className="my-2 not-prose">Premoney Valuation</h2>
-                <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+                <div className="z-10 max-w-5xl items-center justify-between font-mono text-sm">
                   <CurrencyInput
                     type="text"
                     name="preMoney"
                     value={preMoney}
                     onValueChange={onValueChange("number")}
                     placeholder="Investment"
-                    className="flex-1 px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 w-full px-3 py-2 mr-4 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                     prefix="$"
                     decimalScale={0}
                     allowDecimals={false}
-                  />
-                </div>
-              </div>
-              <div className="flex-1">
-                <h2 className="my-2 not-prose">Post Money Valuation</h2>
-                <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-                  <CurrencyInput
-                    type="text"
-                    name="totalSeriesInvestment"
-                    value={postMoney}
-                    className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    prefix="$"
-                    decimalScale={0}
-                    allowDecimals={false}
-                    disabled={true}
                   />
                 </div>
               </div>
             </div>
             <div className="flex space-x-4 ml-10">
-              <div className="flex-1">
+              <div className="w-1/4">
                 <h2 className="my-2 not-prose">Target Options Pool</h2>
                 <CurrencyInput
                   type="text"
@@ -152,7 +165,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                   value={targetOptionsPool}
                   onValueChange={onValueChange("percent")}
                   placeholder="Target Options Pool %"
-                  className="w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   prefix=""
                   suffix="%"
                   decimalScale={1}
@@ -160,13 +173,13 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                   allowDecimals={true}
                 />
               </div>
-              <div className="flex-1">
+              <div className="w-1/4">
                 <h2 className="my-2 not-prose">Additional Options</h2>
                 <CurrencyInput
                   type="text"
                   name="additionalOptions"
                   value={pricedConversion?.additionalOptions}
-                  className="flex-1 px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 w-full px-3 py-2 bg-gray-100 dark:bg-inherit border  focus:outline-none focus:ring-2 focus:ring-blue-500"
                   prefix=""
                   decimalScale={0}
                   max={99}
@@ -185,6 +198,23 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                 onUpdate={onUpdateRow}
               />
             </div>
+            <div className="flex space-x-4 ml-10 mt-8">
+              <div className="w-1/4">
+                <h2 className="my-2 not-prose">Post Money Valuation</h2>
+                <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+                  <CurrencyInput
+                    type="text"
+                    name="totalSeriesInvestment"
+                    value={postMoney}
+                    onValueChange={onPostMoneyChange}
+                    className="flex-1 w-full px-3 py-2 border  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    prefix="$"
+                    decimalScale={0}
+                    allowDecimals={false}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div className="pt-10">
             <h2 className="text-2xl ml-10 font-bold mb-4 not-prose">Priced Round Overview</h2>
@@ -196,9 +226,11 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                     ...conversionState,
                     preMoneyChange,
                     investmentChange,
+                    targetOptionsChange,
                   })}
                   updateInvestmentChange={updateInvestmentChange}
                   updatePreMoneyChange={updatePreMoneyChange}
+                  updateTargetOptionsChange={updateTargetOptionsChange}
                 />
                   <h2 className="text-lg font-bold mb-4 mt-8 not-prose">
                    Cap Table after Priced Round
@@ -208,6 +240,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                      ...conversionState,
                      preMoneyChange,
                      investmentChange,
+                     targetOptionsChange
                     })}
                 />
               </div>
