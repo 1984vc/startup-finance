@@ -19,7 +19,7 @@ describe("SAFE Props selector behaviour", () => {
     const safeNotes = getSAFERowPropsSelector(
       store.getState(),
     );
-    expect(safeNotes[0].ownership[0].percent.toFixed(2)).toEqual("7.00");
-    expect(safeNotes[0].disabledFields?.sort()).toEqual(["cap", "discount", "investment"].sort());
+    expect(safeNotes[1].ownership[0].percent.toFixed(2)).toEqual("3.75");
+    expect(safeNotes[1].disabledFields?.sort()).toEqual(["cap"].sort());
   });
 });

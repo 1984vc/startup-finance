@@ -59,6 +59,7 @@ const buildPricedRoundShareholderProps = (
 export type ResultSelectorState = IConversionStateData & {
   preMoneyChange?: number;
   investmentChange?: number;
+  targetOptionsChange?: number;
 };
 
 // The goal is to build a result set for a priced round that allows the user to play around
@@ -66,6 +67,7 @@ export type ResultSelectorState = IConversionStateData & {
 export const getPriceRoundPropsSelector = createSelector(
   (state: ResultSelectorState) => state.preMoneyChange,
   (state: ResultSelectorState) => state.investmentChange,
+  (state: ResultSelectorState) => state.targetOptionsChange,
   (state: ResultSelectorState) => state.rowData,
   (state: ResultSelectorState) => state.preMoney,
   (state: ResultSelectorState) => state.targetOptionsPool,
@@ -73,6 +75,7 @@ export const getPriceRoundPropsSelector = createSelector(
   (
     preMoneyChange,
     investmentChange,
+    targetOptionsChange,
     rowData,
     preMoney,
     targetOptionsPool,
@@ -80,6 +83,7 @@ export const getPriceRoundPropsSelector = createSelector(
   ): PricedRoundPropsData => {
     investmentChange = investmentChange ?? 0;
     preMoneyChange = preMoneyChange ?? 0;
+    targetOptionsChange = targetOptionsChange ?? 0;
 
 
     // Get the Series Investments and distribute the investmentChange over the series investors pro rata
@@ -125,7 +129,7 @@ export const getPriceRoundPropsSelector = createSelector(
     // With the changes
     const currentState: IConversionStateData = {
       preMoney: currentPreMoney,
-      targetOptionsPool,
+      targetOptionsPool: targetOptionsPool + (targetOptionsChange * 100),
       unusedOptions,
       rowData: updatedRows,
     };
@@ -202,6 +206,7 @@ export const getPriceRoundPropsSelector = createSelector(
       capTable: currentCapTable,
       preMoneyChange,
       investmentChange,
+      targetOptionsChange,
     };
   },
 );
