@@ -1,6 +1,6 @@
 // You can access any of the global GAS objects in this file. You can also
 // import local files or external dependencies:
-import { ISafeNote } from "./cap-table";
+import { SAFENote } from "./cap-table";
 import {
   DEFAULT_ROUNDING_STRATEGY,
   fitConversion,
@@ -43,7 +43,7 @@ function SAFE_CONVERSION(
   roundPPSPlaces: number = defaultRounding.roundPPSPlaces,
 ): SAFE_CONVERSION_RESULT {
   try {
-    const safes: ISafeNote[] = safeRanges.map((e) => {
+    const safes: SAFENote[] = safeRanges.map((e) => {
       // Check each element of the array to see if it's a number, if not throw an Error
       if ([e[0], e[1], e[2]].some((el) => typeof el !== "number")) {
         throw new Error(

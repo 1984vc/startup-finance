@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { ISafeNote } from "@library/cap-table";
+import { SAFENote } from "@library/cap-table";
 import { fitConversion } from "@library/conversion-solver";
 
 describe("converting safe investments with existing common stock", () => {
@@ -7,7 +7,7 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 32_000_000;
     const common = 2_000_000;
     const unusedOptions = { name: "Unused options", amount: 0 };
-    const safes: ISafeNote[] = [
+    const safes: SAFENote[] = [
       {
         investment: 2_000_000,
         discount: 0,
@@ -42,7 +42,7 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 16_700_000;
     const common = 9_390_728;
     const unusedOptions = 609_272;
-    const safes: ISafeNote[] = [
+    const safes: SAFENote[] = [
       {
         investment: 125_000,
         discount: 0,
@@ -102,7 +102,7 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 49_800_000;
     const common = 10_000_000 + 1_694_118;
     const unusedOptions = 0;
-    const safes: ISafeNote[] = [
+    const safes: SAFENote[] = [
       {
         investment: 50_000,
         discount: 0,
@@ -198,7 +198,7 @@ describe("converting safe investments with existing common stock", () => {
     const preMoneyValuation = 16_700_000;
     const common = 9_390_728;
     const unusedOptions = { name: "Unused options", amount: 609_272 };
-    const safes: ISafeNote[] = [
+    const safes: SAFENote[] = [
       // YC 7% on $125k is $1,785,714.28571429 cap
       {
         investment: 125_000,

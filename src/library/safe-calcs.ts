@@ -1,7 +1,7 @@
-import { ISafeNote } from "./cap-table";
+import { SAFENote } from "./cap-table";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
-const getMFNCapAter = (rows: ISafeNote[], idx: number): number => {
+const getMFNCapAter = (rows: SAFENote[], idx: number): number => {
   // For each safe after the idx, find the lowest number that's not 0
   // and return that number
   return (
@@ -34,7 +34,7 @@ const getMFNCapAter = (rows: ISafeNote[], idx: number): number => {
 
 // Do all the complex work here of handling row data and doing some complex calculations
 // like MFN on safes and ownership percentages at various stages
-export const getCapForSafe = (idx: number, safes: ISafeNote[]): number => {
+export const getCapForSafe = (idx: number, safes: SAFENote[]): number => {
   const safe = safes[idx];
   if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
     return getMFNCapAter(safes, idx);
@@ -44,7 +44,7 @@ export const getCapForSafe = (idx: number, safes: ISafeNote[]): number => {
 
 // Sum the shares of the safes after conversion
 export const sumSafeConvertedShares = (
-  safes: ISafeNote[],
+  safes: SAFENote[],
   pps: number,
   preMoneyShares: number,
   postMoneyShares: number,
@@ -61,7 +61,7 @@ export const sumSafeConvertedShares = (
 
 // Returns the PPS of a conversion given the amount of shares and the price of the shares
 export const safeConvert = (
-  safe: ISafeNote,
+  safe: SAFENote,
   preShares: number,
   postShares: number,
   pps: number,

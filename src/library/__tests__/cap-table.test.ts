@@ -1,9 +1,9 @@
 import { describe, expect, test } from "@jest/globals";
-import { buildPreRoundCapTable, buildPricedRoundCapTable, CapTableRow, ICommonStockholder, ISafeNote, SeriesInvestor, TotalCapTableRow } from "@library/cap-table";
+import { buildPreRoundCapTable, buildPricedRoundCapTable, CapTableRow, CommonStockholder, SAFENote, SeriesInvestor, TotalCapTableRow } from "@library/cap-table";
 import { DEFAULT_ROUNDING_STRATEGY, fitConversion } from "@library/conversion-solver";
 import { roundPPSToPlaces } from "@library/utils/rounding";
 
-const commonFixture: ICommonStockholder[] = [
+const commonFixture: CommonStockholder[] = [
   {
     shares: 4_500_000,
     commonType: "shareholder",
@@ -30,7 +30,7 @@ const commonFixture: ICommonStockholder[] = [
   },
 ]
 
-const safeFixture: ISafeNote[] = [
+const safeFixture: SAFENote[] = [
   {
     name: "1984",
     investment: 1_000_000,
@@ -50,11 +50,12 @@ const safeFixture: ISafeNote[] = [
 ]
 
 const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTableRow) => {
-  const investors = rows.filter(row => ['safe','series'].includes(row.type)) as (ISafeNote | SeriesInvestor)[];
+  const investors = rows.filter(row => ['safe','series'].includes(row.type)) as (SAFENote | SeriesInvestor)[];
   const investedTotal = investors.reduce((acc, row) => acc + (row.investment ?? 0), 0);
   expect(investedTotal).toEqual(total.investment);
 
-  const pctTotal = roundPPSToPlaces(rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0), 5);
+  // Handle floating point issues, 12 places of precision is plenty
+  const pctTotal = roundPPSToPlaces(rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0), 12);
   expect(pctTotal).toEqual(1);
   expect(total.ownershipPct).toEqual(1);
 
@@ -70,7 +71,7 @@ describe("Building a pre-round cap table with common shareholders and SAFE notes
     crossCheckCapTableResults([...common, ...safes], total);
   });
   test("Handle pre-round with MFN", () => {
-    const safeFixtureMod: ISafeNote[] = [...safeFixture]
+    const safeFixtureMod: SAFENote[] = [...safeFixture]
     safeFixtureMod.push(
       {
         name: "MFN Investor",
@@ -108,7 +109,7 @@ describe("Building a pre-round cap table with common shareholders and SAFE notes
   });
 
   test("Handle pre-round with pre-money conversion", () => {
-    const safeFixtureMod: ISafeNote[] = [...safeFixture]
+    const safeFixtureMod: SAFENote[] = [...safeFixture]
     safeFixtureMod.push(
       {
         name: "Pre Investor 1",

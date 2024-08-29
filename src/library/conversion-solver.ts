@@ -1,4 +1,4 @@
-import { ISafeNote } from "./cap-table";
+import { SAFENote } from "./cap-table";
 import { sumSafeConvertedShares, safeConvert } from "./safe-calcs";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
@@ -91,7 +91,7 @@ const attemptFit = (
   commonShares: number,
   unusedOptions: number,
   targetOptionsPct: number,
-  safes: ISafeNote[],
+  safes: SAFENote[],
   seriesInvestments: number[],
   totalShares: number, // This is only number that changes
   roundingStrategy: RoundingStrategy = DEFAULT_ROUNDING_STRATEGY,
@@ -122,7 +122,7 @@ export const fitConversion = (
   // Existing shareholders (doesn't include unused options)
   commonShares: number,
   // The SAFE's we wish to convert
-  safes: ISafeNote[],
+  safes: SAFENote[],
   // Our unused options - This plus existing is the total shares we currently have
   unusedOptions: number,
   // Our new target option pool size

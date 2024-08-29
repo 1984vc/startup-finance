@@ -4,37 +4,41 @@ import { BestFit } from "./conversion-solver";
 import { getCapForSafe } from "./safe-calcs";
 import { roundShares } from "./utils/rounding";
 
-export interface IStake {
+export type BaseStake = {
   name?: string;
   shares?: number;
   type: "common" | "safe" | "series";
 }
 
-export interface ICommonStockholder extends IStake {
+export type CommonStockholder = BaseStake & {
   name: string;
   shares: number;
   type: "common";
   commonType: "shareholder" | "unusedOptions";
 }
 
-export interface ISafeNote extends IStake {
+export type SAFENote = BaseStake & {
   name?: string;
   investment: number;
   cap: number;
   discount: number;
   type: "safe";
+  // TODO: Pro-Rata is not implemented yet
   sideLetters?: ("mfn"|"pro-rata")[];
   conversionType: "pre" | "post" | "mfn" | "yc7p" | "ycmfn";
 }
 
-export interface SeriesInvestor extends IStake {
+export type SeriesInvestor = BaseStake & {
   name?: string;
   investment: number;
   type: "series";
   round: number;
 }
 
-export type StakeHolder = ICommonStockholder | ISafeNote | SeriesInvestor;
+export type StakeHolder = CommonStockholder | SAFENote | SeriesInvestor;
+
+
+// Cap table return types below. These are the types of rows that can be in a cap table
 
 export type CapTableOwnershipError = {
   type: "tbd";
@@ -85,7 +89,7 @@ export type RefreshedOptionsCapTableRow = BaseCapTableRow & {
 export type CapTableRow = TotalCapTableRow | SafeCapTableRow | SeriesCapTableRow | CommonCapTableRow | RefreshedOptionsCapTableRow;
 
 // Very basic implementation of the ownership calculation before any rounds, including SAFE Notes
-export const getCapTableOwnership = (commonStockholders: ICommonStockholder[]): CommonCapTableRow[] => {
+export const getCapTableOwnership = (commonStockholders: CommonStockholder[]): CommonCapTableRow[] => {
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
   return commonStockholders.map((stockholder) => {
     return {
@@ -99,10 +103,10 @@ export const getCapTableOwnership = (commonStockholders: ICommonStockholder[]): 
 }
 
 export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow, error?: CapTableOwnershipError} => {
-  const commonStockholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common") as ICommonStockholder[];
+  const commonStockholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common") as CommonStockholder[];
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
 
-  let safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as ISafeNote[];
+  let safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[];
   const totalSafeInvestment = safeNotes.reduce((acc, stockholder) => acc + stockholder.investment, 0);
 
   // Calculate the cap value for the MFN safes
@@ -189,8 +193,8 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
     total: TotalCapTableRow,
     error?: CapTableOwnershipError
   } => {
-  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common" && stakeHolder.commonType !== 'unusedOptions') as ICommonStockholder[];
-  const safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as ISafeNote[];
+  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common" && stakeHolder.commonType !== 'unusedOptions') as CommonStockholder[];
+  const safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[];
   const seriesInvestors = stakeHolders.filter((stakeHolder) => stakeHolder.type === "series") as SeriesInvestor[];
   const totalShares = pricedConversion.totalShares;
 
@@ -202,7 +206,6 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalShares,
       type: "common",
-      pps: -1
     }
   })
 
@@ -227,6 +230,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       investment: seriesInvestor.investment,
       shares: shares,
       ownershipPct: shares / totalShares,
+      pps: pricedConversion.pps,
       type: "series",
     }
   })
