@@ -248,6 +248,7 @@ export const getPricedConversion = createSelector(
             cap: calculatedCap,
             discount: stringToNumber(row.discount) / 100,
             conversionType,
+            type: "safe",
           };
         },
       ),
