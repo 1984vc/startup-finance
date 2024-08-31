@@ -8,6 +8,7 @@ interface PercentNoteProps {
 }
 
 const PercentNote: React.FC<PercentNoteProps> = ({ pct, note, error}) => {
+  console.log(pct, note, error)
     if (error === "tbd") {
       return (
         <ToolipComponent content={note ?? ""}>

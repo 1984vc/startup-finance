@@ -57,8 +57,8 @@ export const getPreRoundCapTable = createSelector(
             cap: row.cap,
             type: row.type,
             ownershipPct: (row.ownershipPct ?? 0) * 100,
-            ownershipError: row.type === 'safe' ? row.ownershipError : undefined,
-            ownershipErrorReason: row.type === 'safe' ? row.ownershipNotes : undefined,
+            ownershipError: row.ownershipError,
+            ownershipNotes: row.ownershipNotes,
           }
         }
         return {

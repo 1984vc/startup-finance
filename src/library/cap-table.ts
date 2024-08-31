@@ -135,6 +135,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
         pps: -1
       }
     } else if (safe.cap <= safe.investment) {
+      console.log("error row", safe.name)
       return {
         name: safe.name,
         discount: safe.discount,

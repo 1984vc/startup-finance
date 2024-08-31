@@ -77,6 +77,8 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
     onDragOver(event, data.id);
   };
 
+  console.log(data)
+
 
   return (
     <div
