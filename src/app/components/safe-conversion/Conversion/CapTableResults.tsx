@@ -24,6 +24,7 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, o
   const pps = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.pps : null
 
   const hasChanges = change
+  const changePct = roundTo((change ?? 0) * 100, 2)
 
   return (
     <tr className="" key={`shareholder-${idx}`}>
@@ -60,9 +61,9 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, o
       </td>
       {hasChanges && (
         <td
-          className={`py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700 ${roundTo(change ?? 0, 2) > 0 ? "text-green-500" : roundTo(change ?? 0, 2) < 0 ? "text-red-500" : "text-black"}`}
+          className={`py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700 ${changePct > 0 ? "text-green-500" : changePct < 0 ? "text-red-500" : "text-black"}`}
         >
-          {roundTo(change ?? 0, 2).toFixed(2)}
+          {changePct.toFixed(2)}
         </td>
       )}
     </tr>

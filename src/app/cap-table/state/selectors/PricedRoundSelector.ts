@@ -218,7 +218,7 @@ export const getPricedRoundCapTableSelector = createSelector(
 
     return {
       totalRow: total,
-      changes: [],
+      changes: ownershipChanges,
       rows: capTableRows.map((row) => {
         if (row.type === 'safe') {
           return {
