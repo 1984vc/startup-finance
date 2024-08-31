@@ -3,26 +3,15 @@ import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { Bars4Icon, XCircleIcon } from "@heroicons/react/24/outline";
-import { OwnershipPctNotes } from "./PricedRound";
 import PercentNote from "./PercentNote";
+import { SafeCapTableRow } from "@library/cap-table";
 
-export interface SAFEProps {
+export type SAFEProps = SafeCapTableRow & {
   id: string;
-  type: "safe";
   name: string;
-  investment: number;
-  cap: number;
-  discount: number;
   // Legacy where we used to allow specific version of SAFE
   conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
-  ownership: {
-    shares?: number
-    percent: number;
-    note?: OwnershipPctNotes
-    pps?: number
-  } [];
   allowDelete?: boolean;
-  shares?: number;
   disabledFields?: string[];
 }
 
@@ -143,7 +132,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         />
       )}
       {data.disabledFields?.includes("cap") ? (
-        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(Math.round(data.cap))}</div>
+        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(Math.round(data.cap ?? 0))}</div>
       ) : (
       <CurrencyInput
         type="text"
@@ -177,7 +166,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         allowDecimals={false}
       />
       )}
-      {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
+      {(data.discount ?? 0) > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
         name="conversionType"
         value={conversionType()}
@@ -189,7 +178,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="mfn">Uncapped MFN</option>
       </select>
       <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
-        <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />
+        <PercentNote pct={data.ownershipPct ?? 0} note={data.ownershipNotes} error={data.ownershipError} />
       </div>
     </div>
   );

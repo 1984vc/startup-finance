@@ -6,14 +6,15 @@ import { BestFit, fitConversion } from "@library/conversion-solver";
 import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
-import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
 import { getCapForSafe } from "@/utils/rowDataHelper";
+import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
 
 // Only the state that we need to serialize
 export type ExistingShareholderState = Pick<
   ExistingShareholderProps,
   "id" | "type" | "name" | "shares"
 >;
+
 export type SAFEState = Pick<
   SAFEProps,
   "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType" 
@@ -131,6 +132,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
               type: "common",
               name: getRandomFounder(state.rowData),
               shares: 0,
+              commonType: "shareholder",
             },
           ],
         }));
@@ -242,7 +244,7 @@ export const getPricedConversion = createSelector(
     const commonStock = (
       rowData.filter(
         (row) => row.type === "common",
-      ) as ExistingShareholderProps[]
+      ) as ExistingShareholderState[]
     )
       .map((row) => row.shares)
       .reduce((acc, val) => acc + val, 0);

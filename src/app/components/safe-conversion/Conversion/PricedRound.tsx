@@ -1,10 +1,10 @@
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
 import { BestFit } from "@library/conversion-solver";
 import QuestionMarkTooltipComponent from "@/components/tooltip/QuestionMarkTooltip";
-import { CapTableRow } from "./CapTableResults";
+import { CapTableOwnershipError } from "@library/cap-table";
 
 export type OwnershipPctNotes = {
-  error?: "TBD" | "Error";
+  error?: CapTableOwnershipError["type"];
   explanation?: string;
 };
 
@@ -14,7 +14,6 @@ interface PricedRoundData {
   totalSeriesInvestment: number;
   totalShares: number;
   newSharesIssued: number;
-  totalPct: number;
   totalInvestedToDate: number;
   pricedConversion: BestFit;
   totalRoundDilution: number;
@@ -23,7 +22,6 @@ interface PricedRoundData {
 export interface PricedRoundPropsData {
   current: PricedRoundData;
   previous: PricedRoundData;
-  capTable: CapTableRow[];
   preMoneyChange: number;
   investmentChange: number;
   targetOptionsChange: number;

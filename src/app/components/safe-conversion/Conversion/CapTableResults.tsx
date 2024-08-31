@@ -1,42 +1,95 @@
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
-import { BestFit } from "@library/conversion-solver";
-
-export interface CapTableRow {
-  name: string;
-  shares?: number;
-  investment?: number;
-  pps?: number;
-  ownershipPct: number;
-  ownershipChange?: number;
-  error?: boolean
-}
+import { CapTableRow, SafeCapTableRow, TotalCapTableRow } from "@library/cap-table";
 
 export type CapTableProps = {
-    pricedConversion?: BestFit,
-    totalShares: number,
-    totalPct: number,
-    totalInvestedToDate: number,
-    capTable: CapTableRow[],
+  rows: CapTableRow[];
+  changes: number[];
+  totalRow: TotalCapTableRow;
 } 
+
+type CapTableRowItemProps = {
+  shareholder: CapTableRow;
+  change?: number
+  ownershipError?: string;
+  ownershipNotes?: string;
+  idx: number;
+}
+
+const roundTo = (num: number, decimal: number): number => {
+  return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
+};
+
+const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, ownershipError, idx}) => {
+  const investment = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.investment : null
+  const pps = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.pps : null
+
+  const hasChanges = change
+
+  return (
+    <tr className="" key={`shareholder-${idx}`}>
+      <td className="py-3 px-2 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
+        {shareholder.name}
+      </td>
+      <td className="py-3 px-2 w-2 border-none"></td>
+      <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
+        {investment
+          ? "$" + formatNumberWithCommas(investment)
+          : ""}
+      </td>
+      <td className="py-3 px-2 w-2 border-none"></td>
+      <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
+        {
+          pps
+            ? "$" + formatNumberWithCommas(pps)
+            : ""
+        }
+      </td>
+      <td className="py-3 px-2 w-2 border-none"></td>
+      <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
+        {
+          shareholder.shares
+            ? formatNumberWithCommas(shareholder.shares)
+            : ""
+        }
+      </td>
+      <td className="py-3 px-2 w-2 border-none"></td>
+      <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
+        {
+          ownershipError ?? shareholder.ownershipPct?.toFixed(2) ?? "0" + "%"
+        }
+      </td>
+      {hasChanges && (
+        <td
+          className={`py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700 ${roundTo(change ?? 0, 2) > 0 ? "text-green-500" : roundTo(change ?? 0, 2) < 0 ? "text-red-500" : "text-black"}`}
+        >
+          {roundTo(change ?? 0, 2).toFixed(2)}
+        </td>
+      )}
+    </tr>
+
+  )
+
+}
 
 export const CapTableResults: React.FC<CapTableProps> = (props) => {
   const {
-    totalShares,
-    totalPct,
-    totalInvestedToDate,
-    capTable
+    rows,
+    changes,
+    totalRow,
   } = props
 
-  const roundTo = (num: number, decimal: number): number => {
-    return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
-  };
 
-  const hasChanges = capTable.some(
-    (shareholder) => shareholder.ownershipChange !== 0,
-  );
-  const ownershipError = capTable.find(
-    (shareholder) => shareholder.error
-  ) !== undefined;
+  const hasChanges = changes.length > 0
+
+  // Assuming rows is of type ExtendedCapTableRow[]
+  const ownershipErrors = rows
+    .filter(
+      (shareholder) => shareholder.type === 'safe' && shareholder.ownershipError
+    )
+    .map((shareholder) => (shareholder as SafeCapTableRow).ownershipError);
+  
+  const ownershipError = ownershipErrors.find((str) => str === 'error') ? "Error" :
+    ownershipErrors.find((str) => str === 'tbd') ? "TBD" : undefined
 
   return (
     <div>
@@ -57,49 +110,13 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
             </tr>
           </thead>
           <tbody className="not-prose font-bold">
-            {capTable.map((shareholder, idx) => (
-              <tr className="" key={`shareholder-${idx}`}>
-                <td className="py-3 px-2 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
-                  {shareholder.name}
-                </td>
-                <td className="py-3 px-2 w-2 border-none"></td>
-                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
-                  {shareholder.investment
-                    ? "$" + formatNumberWithCommas(shareholder.investment)
-                    : ""}
-                </td>
-                <td className="py-3 px-2 w-2 border-none"></td>
-                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
-                {ownershipError
-                    ? "Error"
-                    : shareholder.pps
-                      ? "$" + formatNumberWithCommas(shareholder.pps)
-                      : ""
-                  }
-                </td>
-                <td className="py-3 px-2 w-2 border-none"></td>
-                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
-                  {ownershipError
-                    ? "Error"
-                    : shareholder.shares
-                      ? formatNumberWithCommas(shareholder.shares)
-                      : ""
-                  }
-                </td>
-                <td className="py-3 px-2 w-2 border-none"></td>
-                <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
-                  {ownershipError
-                    ? "Error"
-                    : shareholder.ownershipPct.toFixed(2) + "%"}
-                </td>
-                {hasChanges && (
-                  <td
-                    className={`py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700 ${roundTo(shareholder.ownershipChange ?? 0, 2) > 0 ? "text-green-500" : roundTo(shareholder.ownershipChange ?? 0, 2) < 0 ? "text-red-500" : "text-black"}`}
-                  >
-                    {roundTo(shareholder.ownershipChange ?? 0, 2).toFixed(2)}
-                  </td>
-                )}
-              </tr>
+            {rows.map((shareholder, idx) => (
+              <CapTableRowItem
+                shareholder={shareholder}
+                change={changes[idx]}
+                ownershipError={ownershipError}
+                idx={idx}
+              />
             ))}
             <tr className="h-4">
               <td className="py-0 px-0"></td>
@@ -116,18 +133,18 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
               <td className="py-3 px-4 text-left">Total</td>
               <td className="py-3 px-2 w-2 border-none"></td>              
               <td className="py-3 px-4 text-left">
-                ${formatNumberWithCommas(totalInvestedToDate)}
+                ${formatNumberWithCommas(totalRow.investment)}
               </td>
               <td className="py-3 px-2 w-2 border-none"></td>              
               <td className="py-3 px-4 text-left">
               </td>
               <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">
-                {formatNumberWithCommas(totalShares)}
+                {formatNumberWithCommas(totalRow.shares)}
               </td>
               <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">
-                {ownershipError ? "Error" : totalPct.toFixed(2) + "%"}
+                {ownershipError ? "Error" : (totalRow.ownershipPct * 100).toFixed(2) + "%"}
               </td>
               {hasChanges && <td className="py-3 px-4 text-left"></td>}
             </tr>

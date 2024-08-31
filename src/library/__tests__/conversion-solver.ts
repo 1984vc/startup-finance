@@ -36,6 +36,7 @@ describe("converting safe investments with existing common stock", () => {
     expect(fit.totalShares * fit.pps).toEqual(expectedValuation);
     expect(fit.totalOptions).toEqual(exptectedTotalOptions);
     expect(fit.totalShares).toEqual(expectedTotalShares);
+    expect(fit.totalInvested).toEqual(10_000_000);
     expect(fit.pps).toEqual(expectedPPS);
   });
   test("matches our Google Sheet", () => {

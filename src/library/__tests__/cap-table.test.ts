@@ -54,7 +54,7 @@ const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTableRow)
   const investedTotal = investors.reduce((acc, row) => acc + (row.investment ?? 0), 0);
   expect(investedTotal).toEqual(total.investment);
 
-  // Handle floating point issues, 12 places of precision is plenty
+  // Handle floating point issues, 12 places of precision is plenty close
   const pctTotal = roundPPSToPlaces(rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0), 12);
   expect(pctTotal).toEqual(1);
   expect(total.ownershipPct).toEqual(1);

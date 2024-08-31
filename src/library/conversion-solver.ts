@@ -13,6 +13,8 @@ export type BestFit = {
   totalShares: number;
   additionalOptions: number;
   totalOptions: number;
+  totalInvested: number;
+  totalSeriesInvestment: number;
   roundingStrategy: RoundingStrategy;
 };
 
@@ -180,6 +182,8 @@ export const fitConversion = (
     ppss[idx] = roundPPSToPlaces(safeConvert(safe, preMoneyShares, postMoneyShares, pps), roundingStrategy.roundPPSPlaces);
   }
 
+  const totalInvested = sumArray(seriesInvestments) + safes.reduce((acc, safe) => acc + safe.investment, 0);
+
   return {
     pps,
     ppss,
@@ -191,6 +195,8 @@ export const fitConversion = (
     seriesShares,
     additionalOptions: increaseInOptionsPool,
     totalOptions: increaseInOptionsPool + unusedOptions,
+    totalInvested,
+    totalSeriesInvestment: sumArray(seriesInvestments),
     roundingStrategy,
   };
 };

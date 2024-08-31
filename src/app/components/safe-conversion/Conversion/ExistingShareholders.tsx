@@ -3,17 +3,10 @@ import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import QuestionMarkTooltipComponent from "@/components/tooltip/QuestionMarkTooltip";
+import { CommonCapTableRow } from "@library/cap-table";
 
-export interface ExistingShareholderProps {
+export type ExistingShareholderProps = CommonCapTableRow & {
   id: string;
-  type: "common";
-  name: string;
-  shares: number;
-  ownership: {
-    shares: number;
-    percent: number;
-    error?: boolean;
-  }[];
   allowDelete?: boolean;
 }
 
@@ -48,7 +41,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
     }
   };
 
-  const ownership = data.ownership[0]
+  const ownership = data.ownershipPct ?? 0;
 
   const button = () => {
     if (allowDelete) {
@@ -119,7 +112,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
         decimalScale={0}
         allowDecimals={false}
       />
-      <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">{ownership?.percent.toFixed(2)}%</div>
+      <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">{(ownership * 100).toFixed(2)}%</div>
     </div>
   );
 };

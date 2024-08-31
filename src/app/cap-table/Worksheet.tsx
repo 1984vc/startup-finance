@@ -10,19 +10,19 @@ import ExisingShareholderList from "@/components/safe-conversion/Conversion/Exis
 import PricedRound from "@/components/safe-conversion/Conversion/PricedRound";
 import SeriesInvestorList from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { stringToNumber } from "@/utils/numberFormatting";
-import { getExistingShareholderPropsSelector } from "@/cap-table/state/selectors/ExistingShareholderPropsSelector";
 import { getSAFERowPropsSelector } from "@/cap-table/state/selectors/SAFEPropsSelector";
 import { getSeriesPropsSelector } from "@/cap-table/state/selectors/SeriesPropsSelector";
 import SafeNoteList from "@/components/safe-conversion/Conversion/SafeNoteList";
-import { getPriceRoundPropsSelector } from "@/cap-table/state/selectors/PricedRoundPropsSelector";
 import Share from "@/components/safe-conversion/Conversion/Share";
 import { CapTableResults } from "@/components/safe-conversion/Conversion/CapTableResults";
-import { getPricedRoundCapTablePropsSelector, getSafeCapTablePropsSelector } from "@/cap-table/state/selectors/CapTablePropsSelector";
 import { getShareUrl } from "./state/selectors/ShareURLSelector";
 import { getErrorSelector } from "./state/selectors/ErrorSelector";
 import Finder from "@/components/safe-conversion/Conversion/Finder";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { localStorageWorks } from "./state/localstorage";
+import { getCommonOnlyCapTable } from "./state/selectors/CommonOnlyCapTableSelector";
+import { getPreRoundCapTable } from "./state/selectors/PreRoundCapTableSelector";
+import { getPricedRoundCapTableSelector, getPricedRoundOverviewSelector } from "./state/selectors/PricedRoundSelector";
 
 type WorksheetProps = {
   conversionState: IConversionState;
@@ -65,9 +65,9 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
   const [preMoneyChange, updatePreMoneyChange] = useState(0);
   const [investmentChange, updateInvestmentChange] = useState(0);
   const [targetOptionsChange, updateTargetOptionsChange] = useState(0);
-  console.log(targetOptionsChange)
 
   const errors = getErrorSelector(conversionState);
+  console.log(getSAFERowPropsSelector(conversionState))
   
   useEffect(() => {
     // Lots of work here to get around a circular dependency of pre-money and post-money
@@ -101,7 +101,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
       <h1 className="text-2xl font-bold mb-12 pl-2">1 Existing Cap Table</h1>
       <div>
         <ExisingShareholderList
-          rows={getExistingShareholderPropsSelector(conversionState)}
+          rows={getCommonOnlyCapTable(conversionState)}
           onAddRow={() => onAddRow("common")}
           onDelete={onDeleteRow}
           onUpdate={(data) => {
@@ -129,7 +129,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           Cap Table Before Priced Round
         </div>
         <CapTableResults
-          {...getSafeCapTablePropsSelector({
+          {...getPreRoundCapTable({
             ...conversionState,
           })}
         />
@@ -222,7 +222,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
             {!errors.safeError &&
               <div className="ml-10">
                 <PricedRound
-                  {...getPriceRoundPropsSelector({
+                  {...getPricedRoundOverviewSelector({
                     ...conversionState,
                     preMoneyChange,
                     investmentChange,
@@ -236,7 +236,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
                    Cap Table after Priced Round
                   </h2>
                   <CapTableResults
-                    {...getPricedRoundCapTablePropsSelector({
+                    {...getPricedRoundCapTableSelector({
                      ...conversionState,
                      preMoneyChange,
                      investmentChange,

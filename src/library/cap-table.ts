@@ -41,7 +41,8 @@ export type StakeHolder = CommonStockholder | SAFENote | SeriesInvestor;
 // Cap table return types below. These are the types of rows that can be in a cap table
 
 export type CapTableOwnershipError = {
-  type: "tbd";
+  type: "tbd" | "error" | "over";
+  reason?: string
 }
 
 export type BaseCapTableRow = {
@@ -64,11 +65,12 @@ export type CommonCapTableRow = BaseCapTableRow & {
 export type SafeCapTableRow = BaseCapTableRow & {
   type: "safe";
   investment: number;
-  cap?: number;
-  pps?: number;
+  discount: number;
+  cap: number;
+  pps: number;
   shares?: number;
   ownershipPct?: number;
-  ownershipError?: "tbd" | "over" | "error";
+  ownershipError?: CapTableOwnershipError["type"];
   ownershipNotes?: string;
 };
 
@@ -76,6 +78,7 @@ export type SeriesCapTableRow = BaseCapTableRow & {
   type: "series";
   investment: number;
   shares: number;
+  pps: number;
   ownershipPct: number;
 };
 
@@ -89,7 +92,7 @@ export type RefreshedOptionsCapTableRow = BaseCapTableRow & {
 export type CapTableRow = TotalCapTableRow | SafeCapTableRow | SeriesCapTableRow | CommonCapTableRow | RefreshedOptionsCapTableRow;
 
 // Very basic implementation of the ownership calculation before any rounds, including SAFE Notes
-export const getCapTableOwnership = (commonStockholders: CommonStockholder[]): CommonCapTableRow[] => {
+export const buildCapTableOwnership = (commonStockholders: CommonStockholder[]): CommonCapTableRow[] => {
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
   return commonStockholders.map((stockholder) => {
     return {
@@ -125,6 +128,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
       return {
         name: safe.name,
         cap: safe.cap,
+        discount: safe.discount,
         ownershipPct,
         ownershipError: "tbd",
         ownershipNotes: "No cap set for this SAFE, ownership percentage is TBD",
@@ -135,8 +139,10 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
     } else if (safe.cap <= safe.investment) {
       return {
         name: safe.name,
+        discount: safe.discount,
+        cap: safe.cap,
         ownershipError: "error",
-        ownershipNotes: "Cap is less than or equal to investment, ownership percentage is over 100%. Inconceievable!",
+        ownershipNotes: "Cap is less than or equal to investment, ownership percentage is over 100%. Inconceivable!",
         investment: safe.investment,
         type: "safe",
         pps: -1
@@ -152,6 +158,7 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
       name: safe.name,
       investment: safe.investment,
       cap: safe.cap,
+      discount: safe.discount,
       ownershipPct,
       type: "safe",
       pps: -1
@@ -217,6 +224,8 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       name: safe.name,
       investment: safe.investment,
       ownershipPct,
+      discount: safe.discount,
+      cap: safe.cap,
       shares,
       type: "safe",
       pps,
