@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { buildPreRoundCapTable, buildPricedRoundCapTable, CapTableRow, CommonStockholder, SAFENote, SeriesInvestor, TotalCapTableRow } from "@library/cap-table";
+import { buildPreRoundCapTable, buildPricedRoundCapTable, CapTableRow, CommonStockholder, SafeCapTableRow, SAFENote, SeriesCapTableRow, SeriesInvestor, TotalCapTableRow } from "@library/cap-table";
 import { DEFAULT_ROUNDING_STRATEGY, fitConversion } from "@library/conversion-solver";
 import { roundPPSToPlaces } from "@library/utils/rounding";
 
@@ -50,7 +50,7 @@ const safeFixture: SAFENote[] = [
 ]
 
 const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTableRow) => {
-  const investors = rows.filter(row => ['safe','series'].includes(row.type)) as (SAFENote | SeriesInvestor)[];
+  const investors = rows.filter(row => (row.type === 'safe' || row.type === 'series')) as (SafeCapTableRow | SeriesCapTableRow)[];
   const investedTotal = investors.reduce((acc, row) => acc + (row.investment ?? 0), 0);
   expect(investedTotal).toEqual(total.investment);
 

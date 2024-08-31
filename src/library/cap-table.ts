@@ -18,7 +18,6 @@ export type CommonStockholder = BaseStake & {
 }
 
 export type SAFENote = BaseStake & {
-  name?: string;
   investment: number;
   cap: number;
   discount: number;
@@ -29,7 +28,6 @@ export type SAFENote = BaseStake & {
 }
 
 export type SeriesInvestor = BaseStake & {
-  name?: string;
   investment: number;
   type: "series";
   round: number;
@@ -67,7 +65,7 @@ export type SafeCapTableRow = BaseCapTableRow & {
   investment: number;
   discount: number;
   cap: number;
-  pps: number;
+  pps?: number;
   shares?: number;
   ownershipPct?: number;
   ownershipError?: CapTableOwnershipError["type"];
