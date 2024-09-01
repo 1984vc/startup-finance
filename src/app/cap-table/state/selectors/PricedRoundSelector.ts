@@ -56,17 +56,22 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
     return [...commonStock, ...safeNotes, ...seriesInvestors];
 }
 
-const getPricedConversion = createSelector(
+export const getPricedConversion = createSelector(
   (state: IConversionStateData) => state.rowData,
   (state: IConversionStateData) => state.preMoney,
   (state: IConversionStateData) => state.targetOptionsPool,
   (state: IConversionStateData) => state.unusedOptions,
+  (state: IConversionStateData) => state.pricedRounds,
   (
     rowData,
     preMoney,
     targetOptionsPool,
     unusedOptions,
-  ): BestFit => {
+    pricedRounds,
+  ): BestFit | undefined => {
+    if (pricedRounds === 0) {
+      return
+    }
     const commonStock = (
       rowData.filter(
         (row) => row.type === "common",
@@ -128,6 +133,9 @@ export const getPricedRoundData = createSelector(
     investmentChange,
     targetOptionsChange,
     ): {currentPricedRound: BestFit, previousPricedRound?: BestFit, rowData: IRowState[]} => {
+      if (!pricedConversion) {
+        throw new Error("Can't use this selector on unpriced round")
+      }
 
       investmentChange = investmentChange ?? 0;
       preMoneyChange = preMoneyChange ?? 0;
@@ -176,7 +184,7 @@ export const getPricedRoundData = createSelector(
         rowData: updatedRows,
       };
 
-      trialPricedConversion = getPricedConversion(currentState);
+      trialPricedConversion = getPricedConversion(currentState)!;
 
     }
 

@@ -1,13 +1,15 @@
 import { createSelector } from "reselect";
-import { ExistingShareholderState, IConversionStateData, SAFEState } from "../ConversionState";
-import { CommonStockholder, SAFENote, buildPreRoundCapTable } from "@library/cap-table";
+import { ExistingShareholderState, getPricedConversion, IConversionStateData, SAFEState } from "../ConversionState";
+import { CommonStockholder, SAFENote, buildEstimatedPreRoundCapTable, buildPreRoundCapTable } from "@library/cap-table";
 import { CapTableProps } from "@/components/safe-conversion/Conversion/CapTableResults";
 
 // The initial shares of the existing shareholders
 export const getPreRoundCapTable = createSelector(
+  getPricedConversion,
   (state: IConversionStateData) => state.rowData,
   (state: IConversionStateData) => state.unusedOptions,
   (
+    pricedConversion,
     rowData,
     unusedOptions
   ): CapTableProps => {
@@ -42,30 +44,32 @@ export const getPreRoundCapTable = createSelector(
         }
       }
     );
-    const {common, safes, total} = buildPreRoundCapTable([...commonStock, ...safeNotes]);
+    const {common, safes, total} = pricedConversion ?
+      buildPreRoundCapTable(pricedConversion, [...commonStock, ...safeNotes]) :
+      buildEstimatedPreRoundCapTable([...commonStock, ...safeNotes]);
     return {
       totalRow: total,
       changes: [],
       rows: [...common, ...safes].map((row) => {
-        if (row.type === 'safe') {
+        if (row.type === 'common') {
           return {
             name: row.name ?? "",
             shares: row.shares,
-            investment: row.investment,
-            pps: 0,
-            discount: row.discount,
-            cap: row.cap,
             type: row.type,
             ownershipPct: (row.ownershipPct ?? 0) * 100,
             ownershipError: row.ownershipError,
-            ownershipNotes: row.ownershipNotes,
           }
-        }
+        } 
         return {
           name: row.name ?? "",
           shares: row.shares,
+          investment: row.investment,
+          pps: row.pps ?? 0,
+          discount: row.discount,
+          cap: row.cap,
           type: row.type,
           ownershipPct: (row.ownershipPct ?? 0) * 100,
+          ownershipError: row.ownershipError,
         }
       })
     }

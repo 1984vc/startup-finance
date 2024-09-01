@@ -67,7 +67,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
   const [targetOptionsChange, updateTargetOptionsChange] = useState(0);
 
   const errors = getErrorSelector(conversionState);
-  console.log(getSAFERowPropsSelector(conversionState))
   
   useEffect(() => {
     // Lots of work here to get around a circular dependency of pre-money and post-money

@@ -21,7 +21,7 @@ export const getSAFERowPropsSelector = createSelector(
     const safeCapTable = preRoundCapTable.rows.filter((row) => row.type === "safe");
 
     return rows.map((row, idx) => {
-      const rowResult: SAFEProps = {
+      return {
         id: row.id,
         type: "safe",
         name: row.name,
@@ -31,13 +31,9 @@ export const getSAFERowPropsSelector = createSelector(
         shares: 0,
         ownershipPct: safeCapTable[idx].ownershipPct,
         ownershipError: safeCapTable[idx].ownershipError,
-        ownershipNotes: safeCapTable[idx].ownershipNotes,
         allowDelete: true,
         disabledFields: determineRowDisabledFields(row),
         conversionType: row.conversionType
-      };
-      return {
-        ...rowResult,
       };
     });
   },

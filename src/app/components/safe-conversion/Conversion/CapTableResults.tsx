@@ -1,5 +1,5 @@
 import { formatNumberWithCommas } from "@/utils/numberFormatting";
-import { CapTableRow, SafeCapTableRow, TotalCapTableRow } from "@library/cap-table";
+import { CapTableRow, TotalCapTableRow } from "@library/cap-table";
 
 export type CapTableProps = {
   rows: CapTableRow[];
@@ -19,12 +19,21 @@ const roundTo = (num: number, decimal: number): number => {
   return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
 };
 
-const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, ownershipError, idx}) => {
+const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, idx}) => {
   const investment = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.investment : null
   const pps = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.pps : null
 
   const hasChanges = change
   const changePct = roundTo((change ?? 0) * 100, 2)
+  let ownershipPct: string | undefined = shareholder.ownershipPct?.toFixed(2) + "%"
+  if (shareholder.ownershipError) {
+    if (shareholder.ownershipError.type === 'error') {
+      ownershipPct = "Error"
+    } else if (shareholder.ownershipError.type === 'tbd') {
+      ownershipPct = "TBD"
+    }
+  }
+  console.log(`shareholder-${idx}`)
 
   return (
     <tr className="" key={`shareholder-${idx}`}>
@@ -56,7 +65,7 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, o
       <td className="py-3 px-2 w-2 border-none"></td>
       <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
         {
-          ownershipError ?? shareholder.ownershipPct?.toFixed(2) ?? "0" + "%"
+          ownershipPct
         }
       </td>
       {hasChanges && (
@@ -82,16 +91,6 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
 
   const hasChanges = changes.length > 0
 
-  // Assuming rows is of type ExtendedCapTableRow[]
-  const ownershipErrors = rows
-    .filter(
-      (shareholder) => shareholder.type === 'safe' && shareholder.ownershipError
-    )
-    .map((shareholder) => (shareholder as SafeCapTableRow).ownershipError);
-  
-  const ownershipError = ownershipErrors.find((str) => str === 'error') ? "Error" :
-    ownershipErrors.find((str) => str === 'tbd') ? "TBD" : undefined
-
   return (
     <div>
       <div className="overflow-hidden w-full mx-auto mt-2">
@@ -115,7 +114,6 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
               <CapTableRowItem
                 shareholder={shareholder}
                 change={changes[idx]}
-                ownershipError={ownershipError}
                 idx={idx}
               />
             ))}
@@ -145,7 +143,7 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
               </td>
               <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">
-                {ownershipError ? "Error" : (totalRow.ownershipPct * 100).toFixed(2) + "%"}
+                {(totalRow.ownershipPct * 100).toFixed(2) + "%"}
               </td>
               {hasChanges && <td className="py-3 px-4 text-left"></td>}
             </tr>

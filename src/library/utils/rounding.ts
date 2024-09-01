@@ -15,12 +15,20 @@ export const roundShares = (num: number, strategy: RoundingStrategy): number => 
   return num
 }
 
-// Legal spreadsheets tend to round to 5 decimal places, allow for this to be configurable
+// Legal spreadsheets tend to round PPS up to 5 decimal places, allow for this to be configurable
 export const roundPPSToPlaces = (num: number, places: number): number => {
   if (places < 0) {
     return num;
   }
   const factor = Math.pow(10, places);
   return Math.ceil(num * factor) / factor;
+};
+
+export const roundToPlaces = (num: number, places: number): number => {
+  if (places < 0) {
+    return num;
+  }
+  const factor = Math.pow(10, places);
+  return Math.round(num * factor) / factor;
 };
 

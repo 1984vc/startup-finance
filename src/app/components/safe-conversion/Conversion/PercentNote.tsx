@@ -8,19 +8,31 @@ interface PercentNoteProps {
 }
 
 const PercentNote: React.FC<PercentNoteProps> = ({ pct, note, error}) => {
-  console.log(pct, note, error)
-    if (error === "tbd") {
+    if (error === "caveat") {
       return (
         <ToolipComponent content={note ?? ""}>
-          TBD %
-          <sup>*</sup>
+          { pct.toFixed(2) } %
+          { note && 
+            <sup>*</sup>
+          }
+        </ToolipComponent>
+      )
+    } else if (error === "tbd") {
+      return (
+        <ToolipComponent content={note ?? ""}>
+          TBD
+          { note && 
+            <sup>*</sup>
+          }
         </ToolipComponent>
       );
     } else if (error === "error") {
       return (
         <ToolipComponent content={note ?? ""}>
           Error
-          <sup>*</sup>
+          { note && 
+            <sup>*</sup>
+          }
         </ToolipComponent>
       );
     }

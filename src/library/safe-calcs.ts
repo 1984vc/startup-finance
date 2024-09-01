@@ -1,4 +1,4 @@
-import { SAFENote } from "./cap-table";
+import { CapTableOwnershipError, SAFENote } from "./cap-table";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
 const getMFNCapAter = (rows: SAFENote[], idx: number): number => {
@@ -78,3 +78,27 @@ export const safeConvert = (
 
 // Quick utility to sum an array of numbers
 const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b, 0);
+
+export const populateSafeCaps = (safeNotes: SAFENote[]): SAFENote[] => {
+  return safeNotes.map((safe, idx): SAFENote => {
+    if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
+      const cap = getCapForSafe(idx, safeNotes);
+       return { ...safe, cap }
+    }
+    return {...safe}
+  })
+}
+
+export const checkSafeNotesForErrors = (safeNotes: SAFENote[]): CapTableOwnershipError | undefined => {
+  let ownershipError: CapTableOwnershipError | undefined = undefined
+  safeNotes.forEach((safe) => {
+    if (safe.investment >= safe.cap && safe.cap !== 0) {
+      ownershipError = {
+        type: 'error',
+        reason: "Investment is greater than Cap"
+      }
+
+    }
+  })
+  return ownershipError
+}

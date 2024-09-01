@@ -77,9 +77,6 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
     onDragOver(event, data.id);
   };
 
-  console.log(data)
-
-
   return (
     <div
       className={`flex items-center space-x-4 ${isHovered ? 'mb-16' : 'mb-4'} ${isDragging ? 'opacity-50' : ''}`}
@@ -180,7 +177,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="mfn">Uncapped MFN</option>
       </select>
       <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
-        <PercentNote pct={data.ownershipPct ?? 0} note={data.ownershipNotes} error={data.ownershipError} />
+        <PercentNote pct={data.ownershipPct ?? 0} note={data.ownershipError?.reason} error={data.ownershipError?.type} />
       </div>
     </div>
   );
