@@ -124,7 +124,7 @@ describe("Building a pre-round cap table with common shareholders and SAFE notes
     crossCheckCapTableResults([...common, ...safes], total);
 
     // Pre-money conversion assumes the cap is pre-money, so the ownership percentage is (investment / (cap + totalSafeInvestment))
-    expect(safes[2].type === 'safe' && safes[2].ownershipPct).toEqual(1_000_000/(10_000_000 + 3_000_000));
+    expect(safes[2].type === 'safe' && safes[2].ownershipPct?.toFixed(8)).toEqual("0.07727277");
 
   });
 });

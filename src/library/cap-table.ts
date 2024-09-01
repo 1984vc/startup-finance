@@ -1,6 +1,6 @@
 // These are all the input types we need to build a cap table
 
-import { BestFit } from "./conversion-solver";
+import { BestFit, DEFAULT_ROUNDING_STRATEGY, fitConversion } from "./conversion-solver";
 import { getCapForSafe } from "./safe-calcs";
 import { roundShares } from "./utils/rounding";
 
@@ -104,24 +104,50 @@ export const buildCapTableOwnership = (commonStockholders: CommonStockholder[]):
 }
 
 export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow, error?: CapTableOwnershipError} => {
-  const commonStockholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common") as CommonStockholder[];
-  const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
+  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common" && stakeHolder.commonType !== 'unusedOptions') as CommonStockholder[];
+  const unusedOptionsRows = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common" && stakeHolder.commonType === 'unusedOptions') as CommonStockholder[];
+  let unusedOptions = 0
+  if (unusedOptionsRows.length > 0) {
+    unusedOptions = unusedOptionsRows[0].shares
+  }
+  const totalCommonShares = commonShareholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
 
-  let safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[];
-  const totalSafeInvestment = safeNotes.reduce((acc, stockholder) => acc + stockholder.investment, 0);
-
-  // Calculate the cap value for the MFN safes
-  safeNotes = safeNotes.map((safe, idx) => {
+  let safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[]
+  // Get the cap for MFN
+  safeNotes = safeNotes.map((safe, idx): SAFENote => {
     if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
       const cap = getCapForSafe(idx, safeNotes);
-      return { ...safe, cap }
+       return { ...safe, cap }
     }
-    return { ...safe }
+    return {...safe}
   })
 
-  // This math is pre-round math, so it's just the ownership percentage
-  const safeCapTable: SafeCapTableRow[] = safeNotes.map((safe) => {
-    let ownershipPct = -1
+
+  const postMoney = safeNotes.reduce((max, stakeholder) => Math.max(max, stakeholder.cap), 0)
+  const pricedConversion = fitConversion(postMoney, totalCommonShares, safeNotes, unusedOptions, 0, [], DEFAULT_ROUNDING_STRATEGY)
+
+  const totalInvestment = [...safeNotes].reduce((acc, investor) => acc + investor.investment, 0);
+  const totalShares = pricedConversion.totalShares;
+
+  const commonCapTable: CommonCapTableRow[] = commonShareholders.map((stockholder) => {
+    return {
+      name: stockholder.name,
+      shares: stockholder.shares,
+      ownershipPct: stockholder.shares / totalShares,
+      type: "common",
+    }
+  })
+  commonCapTable.push({
+    name: "Unused Options",
+    shares: unusedOptions,
+    ownershipPct: unusedOptions / totalShares,
+    type: "common"
+  })
+
+  const safeCapTable: SafeCapTableRow[] = safeNotes.map((safe, idx) => {
+    const pps = pricedConversion.ppss[idx];
+    const shares = roundShares(safe.investment / pps, pricedConversion.roundingStrategy);
+    const ownershipPct = shares / totalShares;
     if (safe.cap === 0) {
       return {
         name: safe.name,
@@ -147,31 +173,14 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
         pps: -1
       }
     }
-    if (safe.conversionType === "pre") {
-      ownershipPct = safe.investment / (safe.cap + totalSafeInvestment);
-
-    } else {
-      ownershipPct = safe.investment / safe.cap;
-    }
     return {
       name: safe.name,
       investment: safe.investment,
-      cap: safe.cap,
-      discount: safe.discount,
       ownershipPct,
+      discount: safe.discount,
+      cap: safe.cap,
       type: "safe",
-      pps: -1
-    }
-  })
-
-  const totalSafeOwnershipPct = safeCapTable.reduce((acc, safe) => acc + (safe.ownershipPct ?? 0), 0);
-  const commonCapTable: CommonCapTableRow[] = commonStockholders.map((stockholder) => {
-    return {
-      name: stockholder.name,
-      shares: stockholder.shares,
-      ownershipPct: (stockholder.shares / totalCommonShares) * (1 - totalSafeOwnershipPct),
-      type: "common",
-      pps: -1
+      pps,
     }
   })
 
@@ -181,8 +190,8 @@ export const buildPreRoundCapTable = (stakeHolders: StakeHolder[]): {common: Com
     total: {
       name: "Total",
       // In a pre-round cap table, the total shares are just the common shares since we can't know the PPS yet
-      shares: totalCommonShares,
-      investment: totalSafeInvestment,
+      shares: totalCommonShares + unusedOptions,
+      investment: totalInvestment,
       ownershipPct: 1,
       type: "total",
     },
