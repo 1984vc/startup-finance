@@ -18,7 +18,6 @@ export const getSAFERowPropsSelector = createSelector(
   (state: IConversionStateData) => state.rowData,
   (preRoundCapTable, rowData): SAFEProps[] => {
     const rows = rowData.filter((row) => row.type === "safe");
-    console.log(preRoundCapTable.rows)
     const safeCapTable = preRoundCapTable.rows.filter((row) => row.type === "safe");
 
     return rows.map((row, idx) => {
