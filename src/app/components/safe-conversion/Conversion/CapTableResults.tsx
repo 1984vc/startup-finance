@@ -33,7 +33,6 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, i
       ownershipPct = "TBD"
     }
   }
-  console.log(`shareholder-${idx}`)
 
   return (
     <tr className="" key={`shareholder-${idx}`}>

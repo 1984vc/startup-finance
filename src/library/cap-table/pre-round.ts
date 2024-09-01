@@ -49,7 +49,6 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[]): {co
         },
         investment: safe.investment,
         type: "safe",
-        pps: -1
       }
     }
     return {
@@ -59,7 +58,6 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[]): {co
       discount: safe.discount,
       cap: safe.cap,
       type: "safe",
-      pps,
     }
   })
 

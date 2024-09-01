@@ -1,7 +1,8 @@
 import { createSelector } from "reselect";
-import { ExistingShareholderState, getPricedConversion, IConversionStateData, SAFEState } from "../ConversionState";
+import { ExistingShareholderState, IConversionStateData, SAFEState } from "../ConversionState";
 import { CommonStockholder, SAFENote, buildEstimatedPreRoundCapTable, buildPreRoundCapTable } from "@library/cap-table";
 import { CapTableProps } from "@/components/safe-conversion/Conversion/CapTableResults";
+import { getPricedConversion } from "./PricedRoundSelector";
 
 // The initial shares of the existing shareholders
 export const getPreRoundCapTable = createSelector(

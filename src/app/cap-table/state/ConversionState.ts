@@ -1,12 +1,8 @@
 import { randomFounders, randomSeed, randomSeries } from "./initialState";
 import { create } from "zustand";
-import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
-import { BestFit, fitConversion } from "@library/conversion-solver";
-import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
-import { getCapForSafe } from "@/utils/rowDataHelper";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
 
 // Only the state that we need to serialize
@@ -229,55 +225,3 @@ export const createConversionStore = (initialState: IConversionStateData) =>
 
         },
   }));
-
-export const getPricedConversion = createSelector(
-  (state: IConversionStateData) => state.rowData,
-  (state: IConversionStateData) => state.preMoney,
-  (state: IConversionStateData) => state.targetOptionsPool,
-  (state: IConversionStateData) => state.unusedOptions,
-  (
-    rowData,
-    preMoney,
-    targetOptionsPool,
-    unusedOptions,
-  ): BestFit => {
-    const commonStock = (
-      rowData.filter(
-        (row) => row.type === "common",
-      ) as ExistingShareholderState[]
-    )
-      .map((row) => row.shares)
-      .reduce((acc, val) => acc + val, 0);
-
-    const totalShares = commonStock;
-    const safeInvestors = rowData.filter((row) => row.type === "safe") as SAFEProps[];
-    const pricedConversion = fitConversion(
-      stringToNumber(preMoney),
-      totalShares,
-      (safeInvestors).map(
-        (row) => {
-          // Handles MFN and YC MFN safes, finds the best cap
-          const calculatedCap = getCapForSafe(row, safeInvestors);
-          // We have numerous conversion types, but we need to boil it down to pre or post
-          // The YC7P and YCMFN are both post-money safes
-          // Just set the conversion type to post if it's not pre
-          const conversionType = row.conversionType === "pre" ? "pre" : "post"
-          return {
-            investment: stringToNumber(row.investment),
-            cap: calculatedCap,
-            discount: stringToNumber(row.discount) / 100,
-            conversionType,
-            type: "safe",
-          };
-        },
-      ),
-      stringToNumber(unusedOptions),
-      stringToNumber(targetOptionsPool) / 100,
-      (rowData.filter((row) => row.type === "series") as SeriesProps[]).map(
-        (row) => row.investment,
-      ),
-      { roundShares: true, roundPPSPlaces: 8 },
-    );
-    return pricedConversion;
-  },
-);
