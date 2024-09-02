@@ -11,7 +11,6 @@ export const getErrorSelector = createSelector(
   getSAFERowPropsSelector,
   (safeInvestors): ErrorSelectorState => {
     const hasSafeError = safeInvestors.some((row) => row.ownershipError?.type === "error");
-    console.log(hasSafeError)
 
     // For future use
     return {

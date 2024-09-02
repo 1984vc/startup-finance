@@ -70,7 +70,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
   const errors = getErrorSelector(conversionState);
 
   const hasPricedRound = (pricedRounds ?? 1) > 0
-  console.log(hasPricedRound, pricedRounds)
   
   useEffect(() => {
     // Lots of work here to get around a circular dependency of pre-money and post-money

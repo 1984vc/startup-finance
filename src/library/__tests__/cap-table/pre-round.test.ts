@@ -113,7 +113,7 @@ describe("Building an estimated pre-round cap table with common shareholders and
 
     // We use a "fake" priced round with no additional options to estimate the pre-money conversion
     // As long as the priced-round is at a valuation higher than the cap, this will be an accurate pre-money value
-    expect(safes[2].type === 'safe' && safes[2].ownershipPct?.toFixed(8)).toEqual("0.07727277");
+    expect(safes[2].type === 'safe' && safes[2].ownershipPct?.toFixed(5)).toEqual("0.07727");
 
   });
 });

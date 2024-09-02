@@ -227,7 +227,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   return (
     <div className="not-prose">
       <div className="flex items-center space-x-4 mb-4">
-        <div className="w-6"> </div>
+        <div className="w-16"> </div>
         <div className="w-48">Name</div>
         <div className="w-36">Investment</div>
         <div className="w-36">Cap</div>

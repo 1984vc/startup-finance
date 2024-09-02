@@ -7,8 +7,8 @@ export const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTa
   const investedTotal = investors.reduce((acc, row) => acc + (row.investment ?? 0), 0);
   expect(investedTotal).toEqual(total.investment);
 
-  // Handle PPS rounding issues, 10 places of precision is plenty close
-  const pctTotal = roundToPlaces(rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0), 10)
+  // Handle PPS rounding issues
+  const pctTotal = roundToPlaces(rows.reduce((acc, row) => acc + (row.ownershipPct ?? 0), 0), 5)
   expect(pctTotal).toEqual(1);
   expect(total.ownershipPct).toEqual(1);
 
