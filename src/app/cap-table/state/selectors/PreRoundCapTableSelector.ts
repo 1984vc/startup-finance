@@ -59,6 +59,7 @@ export const getPreRoundCapTable = createSelector(
             type: row.type,
             ownershipPct: (row.ownershipPct ?? 0) * 100,
             ownershipError: row.ownershipError,
+            commonType: row.commonType,
           }
         } 
         return {

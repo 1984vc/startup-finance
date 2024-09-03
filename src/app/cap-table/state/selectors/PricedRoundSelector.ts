@@ -252,12 +252,24 @@ export const getPricedRoundCapTableSelector = createSelector(
             ownershipPct: (row.ownershipPct ?? 0) * 100,
           }
         }
-        return {
+        if (row.type === 'common') {
+          return {
             name: row.name ?? "",
             shares: row.shares,
             type: row.type,
             ownershipPct: (row.ownershipPct ?? 0) * 100,
+            commonType: row.commonType,
+          }
         }
+        if (row.type === 'refreshedOptions') {
+          return {
+            name: row.name ?? "",
+            shares: row.shares,
+            type: row.type,
+            ownershipPct: (row.ownershipPct ?? 0) * 100,
+          }
+        }
+        throw new Error("Unknown row type")
       })
     }
   },
@@ -287,7 +299,7 @@ export const getPricedRoundOverviewSelector = createSelector(
 
     const current = {
         preMoney: currentPreMoney,
-        postMoney: currentPreMoney + currentPricedConversion.totalInvested,
+        postMoney: currentPreMoney + currentPricedConversion.totalSeriesInvestment,
         totalShares: currentPricedConversion.totalShares,
         newSharesIssued: currentPricedConversion.newSharesIssued,
         totalInvestedToDate: currentPricedConversion.totalInvested,
@@ -298,7 +310,7 @@ export const getPricedRoundOverviewSelector = createSelector(
 
     const previous = previousPricedConversion ? {
         preMoney,
-        postMoney: previousPreMoney + previousPricedConversion.totalInvested,
+        postMoney: previousPreMoney + previousPricedConversion.totalSeriesInvestment,
         totalShares: previousPricedConversion.totalShares,
         newSharesIssued: previousPricedConversion.newSharesIssued,
         totalInvestedToDate: previousPricedConversion.totalInvested,

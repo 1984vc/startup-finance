@@ -29,12 +29,17 @@ export const getCommonOnlyCapTable = createSelector(
     })
     const results = buildExistingShareholderCapTable(commonStock);
     return results.map((row,idx) => {
+      let id = rowData[idx].id || "";
+      if (row.commonType === "unusedOptions") {
+        id = "UnusedOptionsPool";
+      }
       return {
-        id: rowData[idx].id,
+        id,
         name: row.name ?? "",
         shares: row.shares,
         ownershipPct: row.ownershipPct,
         type: "common",
+        commonType: row.commonType,
       }
     })
   },

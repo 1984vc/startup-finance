@@ -58,6 +58,7 @@ export type TotalCapTableRow = BaseCapTableRow & {
 export type CommonCapTableRow = BaseCapTableRow & {
   type: "common";
   shares: number;
+  commonType: CommonStockholder["commonType"];
 };
 
 export type SafeCapTableRow = BaseCapTableRow & {
@@ -96,6 +97,7 @@ export const buildExistingShareholderCapTable = (commonStockholders: CommonStock
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalCommonShares,
       type: "common",
+      commonType: stockholder.commonType,
     }
   })
 }

@@ -25,6 +25,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalShares,
       type: "common",
+      commonType: stockholder.commonType,
     }
   })
 

@@ -156,6 +156,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
     },
 
     onUpdateRow: (data: IRowState) => {
+      console.log("updating", data);
       set((state) => ({
         ...state,
         rowData: state.rowData.map((row) => (row.id === data.id ? data : row)),
@@ -185,6 +186,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
           name: string | undefined,
           values?: CurrencyInputOnChangeValues,
         ) => {
+          console.log("onValueChange", value, name, values);
           if (type === "number") {
             if (name) {
               const val = values?.float ?? 0;

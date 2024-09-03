@@ -28,6 +28,7 @@ export const buildTBDPreRoundCapTable = (safeNotes: SAFENote[], common: CommonSt
       shares: stockholder.shares,
       ownershipError,
       type: "common",
+      commonType: stockholder.commonType,
     }
   })
 
@@ -76,6 +77,7 @@ export const buildErrorPreRoundCapTable = (safeNotes: SAFENote[], common: Common
       shares: stockholder.shares,
       ownershipError,
       type: "common",
+      commonType: stockholder.commonType,
     }
   })
 

@@ -114,6 +114,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / postShareCapitilization,
       type: "common",
+      commonType: stockholder.commonType,
     }
   })
 
@@ -152,6 +153,7 @@ export const buildPreRoundCapTable = (pricedConversion: BestFit, stakeHolders: S
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalShares,
       type: "common",
+      commonType: stockholder.commonType,
     }
   })
 
