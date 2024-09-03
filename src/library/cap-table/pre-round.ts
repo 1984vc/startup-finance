@@ -95,15 +95,30 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
 
   safeCapTable = safeCapTable.map((safe) => {
     if (safe.cap === 0) {
+      let reason = "No cap set for this SAFE, ownership based on max cap of all other SAFE's."
+      if (safe.discount > 0) {
+        reason = reason + " It is not possible to calculate ownership with a discount until a priced round is entered"
+
+      }
+
       return {
         ...safe,
         ownershipError: {
           type: "caveat",
-          reason: "No cap set for this SAFE, ownership based on max cap of all other SAFE's",
+          reason,
         },
       }
     }
-    return {...safe}
+    if (safe.discount > 0) {
+      return {
+        ...safe,
+        ownershipError: {
+          type: "caveat",
+          reason: "It is not possible to calculate ownership with a discount until a priced round is entered",
+        },
+      }
+    }
+    return safe
   })
 
 
