@@ -96,9 +96,9 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
 
   safeCapTable = safeCapTable.map((safe) => {
     if (safe.cap === 0) {
-      let reason = `No cap set for this SAFE, ownership based on max cap of all other SAFE's. Currently set to ${formatUSDWithCommas(maxCap)}`
+      let reason = `No cap set for this SAFE, ownership based on max cap of all other SAFE's. Currently set to ${formatUSDWithCommas(maxCap)}.`
       if (safe.discount > 0) {
-        reason = reason + " It is not possible to calculate ownership with a discount until a priced round is entered"
+        reason = reason + " It is not possible to calculate ownership with a discount until a priced round is entered."
 
       }
 

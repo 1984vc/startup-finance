@@ -42,6 +42,18 @@ export const getCapForSafe = (idx: number, safes: SAFENote[]): number => {
   return safe.cap;
 };
 
+// Ensure MFN Safes get the proper cap
+export const populateSafeCaps = (safeNotes: SAFENote[]): SAFENote[] => {
+  return safeNotes.map((safe, idx): SAFENote => {
+    if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
+      const cap = getCapForSafe(idx, safeNotes);
+       return { ...safe, cap }
+    }
+    return {...safe}
+  })
+}
+
+
 // Sum the shares of the safes after conversion
 export const sumSafeConvertedShares = (
   safes: SAFENote[],
@@ -78,16 +90,6 @@ export const safeConvert = (
 
 // Quick utility to sum an array of numbers
 const sumArray = (arr: number[]): number => arr.reduce((a, b) => a + b, 0);
-
-export const populateSafeCaps = (safeNotes: SAFENote[]): SAFENote[] => {
-  return safeNotes.map((safe, idx): SAFENote => {
-    if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
-      const cap = getCapForSafe(idx, safeNotes);
-       return { ...safe, cap }
-    }
-    return {...safe}
-  })
-}
 
 export const checkSafeNotesForErrors = (safeNotes: SAFENote[]): CapTableOwnershipError | undefined => {
   let ownershipError: CapTableOwnershipError | undefined = undefined

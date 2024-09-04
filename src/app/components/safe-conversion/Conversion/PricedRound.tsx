@@ -113,7 +113,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             PPS
           </dt>
           <dd className="order-first text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
-            ${current.pricedConversion.pps}
+            ${current.pricedConversion.pps.toFixed(5)}
           </dd>
         </div>
         <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
