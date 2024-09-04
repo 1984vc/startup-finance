@@ -11,7 +11,7 @@ const PercentNote: React.FC<PercentNoteProps> = ({ pct, note, error}) => {
     if (error === "caveat") {
       return (
         <ToolipComponent content={note ?? ""}>
-          { pct.toFixed(2) } %
+          { pct.toFixed(2) }%
           { note && 
             <sup>*</sup>
           }

@@ -11,11 +11,14 @@ const ToolipComponent: React.FC<{
       <span
         className="inline"
         data-tooltip-id={id.current}
-        data-tooltip-content={content}
       >
         {children}
       </span>
-      <Tooltip id={id.current} place="top" />
+      <Tooltip id={id.current} place="top" clickable>
+        <div className="max-w-72">
+          {content}
+        </div>
+      </Tooltip>
     </span>
   );
 };

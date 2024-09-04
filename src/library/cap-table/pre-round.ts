@@ -3,6 +3,7 @@ import { checkSafeNotesForErrors, populateSafeCaps } from "@library/safe-calcs";
 import { RoundingStrategy, roundShares } from "@library/utils/rounding";
 import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, StakeHolder } from ".";
 import { buildErrorPreRoundCapTable, buildTBDPreRoundCapTable } from "./error";
+import { formatUSDWithCommas } from "@/utils/numberFormatting";
 
 // Builds a preRound cap table assuming there are no refreshed options
 // Needs to handle 3 possible states:
@@ -44,7 +45,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
 
   let safeCapTable: SafeCapTableRow[] = safeNotes.map((safe) => {
     if (safe.conversionType === 'pre') {
-      const cap = (safe.cap === 0 ? maxCap / preMoneyShares : safe.cap)
+      const cap = (safe.cap === 0 ? maxCap : safe.cap)
       const shares = roundShares((safe.investment / cap) * preMoneyShares, roundingStrategy)
       return {
         name: safe.name,
@@ -95,7 +96,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
 
   safeCapTable = safeCapTable.map((safe) => {
     if (safe.cap === 0) {
-      let reason = "No cap set for this SAFE, ownership based on max cap of all other SAFE's."
+      let reason = `No cap set for this SAFE, ownership based on max cap of all other SAFE's. Currently set to ${formatUSDWithCommas(maxCap)}`
       if (safe.discount > 0) {
         reason = reason + " It is not possible to calculate ownership with a discount until a priced round is entered"
 

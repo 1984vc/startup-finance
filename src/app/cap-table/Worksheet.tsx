@@ -22,6 +22,7 @@ import { localStorageWorks } from "./state/localstorage";
 import { getCommonOnlyCapTable } from "./state/selectors/CommonOnlyCapTableSelector";
 import { getPreRoundCapTable } from "./state/selectors/PreRoundCapTableSelector";
 import { getPricedConversion, getPricedRoundCapTableSelector, getPricedRoundOverviewSelector } from "./state/selectors/PricedRoundSelector";
+import ToolipComponent from "@/components/tooltip/Tooltip";
 
 type WorksheetProps = {
   conversionState: IConversionState;
@@ -130,7 +131,11 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
 
       <div className="pt-10 ml-10">
         <div className="ml-2 mb-4 inline not-prose">
-          Cap Table Before Priced Round
+          { hasPricedRound ? 
+            <span>Cap Table Before Priced Round</span>
+            :
+            <ToolipComponent content="Until a priced round is entered, this is just an estimate based on the assumption that all SAFE's convert at their current Cap or, if uncapped, the maximum Cap of all SAFE's">Cap Table Before Priced Round<sup>?</sup></ToolipComponent>
+          }
         </div>
         <CapTableResults
           {...getPreRoundCapTable({
