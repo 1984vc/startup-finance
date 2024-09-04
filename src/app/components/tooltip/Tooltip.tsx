@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Tooltip } from "react-tooltip";
 
-const ToolipComponent: React.FC<{
+const TooltipComponent: React.FC<{
   content: string;
   children: React.ReactNode;
 }> = ({ content, children: children }) => {
@@ -23,4 +23,4 @@ const ToolipComponent: React.FC<{
   );
 };
 
-export default ToolipComponent;
+export default TooltipComponent;

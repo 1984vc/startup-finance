@@ -1,4 +1,4 @@
-import ToolipComponent from "@/components/tooltip/Tooltip";
+import TooltipComponent from "@/components/tooltip/Tooltip";
 import { CapTableOwnershipError } from "@library/cap-table";
 
 interface PercentNoteProps {
@@ -10,30 +10,30 @@ interface PercentNoteProps {
 const PercentNote: React.FC<PercentNoteProps> = ({ pct, note, error}) => {
     if (error === "caveat") {
       return (
-        <ToolipComponent content={note ?? ""}>
+        <TooltipComponent content={note ?? ""}>
           { pct.toFixed(2) }%
           { note && 
             <sup>*</sup>
           }
-        </ToolipComponent>
+        </TooltipComponent>
       )
     } else if (error === "tbd") {
       return (
-        <ToolipComponent content={note ?? ""}>
+        <TooltipComponent content={note ?? ""}>
           TBD
           { note && 
             <sup>*</sup>
           }
-        </ToolipComponent>
+        </TooltipComponent>
       );
     } else if (error === "error") {
       return (
-        <ToolipComponent content={note ?? ""}>
+        <TooltipComponent content={note ?? ""}>
           Error
           { note && 
             <sup>*</sup>
           }
-        </ToolipComponent>
+        </TooltipComponent>
       );
     }
     return pct.toFixed(2) + "%";

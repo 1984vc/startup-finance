@@ -5,7 +5,7 @@ import { RowsProps } from "./PropTypes";
 import { Bars4Icon, XCircleIcon } from "@heroicons/react/24/outline";
 import PercentNote from "./PercentNote";
 import { SafeCapTableRow } from "@library/cap-table";
-import ToolipComponent from "@/components/tooltip/Tooltip";
+import TooltipComponent from "@/components/tooltip/Tooltip";
 
 export type SAFEProps = SafeCapTableRow & {
   id: string;
@@ -232,9 +232,9 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
         <div className="w-48">Name</div>
         <div className="w-36">Investment</div>
         <div className="w-36">Cap</div>
-        <div className="w-28"><ToolipComponent
+        <div className="w-28"><TooltipComponent
           content="Discount to the price of the next round when available (typically 0%-25%).  Note that the actual Post Money Safe uses a Discount Rate which is (1 - Discount). So if the Safe has a Discount Rate of 80% then the Discount is 20% and you should enter 20%"
-          >Discount<sup>?</sup></ToolipComponent></div>
+          >Discount<sup>?</sup></TooltipComponent></div>
         <div className="w-36">Type</div>
         <div className="w-24">Ownership %</div>
       </div>
