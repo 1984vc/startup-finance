@@ -1,6 +1,6 @@
 // You can access any of the global GAS objects in this file. You can also
 // import local files or external dependencies:
-import { SAFENote } from "./cap-table";
+import { CapTableRowType, SAFENote } from "./cap-table";
 import {
   DEFAULT_ROUNDING_STRATEGY,
   fitConversion,
@@ -54,7 +54,7 @@ function SAFE_CONVERSION(
         investment: e[0],
         cap: e[1],
         discount: e[2],
-        type: "safe",
+        type: CapTableRowType.Safe,
         conversionType: e[3].match(/^pre/i) ? "pre" : "post",
       };
     });

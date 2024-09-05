@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
 import { ExistingShareholderState, IConversionStateData } from "../ConversionState";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders"
-import { CommonStockholder, buildExistingShareholderCapTable } from "@library/cap-table";
+import { CapTableRowType, CommonRowType, CommonStockholder, buildExistingShareholderCapTable } from "@library/cap-table";
 
 // The initial shares of the existing shareholders
 export const getCommonOnlyCapTable = createSelector(
@@ -18,16 +18,16 @@ export const getCommonOnlyCapTable = createSelector(
           id: row.id,
           name: row.name ?? "",
           shares: row.shares,
-          type: 'common',
-          commonType: 'shareholder',
+          type: CapTableRowType.Common,
+          commonType: CommonRowType.Shareholder
         }
       }
     );
     commonStock.push({
       name: "Unused Options Pool",
       shares: unusedOptions,
-      type: 'common',
-      commonType: 'unusedOptions',
+      type: CapTableRowType.Common,
+      commonType: CommonRowType.UnusedOptions,
     })
     const results = buildExistingShareholderCapTable(commonStock);
     return results.map((row) => {

@@ -1,6 +1,15 @@
 import { CapTableOwnershipError, SAFENote } from "./cap-table";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
+const isMFN = (safe: SAFENote): boolean => {
+  // TODO: Legacy of having the conversionType as 'mfn' or "ycmfm", but the eventual conversionType is 'post' and a side letter of 'mfn'
+  // We will eventually need to 'migrate' the old states to this style
+  if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
+    return true;
+  }
+  return false;
+}
+
 const getMFNCapAfter = (rows: SAFENote[], idx: number): number => {
   // For each safe after the idx, find the lowest number that's not 0
   // and return that number
@@ -8,7 +17,7 @@ const getMFNCapAfter = (rows: SAFENote[], idx: number): number => {
     rows.slice(idx + 1).reduce((val, row) => {
 
       // Ignore anything that's in MFN
-      if (row.conversionType === "mfn" || row.conversionType === "ycmfn") {
+      if (isMFN(row)) {
         return val;
       }
 
@@ -36,7 +45,7 @@ const getMFNCapAfter = (rows: SAFENote[], idx: number): number => {
 // like MFN on safes and ownership percentages at various stages
 export const getCapForSafe = (idx: number, safes: SAFENote[]): number => {
   const safe = safes[idx];
-  if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
+  if (isMFN(safe)) {
     return getMFNCapAfter(safes, idx);
   }
   return safe.cap;
@@ -45,7 +54,7 @@ export const getCapForSafe = (idx: number, safes: SAFENote[]): number => {
 // Ensure MFN Safes get the proper cap
 export const populateSafeCaps = (safeNotes: SAFENote[]): SAFENote[] => {
   return safeNotes.map((safe, idx): SAFENote => {
-    if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
+    if (isMFN(safe)) {
       const cap = getCapForSafe(idx, safeNotes);
        return { ...safe, cap }
     }

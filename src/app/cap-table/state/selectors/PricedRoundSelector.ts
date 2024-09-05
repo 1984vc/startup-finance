@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { ExistingShareholderState, IConversionStateData, IRowState, SAFEState } from "../ConversionState";
-import { buildPricedRoundCapTable, CommonStockholder, SAFENote, SeriesInvestor } from "@library/cap-table";
+import { buildPricedRoundCapTable, CapTableRowType, CommonRowType, CommonStockholder, SAFENote, SeriesInvestor } from "@library/cap-table";
 import { CapTableProps } from "@/components/safe-conversion/Conversion/CapTableResults";
 import { BestFit, fitConversion } from "@library/conversion-solver";
 import { stringToNumber } from "@/utils/numberFormatting";
@@ -23,8 +23,8 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
           id: row.id,
           name: row.name ?? "",
           shares: row.shares,
-          type: 'common',
-          commonType: 'shareholder',
+          type: CapTableRowType.Common,
+          commonType: CommonRowType.Shareholder,
         }
       }
     );
@@ -40,7 +40,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
           discount: row.discount ?? 0,
           conversionType,
           sideLetters: row.conversionType === "mfn" ? ["mfn"] : [],
-          type: 'safe',
+          type: CapTableRowType.Safe
         }
       }
     );
@@ -51,7 +51,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
           id: row.id,
           name: row.name ?? "",
           investment: row.investment,
-          type: 'series',
+          type: CapTableRowType.Series,
           round: 1,
         }
       }
@@ -101,7 +101,7 @@ export const getPricedConversion = createSelector(
             cap: calculatedCap,
             discount: stringToNumber(row.discount ?? 0) / 100,
             conversionType,
-            type: "safe",
+            type: CapTableRowType.Safe,
           };
         },
       ),

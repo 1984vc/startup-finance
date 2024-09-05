@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 import { ExistingShareholderState, IConversionStateData, SAFEState } from "../ConversionState";
-import { CommonStockholder, SAFENote, buildEstimatedPreRoundCapTable, buildPreRoundCapTable } from "@library/cap-table";
+import { CapTableRowType, CommonRowType, CommonStockholder, SAFENote, buildEstimatedPreRoundCapTable, buildPreRoundCapTable } from "@library/cap-table";
 import { CapTableProps } from "@/components/safe-conversion/Conversion/CapTableResults";
 import { getPricedConversion } from "./PricedRoundSelector";
 
@@ -19,16 +19,16 @@ export const getPreRoundCapTable = createSelector(
         return {
           name: row.name ?? "",
           shares: row.shares,
-          type: 'common',
-          commonType: 'shareholder',
+          type: CapTableRowType.Common,
+          commonType: CommonRowType.Shareholder
         }
       }
     );
     commonStock.push({
       name: "Unused Options Pool",
       shares: unusedOptions,
-      type: 'common',
-      commonType: 'unusedOptions',
+      type: CapTableRowType.Common,
+      commonType: CommonRowType.UnusedOptions
     })
 
     const safeNotes: SAFENote[] = (rowData.filter((row) => row.type === "safe") as SAFEState[]).map(
@@ -41,7 +41,7 @@ export const getPreRoundCapTable = createSelector(
           discount: row.discount ?? 0,
           conversionType,
           sideLetters: row.conversionType === "mfn" ? ["mfn"] : [],
-          type: 'safe',
+          type: CapTableRowType.Safe,
         }
       }
     );

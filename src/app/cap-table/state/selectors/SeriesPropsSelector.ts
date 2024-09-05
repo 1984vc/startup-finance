@@ -2,6 +2,7 @@ import { createSelector } from "reselect";
 import { IConversionStateData } from "../ConversionState";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { getPricedConversion } from "./PricedRoundSelector";
+import { CapTableRowType } from "@library/cap-table";
 
 export const getSeriesPropsSelector = createSelector(
   getPricedConversion,
@@ -17,7 +18,7 @@ export const getSeriesPropsSelector = createSelector(
     return rows.map((row, idx) => {
       return {
         id: row.id,
-        type: "series",
+        type: CapTableRowType.Series,
         name: row.name,
         investment: row.investment,
         ownership: [{

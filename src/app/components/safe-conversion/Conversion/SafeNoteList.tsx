@@ -12,6 +12,7 @@ export type SAFEProps = SafeCapTableRow & {
   name: string;
   // Legacy where we used to allow specific version of SAFE
   conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
+  sideLetters?: ['mfn'];
   allowDelete?: boolean;
   disabledFields?: string[];
 }

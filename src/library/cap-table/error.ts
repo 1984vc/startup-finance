@@ -1,4 +1,4 @@
-import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, CapTableOwnershipError } from ".";
+import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, CapTableOwnershipError, CapTableRowType } from ".";
 
 export const buildTBDPreRoundCapTable = (safeNotes: SAFENote[], common: CommonStockholder[]): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow} => {
   const totalInvestment = safeNotes.reduce((acc, investor) => acc + investor.investment, 0);
@@ -18,7 +18,7 @@ export const buildTBDPreRoundCapTable = (safeNotes: SAFENote[], common: CommonSt
         reason: "Unable to model Pre-Round cap table with uncapped SAFE's",
       },
       investment: safe.investment,
-      type: "safe",
+      type: CapTableRowType.Safe,
     }
   })
 
@@ -27,7 +27,7 @@ export const buildTBDPreRoundCapTable = (safeNotes: SAFENote[], common: CommonSt
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipError,
-      type: "common",
+      type: CapTableRowType.Common,
       commonType: stockholder.commonType,
     }
   })
@@ -42,7 +42,7 @@ export const buildTBDPreRoundCapTable = (safeNotes: SAFENote[], common: CommonSt
       shares: totalShares,
       investment: totalInvestment,
       ownershipPct: 1,
-      type: "total",
+      type: CapTableRowType.Total,
     },
   }
 }
@@ -67,7 +67,7 @@ export const buildErrorPreRoundCapTable = (safeNotes: SAFENote[], common: Common
       discount: safe.discount,
       ownershipError: safeOwnershipError,
       investment: safe.investment,
-      type: "safe",
+      type: CapTableRowType.Safe,
     }
   })
 
@@ -76,7 +76,7 @@ export const buildErrorPreRoundCapTable = (safeNotes: SAFENote[], common: Common
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipError,
-      type: "common",
+      type: CapTableRowType.Common,
       commonType: stockholder.commonType,
     }
   })
@@ -91,7 +91,7 @@ export const buildErrorPreRoundCapTable = (safeNotes: SAFENote[], common: Common
       shares: totalShares,
       investment: totalInvestment,
       ownershipPct: 1,
-      type: "total",
+      type: CapTableRowType.Total,
     },
   }
 }

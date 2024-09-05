@@ -1,6 +1,6 @@
 import { BestFit } from "@library/conversion-solver";
 import { roundShares } from "@library/utils/rounding";
-import { StakeHolder, CommonCapTableRow, SafeCapTableRow, SeriesCapTableRow, RefreshedOptionsCapTableRow, TotalCapTableRow, CapTableOwnershipError, CommonStockholder, SAFENote, SeriesInvestor } from ".";
+import { StakeHolder, CommonCapTableRow, SafeCapTableRow, SeriesCapTableRow, RefreshedOptionsCapTableRow, TotalCapTableRow, CapTableOwnershipError, CommonStockholder, SAFENote, SeriesInvestor, CapTableRowType } from ".";
 
 
 export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders: StakeHolder[]): 
@@ -24,7 +24,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalShares,
-      type: "common",
+      type: CapTableRowType.Common,
       commonType: stockholder.commonType,
     }
   })
@@ -40,7 +40,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       discount: safe.discount,
       cap: safe.cap,
       shares,
-      type: "safe",
+      type: CapTableRowType.Safe,
       pps,
     }
   })
@@ -53,7 +53,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       shares: shares,
       ownershipPct: shares / totalShares,
       pps: pricedConversion.pps,
-      type: "series",
+      type: CapTableRowType.Series,
     }
   })
   
@@ -61,7 +61,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
     name: "Refreshed Options Pool",
     shares: pricedConversion.totalOptions,
     ownershipPct: pricedConversion.totalOptions / totalShares,
-    type: "refreshedOptions"
+    type: CapTableRowType.RefreshedOptions
   }
 
   return {
@@ -75,7 +75,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
       shares: totalShares,
       investment: totalInvestment,
       ownershipPct: 1,
-      type: "total",
+      type: CapTableRowType.Total,
     },
     error: undefined
   }

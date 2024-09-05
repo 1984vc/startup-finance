@@ -1,7 +1,7 @@
 import { BestFit, DEFAULT_ROUNDING_STRATEGY } from "@library/conversion-solver";
 import { checkSafeNotesForErrors, populateSafeCaps } from "@library/safe-calcs";
 import { RoundingStrategy, roundShares } from "@library/utils/rounding";
-import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, StakeHolder } from ".";
+import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, StakeHolder, CapTableRowType } from ".";
 import { buildErrorPreRoundCapTable, buildTBDPreRoundCapTable } from "./error";
 import { formatUSDWithCommas } from "@/utils/numberFormatting";
 
@@ -53,7 +53,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
         discount: safe.discount,
         shares: shares,
         investment: safe.investment,
-        type: "safe",
+        type: CapTableRowType.Safe,
       }
     } else {
       return {
@@ -62,7 +62,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
         discount: safe.discount,
         ownershipPct: safe.investment / (safe.cap === 0 ? maxCap : safe.cap),
         investment: safe.investment,
-        type: "safe",
+        type: CapTableRowType.Safe,
       }
     }
   })
@@ -84,7 +84,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
         shares: safe.shares,
         ownershipPct: pct,
         investment: safe.investment,
-        type: "safe",
+        type: CapTableRowType.Safe,
       }
     } else {
       return {
@@ -129,7 +129,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / postShareCapitilization,
-      type: "common",
+      type: CapTableRowType.Common,
       commonType: stockholder.commonType,
     }
   })
@@ -146,7 +146,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
       shares: totalShares,
       investment: totalInvestment,
       ownershipPct: 1,
-      type: "total",
+      type: CapTableRowType.Total,
     },
   }
 }
@@ -168,7 +168,7 @@ export const buildPreRoundCapTable = (pricedConversion: BestFit, stakeHolders: S
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalShares,
-      type: "common",
+      type: CapTableRowType.Common,
       commonType: stockholder.commonType,
     }
   })
@@ -184,7 +184,7 @@ export const buildPreRoundCapTable = (pricedConversion: BestFit, stakeHolders: S
       discount: safe.discount,
       cap: safe.cap,
       shares,
-      type: "safe",
+      type: CapTableRowType.Safe,
       pps,
     }
   })
@@ -198,7 +198,7 @@ export const buildPreRoundCapTable = (pricedConversion: BestFit, stakeHolders: S
       shares: totalShares,
       investment: totalInvestment,
       ownershipPct: 1,
-      type: "total",
+      type: CapTableRowType.Total,
     },
   }
 }

@@ -5,6 +5,7 @@ import {
 } from "../ConversionState";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { getPreRoundCapTable } from "./PreRoundCapTableSelector";
+import { CapTableRowType } from "@library/cap-table";
 
 const determineRowDisabledFields = (row: SAFEState) => {
   if (row.conversionType === "mfn") return ["cap"]
@@ -17,13 +18,13 @@ export const getSAFERowPropsSelector = createSelector(
   getPreRoundCapTable,
   (state: IConversionStateData) => state.rowData,
   (preRoundCapTable, rowData): SAFEProps[] => {
-    const rows = rowData.filter((row) => row.type === "safe");
-    const safeCapTable = preRoundCapTable.rows.filter((row) => row.type === "safe");
+    const rows = rowData.filter((row) => row.type === CapTableRowType.Safe) as SAFEState[];
+    const safeCapTable = preRoundCapTable.rows.filter((row) => row.type === CapTableRowType.Safe);
 
     return rows.map((row, idx) => {
       return {
         id: row.id,
-        type: "safe",
+        type: CapTableRowType.Safe,
         name: row.name,
         investment: row.investment,
         cap: safeCapTable[idx].cap ?? row.cap,
@@ -33,7 +34,7 @@ export const getSAFERowPropsSelector = createSelector(
         ownershipError: safeCapTable[idx].ownershipError,
         allowDelete: true,
         disabledFields: determineRowDisabledFields(row),
-        conversionType: row.conversionType
+        conversionType: row.conversionType,
       };
     });
   },

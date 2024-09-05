@@ -4,6 +4,7 @@ import { CurrencyInputOnChangeValues } from "react-currency-input-field";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
+import { CapTableRowType, CommonRowType } from "@library/cap-table";
 
 // Only the state that we need to serialize
 export type ExistingShareholderState = Pick<
@@ -34,7 +35,7 @@ export interface IConversionStateData {
 export type ConversionStore = ReturnType<typeof createConversionStore>;
 
 export interface IConversionState extends IConversionStateData {
-  onAddRow: (type: "safe" | "series" | "common") => void;
+  onAddRow: (type: CapTableRowType.Common | CapTableRowType.Safe | CapTableRowType.Series) => void;
   onDeleteRow: (id: string) => void;
   onUpdateRow: (data: IRowState) => void;
   onValueChange: (
@@ -109,12 +110,12 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             ...state.rowData,
             {
               id: idx,
-              type: "safe",
               name: getRandomSeed(state.rowData),
               investment: 0,
               cap: 0,
               discount: 0,
               conversionType: "post",
+              type: CapTableRowType.Safe,
             },
           ],
         }));
@@ -125,10 +126,10 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             ...state.rowData,
             {
               id: idx,
-              type: "common",
               name: getRandomFounder(state.rowData),
               shares: 0,
-              commonType: "shareholder",
+              type: CapTableRowType.Common,
+              commonType: CommonRowType.Shareholder,
             },
           ],
         }));

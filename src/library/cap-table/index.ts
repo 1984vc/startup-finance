@@ -3,33 +3,47 @@
 import { buildEstimatedPreRoundCapTable, buildPreRoundCapTable } from "./pre-round";
 import { buildPricedRoundCapTable } from "./priced-round";
 
+
+export enum CapTableRowType {
+  Common = "common",
+  Safe = "safe",
+  Series = "series",
+  Total = "total",
+  RefreshedOptions = "refreshedOptions",
+}
+
+export enum CommonRowType {
+  Shareholder = "shareholder",
+  UnusedOptions = "unusedOptions",
+}
+
 export type BaseStake = {
   id?: string;
   name?: string;
   shares?: number;
-  type: "common" | "safe" | "series";
+  type: CapTableRowType.Common | CapTableRowType.Safe | CapTableRowType.Series;
 }
 
 export type CommonStockholder = BaseStake & {
   name: string;
   shares: number;
-  type: "common";
-  commonType: "shareholder" | "unusedOptions";
+  type: CapTableRowType.Common;
+  commonType: CommonRowType.Shareholder | CommonRowType.UnusedOptions;
 }
 
 export type SAFENote = BaseStake & {
   investment: number;
   cap: number;
   discount: number;
-  type: "safe";
+  type: CapTableRowType.Safe;
   // TODO: Pro-Rata is not implemented yet
-  sideLetters?: ("mfn"|"pro-rata")[];
+  sideLetters?: ("mfn" | "pro-rata")[];
   conversionType: "pre" | "post" | "mfn" | "yc7p" | "ycmfn";
 }
 
 export type SeriesInvestor = BaseStake & {
   investment: number;
-  type: "series";
+  type: CapTableRowType.Series;
   round: number;
 }
 
@@ -51,20 +65,20 @@ export type BaseCapTableRow = {
 }
 
 export type TotalCapTableRow = BaseCapTableRow & {
-  type: "total";
+  type: CapTableRowType.Total;
   investment: number;
   shares: number;
   ownershipPct: number;
 };
 
 export type CommonCapTableRow = BaseCapTableRow & {
-  type: "common";
+  type: CapTableRowType.Common;
   shares: number;
-  commonType: CommonStockholder["commonType"];
+  commonType: CommonRowType;
 };
 
 export type SafeCapTableRow = BaseCapTableRow & {
-  type: "safe";
+  type: CapTableRowType.Safe;
   investment: number;
   discount: number;
   cap: number;
@@ -74,7 +88,7 @@ export type SafeCapTableRow = BaseCapTableRow & {
 };
 
 export type SeriesCapTableRow = BaseCapTableRow & {
-  type: "series";
+  type: CapTableRowType.Series;
   investment: number;
   shares: number;
   pps: number;
@@ -82,7 +96,7 @@ export type SeriesCapTableRow = BaseCapTableRow & {
 };
 
 export type RefreshedOptionsCapTableRow = BaseCapTableRow & {
-  type: "refreshedOptions";
+  type: CapTableRowType.RefreshedOptions;
   shares: number;
   ownershipPct: number;
 };
@@ -99,7 +113,7 @@ export const buildExistingShareholderCapTable = (commonStockholders: CommonStock
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalCommonShares,
-      type: "common",
+      type: CapTableRowType.Common,
       commonType: stockholder.commonType,
     }
   })

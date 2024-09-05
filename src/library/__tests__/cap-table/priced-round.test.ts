@@ -1,32 +1,32 @@
 import { describe, expect, test } from "@jest/globals";
-import { buildPricedRoundCapTable, CommonStockholder, SAFENote, SeriesInvestor } from "@library/cap-table";
+import { buildPricedRoundCapTable, CapTableRowType, CommonRowType, CommonStockholder, SAFENote, SeriesInvestor } from "@library/cap-table";
 import { DEFAULT_ROUNDING_STRATEGY, fitConversion } from "@library/conversion-solver";
 import { crossCheckCapTableResults } from "./utils";
 
 const commonFixture: CommonStockholder[] = [
   {
     shares: 4_500_000,
-    commonType: "shareholder",
     name: "Founder 1",
-    type: "common",
+    type: CapTableRowType.Common,
+    commonType: CommonRowType.Shareholder,
   },
   {
     shares: 4_500_000,
-    commonType: "shareholder",
     name: "Founder 1",
-    type: "common",
+    type: CapTableRowType.Common,
+    commonType: CommonRowType.Shareholder,
   },
   {
     shares: 400_000,
-    commonType: "shareholder",
     name: "Issued Options",
-    type: "common",
+    type: CapTableRowType.Common,
+    commonType: CommonRowType.Shareholder,
   },
   {
     shares: 600_000,
-    type: "common",
     name: "Unused options",
-    commonType: "unusedOptions",
+    type: CapTableRowType.Common,
+    commonType: CommonRowType.UnusedOptions,
   },
 ]
 
@@ -37,7 +37,7 @@ const safeFixture: SAFENote[] = [
     discount: 0,
     cap: 10_000_000,
     conversionType: "post",
-    type: "safe",
+    type: CapTableRowType.Safe,
   },
   {
     name: "Venture Fund 2",
@@ -45,7 +45,7 @@ const safeFixture: SAFENote[] = [
     discount: 0,
     cap: 20_000_000,
     conversionType: "post",
-    type: "safe",
+    type: CapTableRowType.Safe,
   },
 ]
 
@@ -53,13 +53,13 @@ const seriesFixture: SeriesInvestor[] = [
   {
     name: "1984",
     investment: 3_000_000,
-    type: "series",
+    type: CapTableRowType.Series,
     round: 1,
   },
   {
     name: "Venture Fund 2",
     investment: 1_000_000,
-    type: "series",
+    type: CapTableRowType.Series,
     round: 1,
   },
 ]
