@@ -59,7 +59,7 @@ function getNextIdx(rowData: IRowState[]) {
 
 function getRandomSeed(rowData: IRowState[]) {
   const existingNames = rowData
-    .filter((r) => r.type === "safe")
+    .filter((r) => r.type === CapTableRowType.Safe)
     .map((r) => r.name);
   const availableNames = randomSeed().filter((r) => !existingNames.includes(r));
   if (availableNames.length > 0) {
@@ -71,7 +71,7 @@ function getRandomSeed(rowData: IRowState[]) {
 
 function getRandomInvestor(rowData: IRowState[]) {
   const existingNames = rowData
-    .filter((r) => r.type === "series")
+    .filter((r) => r.type === CapTableRowType.Series)
     .map((r) => r.name);
   const availableNames = randomSeries().filter((r) => !existingNames.includes(r));
   if (availableNames.length > 0) {
@@ -83,7 +83,7 @@ function getRandomInvestor(rowData: IRowState[]) {
 
 function getRandomFounder(rowData: IRowState[]) {
   const existingNames = rowData
-    .filter((r) => r.type === "common")
+    .filter((r) => r.type === CapTableRowType.Common)
     .map((r) => r.name);
   const availableNames = randomFounders().filter(
     (r) => !existingNames.includes(r),
@@ -101,7 +101,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
   create<IConversionState>((set, get) => ({
     ...initialState,
 
-    onAddRow: (type: "safe" | "series" | "common") => {
+    onAddRow: (type: CapTableRowType.Common | CapTableRowType.Safe | CapTableRowType.Series) => {
       const idx = getNextIdx(get().rowData);
       if (type === CapTableRowType.Safe) {
         set((state) => ({

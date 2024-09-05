@@ -1,9 +1,9 @@
 import { expect } from "@jest/globals";
-import { CapTableRow, TotalCapTableRow, SafeCapTableRow, SeriesCapTableRow } from "@library/cap-table";
+import { CapTableRow, TotalCapTableRow, SafeCapTableRow, SeriesCapTableRow, CapTableRowType } from "@library/cap-table";
 import { roundToPlaces } from "@library/utils/rounding";
 
 export const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTableRow) => {
-  const investors = rows.filter(row => (row.type === 'safe' || row.type === 'series')) as (SafeCapTableRow | SeriesCapTableRow)[];
+  const investors = rows.filter(row => (row.type === CapTableRowType.Safe || row.type === CapTableRowType.Series)) as (SafeCapTableRow | SeriesCapTableRow)[];
   const investedTotal = investors.reduce((acc, row) => acc + (row.investment ?? 0), 0);
   expect(investedTotal).toEqual(total.investment);
 

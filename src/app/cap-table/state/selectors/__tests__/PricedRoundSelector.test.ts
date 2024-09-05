@@ -5,6 +5,7 @@ import {
 } from "@/cap-table/state/ConversionState";
 import fixtureData from "../../__tests__/fixtures/state_fixtures.json";
 import { getPricedRoundCapTableSelector } from "../PricedRoundSelector";
+import { CapTableRowType } from "@library/cap-table";
 
 // Test our Result Selector, which handles both showing the resulting cap table and allow users to play around with the pre-money and investment changes
 describe("Result Selector", () => {
@@ -15,7 +16,7 @@ describe("Result Selector", () => {
       preMoneyChange: 0,
       investmentChange: 0,
     });
-    const investors = resultSelector.rows.filter((row) => row.type === 'safe' || row.type === 'series')
+    const investors = resultSelector.rows.filter((row) => row.type === CapTableRowType.Safe || row.type === CapTableRowType.Series)
     const totalInvestment = investors.reduce((sum, current) => sum + current.investment, 0);
     expect(resultSelector.totalRow.investment).toEqual(totalInvestment);
   });

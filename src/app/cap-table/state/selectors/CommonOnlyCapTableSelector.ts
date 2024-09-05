@@ -11,7 +11,7 @@ export const getCommonOnlyCapTable = createSelector(
     rowData,
     unusedOptions
   ): ExistingShareholderProps[] => {
-    const commonRows = rowData.filter((row) => row.type === "common") as ExistingShareholderState[]
+    const commonRows = rowData.filter((row) => row.type === CapTableRowType.Common) as ExistingShareholderState[]
     const commonStock: CommonStockholder[] = (commonRows).map(
       (row) => {
         return {

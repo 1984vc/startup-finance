@@ -67,8 +67,8 @@ const seriesFixture: SeriesInvestor[] = [
 describe("Building a priced-round cap table with common shareholders, SAFE notes, and priced round investors", () => {
   test("Sanity check our baseline", () => {
     const premoney = 25_000_000;
-    const commonShares = commonFixture.filter(row => row.type === "common" && row.commonType === 'shareholder').reduce((acc, row) => acc + row.shares, 0);
-    const unusedOptions = commonFixture.filter(row => row.type === "common" && row.commonType === 'unusedOptions').reduce((acc, row) => acc + row.shares, 0);
+    const commonShares = commonFixture.filter(row => row.type === CapTableRowType.Common && row.commonType === CommonRowType.Shareholder).reduce((acc, row) => acc + row.shares, 0);
+    const unusedOptions = commonFixture.filter(row => row.type === CapTableRowType.Common && row.commonType === CommonRowType.UnusedOptions).reduce((acc, row) => acc + row.shares, 0);
 
     const pricedConversion = fitConversion(premoney, commonShares, safeFixture, unusedOptions, 0.1, [
       seriesFixture[0].investment,

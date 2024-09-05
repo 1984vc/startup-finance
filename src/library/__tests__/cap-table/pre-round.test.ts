@@ -113,7 +113,7 @@ describe("Building an estimated pre-round cap table with common shareholders and
 
     // We use a "fake" priced round with no additional options to estimate the pre-money conversion
     // As long as the priced-round is at a valuation higher than the cap, this will be an accurate pre-money value
-    expect(safes[2].type === 'safe' && safes[2].ownershipPct?.toFixed(5)).toEqual("0.07727");
+    expect(safes[2].type === CapTableRowType.Safe && safes[2].ownershipPct?.toFixed(5)).toEqual("0.07727");
 
   });
 });
@@ -137,8 +137,8 @@ describe("Building a priced-round pre-round cap table with common shareholders, 
   // This is different than the priced-round cap table because it's the cap table excluding the new series investors and additional options refresh
   test("Pre-round cap table with pre-money SAFE should be the same as the estimate", () => {
     const premoney = 25_000_000;
-    const commonShares = commonFixture.filter(row => row.type === "common" && row.commonType === 'shareholder').reduce((acc, row) => acc + row.shares, 0);
-    const unusedOptions = commonFixture.filter(row => row.type === "common" && row.commonType === 'unusedOptions').reduce((acc, row) => acc + row.shares, 0);
+    const commonShares = commonFixture.filter(row => row.type === CapTableRowType.Common && row.commonType === CommonRowType.Shareholder).reduce((acc, row) => acc + row.shares, 0);
+    const unusedOptions = commonFixture.filter(row => row.type === CapTableRowType.Common && row.commonType === CommonRowType.UnusedOptions).reduce((acc, row) => acc + row.shares, 0);
 
     const pricedConversion = fitConversion(premoney, commonShares, safeFixtureWithPreMoney, unusedOptions, 0.0, [
       seriesFixture[0].investment,
@@ -151,6 +151,6 @@ describe("Building a priced-round pre-round cap table with common shareholders, 
     crossCheckCapTableResults([...common, ...safes], total);
 
     // Should match our ownership pct from the estimated round because we didn't add additional options
-    expect(safes[2].type === 'safe' && safes[2].ownershipPct?.toFixed(8)).toEqual("0.07727277");
+    expect(safes[2].type === CapTableRowType.Safe && safes[2].ownershipPct?.toFixed(8)).toEqual("0.07727277");
   });
 });

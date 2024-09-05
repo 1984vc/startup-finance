@@ -4,6 +4,7 @@ import { getRecentStates } from "@/cap-table/state/localstorage";
 import { compressState } from "@/utils/stateCompression";
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
 import { shortenedUSD } from "@library/utils/numberFormatting";
+import { CapTableRowType } from "@library/cap-table";
 
 // Get a list of recent states from local storage
 // Also allow for a reset of the recent states
@@ -38,8 +39,8 @@ const Finder: React.FC<{currentId: string, loadById: (id: string) => void}> = ({
   };
 
   const describeCapTable = (state: IConversionStateData) => {
-    const safeInvestments = state.rowData.filter((row) => row.type === "safe").map((row) => row.investment).reduce((acc, val) => acc + val, 0);
-    const safeCount = state.rowData.filter((row) => row.type === "safe").length;
+    const safeInvestments = state.rowData.filter((row) => row.type === CapTableRowType.Safe).map((row) => row.investment).reduce((acc, val) => acc + val, 0);
+    const safeCount = state.rowData.filter((row) => row.type === CapTableRowType.Safe).length;
     return `${safeCount} SAFE${ safeCount === 1 ? "" : "'s"} totaling ${shortenedUSD(safeInvestments)}`;
   }
 
