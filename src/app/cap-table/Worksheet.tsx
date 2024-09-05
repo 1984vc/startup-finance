@@ -87,8 +87,6 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
     setPostMoney(stringToNumber(val ?? 0));
   }
 
-  console.log("Worksheet.tsx: conversionState: ", conversionState);
-
   return (
     <div className={"not-prose"}>
       <div className="w-full flex justify-end gap-2">

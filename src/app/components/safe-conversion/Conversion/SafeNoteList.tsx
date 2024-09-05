@@ -67,14 +67,12 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   }
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
-    console.log("drag start", data.name, " - ", data.id);
     event.dataTransfer.setData('text/plain', data.id)
     onDragStart(event, data.id);
   }
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault();
-    console.log("drag over", data.name, " - ", data.id);
     onDragOver(event, data.id);
   };
 

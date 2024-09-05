@@ -23,7 +23,7 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, i
   const investment = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.investment : null
   const pps = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.pps : null
 
-  const hasChanges = change
+  const hasChanges = change !== undefined
   const changePct = roundTo((change ?? 0) * 100, 2)
   let ownershipPct: string | undefined = shareholder.ownershipPct?.toFixed(2) + "%"
   if (shareholder.ownershipError) {
@@ -63,17 +63,19 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, i
       </td>
       <td className="py-3 px-2 w-2 border-none"></td>
       <td className="py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
-        {
-          ownershipPct
-        }
+        <div className="grid grid-cols-2 justify-items-start">
+          <span className="">
+          {ownershipPct}
+          </span>
+          {hasChanges && (
+            <span
+              className={`pl-2 text-right ${changePct > 0 ? "text-green-500" : changePct < 0 ? "text-red-500" : "text-black"}`}
+            >
+              {changePct > 0 ? "+" : ""}{changePct}%
+            </span>
+          )}
+        </div>
       </td>
-      {hasChanges && (
-        <td
-          className={`py-3 px-4 pb-1 text-left border-b border-gray-300 dark:border-gray-700 ${changePct > 0 ? "text-green-500" : changePct < 0 ? "text-red-500" : "text-black"}`}
-        >
-          {changePct.toFixed(2)}
-        </td>
-      )}
     </tr>
 
   )
@@ -105,7 +107,6 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
               <th className="py-3 px-4 text-left font-thin">Shares</th>
               <th className="py-3 px-2 w-2 border-none"></th>
               <th className="py-3 px-4 text-left font-thin">Ownership %</th>
-              {hasChanges && <th className="py-3 px-4 text-left font-thin">Change %</th>}
             </tr>
           </thead>
           <tbody className="not-prose font-bold">
@@ -138,7 +139,7 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
               </td>
               <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">
-                {formatNumberWithCommas(totalRow.shares)}
+                {formatNumberWithCommas(totalRow.shares ?? 0)}
               </td>
               <td className="py-3 px-2 w-2 border-none"></td>
               <td className="py-3 px-4 text-left">

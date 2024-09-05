@@ -47,7 +47,7 @@ const ExistingShareholderRow: React.FC<ExistingShareholderRowProps> = ({
     if (allowDelete) {
       return (
         <button
-          onClick={() => onDelete(data.id)}
+          onClick={() => { onDelete(data.id) } }
           className={"w-6 text-left focus:outline-none text-red-400 hover:text-red-500"}>
           <XCircleIcon className="inline" width={20} />
         </button>
@@ -127,6 +127,7 @@ const ExisingShareholderList: React.FC<
 
   const issuedOptionsRow = rows.find((row) => row.id === "IssuedOptions")
   const unusedOptionsRow = rows.find((row) => row.id === "UnusedOptionsPool")
+
 
   return (
     <div>

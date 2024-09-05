@@ -156,7 +156,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
     },
 
     onUpdateRow: (data: IRowState) => {
-      console.log("updating", data);
       set((state) => ({
         ...state,
         rowData: state.rowData.map((row) => (row.id === data.id ? data : row)),
@@ -164,7 +163,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
     },
 
     onMoveRow: (rowId: string, afterId: string) => {
-      console.log("moving", rowId, afterId);
       const updatedRows = [...get().rowData];
       const rowIndex = updatedRows.findIndex((row) => row.id === rowId);
       const afterIndex = updatedRows.findIndex((row) => row.id === afterId);
@@ -186,7 +184,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
           name: string | undefined,
           values?: CurrencyInputOnChangeValues,
         ) => {
-          console.log("onValueChange", value, name, values);
           if (type === "number") {
             if (name) {
               const val = values?.float ?? 0;
@@ -218,7 +215,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
         },
         togglepriceRounds: () => {
           set((state) => {
-            console.log(state.pricedRounds);
             return {
               ...state,
               pricedRounds: state.pricedRounds === 0 ? 1 : 0,

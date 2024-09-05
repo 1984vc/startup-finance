@@ -4,6 +4,7 @@ import { buildEstimatedPreRoundCapTable, buildPreRoundCapTable } from "./pre-rou
 import { buildPricedRoundCapTable } from "./priced-round";
 
 export type BaseStake = {
+  id?: string;
   name?: string;
   shares?: number;
   type: "common" | "safe" | "series";
@@ -43,6 +44,7 @@ export type CapTableOwnershipError = {
 }
 
 export type BaseCapTableRow = {
+  id?: string;
   name?: string;
   ownershipPct?: number;
   ownershipError?: CapTableOwnershipError
@@ -93,6 +95,7 @@ export const buildExistingShareholderCapTable = (commonStockholders: CommonStock
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
   return commonStockholders.map((stockholder) => {
     return {
+      id: stockholder.id,
       name: stockholder.name,
       shares: stockholder.shares,
       ownershipPct: stockholder.shares / totalCommonShares,
