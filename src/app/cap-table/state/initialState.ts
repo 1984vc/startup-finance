@@ -115,5 +115,5 @@ export const initialState = ({
   preMoney: 36_000_000,
   targetOptionsPool: 10,
   unusedOptions: 750_000,
-  pricedRounds: 1,
+  pricedRounds: 0,
 });

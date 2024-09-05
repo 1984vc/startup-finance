@@ -52,6 +52,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
         cap: safe.cap,
         discount: safe.discount,
         shares: shares,
+        sideLetters: safe.sideLetters,
         investment: safe.investment,
         type: CapTableRowType.Safe,
       }
@@ -60,6 +61,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
         name: safe.name,
         cap: safe.cap,
         discount: safe.discount,
+        sideLetters: safe.sideLetters,
         ownershipPct: safe.investment / (safe.cap === 0 ? maxCap : safe.cap),
         investment: safe.investment,
         type: CapTableRowType.Safe,
@@ -83,6 +85,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
         discount: safe.discount,
         shares: safe.shares,
         ownershipPct: pct,
+        sideLetters: safe.sideLetters,
         investment: safe.investment,
         type: CapTableRowType.Safe,
       }
@@ -109,8 +112,7 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
           reason,
         },
       }
-    }
-    if (safe.discount > 0) {
+    } else if (safe.discount > 0) {
       return {
         ...safe,
         ownershipError: {
@@ -118,11 +120,17 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
           reason: "It is not possible to calculate ownership with a discount until a priced round is entered",
         },
       }
+    } else if (safe.sideLetters && safe.sideLetters.includes("mfn")) {
+      return {
+        ...safe,
+        ownershipError: {
+          type: "caveat",
+          reason: "For an Uncapped MFN the cap is set to the lowest cap in subsequent SAFE's. You can re-order the SAFEs using the reorder button on the left.",
+        },
+      }
     }
     return safe
   })
-
-
 
   const commonCapTable: CommonCapTableRow[] = commonShareholders.map((stockholder) => {
     return {

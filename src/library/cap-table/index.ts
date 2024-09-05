@@ -82,6 +82,7 @@ export type SafeCapTableRow = BaseCapTableRow & {
   investment: number;
   discount: number;
   cap: number;
+  sideLetters?: ("mfn" | "pro-rata")[];
   pps?: number;
   shares?: number;
   ownershipPct?: number;
