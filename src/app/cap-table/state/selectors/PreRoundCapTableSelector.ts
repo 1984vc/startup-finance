@@ -54,6 +54,7 @@ export const getPreRoundCapTable = createSelector(
       rows: [...common, ...safes].map((row) => {
         if (row.type === 'common') {
           return {
+            id: row.id ?? "",
             name: row.name ?? "",
             shares: row.shares,
             type: row.type,
@@ -63,6 +64,7 @@ export const getPreRoundCapTable = createSelector(
           }
         } 
         return {
+          id: row.id ?? "",
           name: row.name ?? "",
           shares: row.shares,
           investment: row.investment,

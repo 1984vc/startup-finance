@@ -20,6 +20,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
     const commonStock: CommonStockholder[] = (rowData.filter((row) => row.type === "common") as ExistingShareholderState[]).map(
       (row) => {
         return {
+          id: row.id,
           name: row.name ?? "",
           shares: row.shares,
           type: 'common',
@@ -32,6 +33,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
       (row) => {
         const conversionType = row.conversionType === "mfn" ? "post" : row.conversionType === 'post' ? "post" : "pre";
         return {
+          id: row.id,
           name: row.name ?? "",
           investment: row.investment,
           cap: row.cap ?? 0,
@@ -46,6 +48,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
     const seriesInvestors: SeriesInvestor[] = rowData.filter((row) => row.type === "series").map(
       (row) => {
         return {
+          id: row.id,
           name: row.name ?? "",
           investment: row.investment,
           type: 'series',
