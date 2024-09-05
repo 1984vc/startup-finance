@@ -1,7 +1,7 @@
 import { CapTableOwnershipError, SAFENote } from "./cap-table";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
-const getMFNCapAter = (rows: SAFENote[], idx: number): number => {
+const getMFNCapAfter = (rows: SAFENote[], idx: number): number => {
   // For each safe after the idx, find the lowest number that's not 0
   // and return that number
   return (
