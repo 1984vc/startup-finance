@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
 import { getSAFERowPropsSelector } from "./SAFEPropsSelector";
-
 type ErrorSelectorState = {
   commonStockError: boolean;
   safeError: boolean;
@@ -11,7 +10,7 @@ type ErrorSelectorState = {
 export const getErrorSelector = createSelector(
   getSAFERowPropsSelector,
   (safeInvestors): ErrorSelectorState => {
-    const hasSafeError = safeInvestors.some((row) => row.ownership[0].note?.error === "Error");
+    const hasSafeError = safeInvestors.some((row) => row.ownershipError?.type === "error");
 
     // For future use
     return {

@@ -1,19 +1,17 @@
 import { randomFounders, randomSeed, randomSeries } from "./initialState";
 import { create } from "zustand";
-import { createSelector } from "reselect";
 import { CurrencyInputOnChangeValues } from "react-currency-input-field";
-import { BestFit, fitConversion } from "@library/safe_conversion";
-import { stringToNumber } from "@/utils/numberFormatting";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { ExistingShareholderProps } from "@/components/safe-conversion/Conversion/ExistingShareholders";
-import { getCapForSafe } from "@/utils/rowDataHelper";
+import { CapTableRowType, CommonRowType } from "@library/cap-table";
 
 // Only the state that we need to serialize
 export type ExistingShareholderState = Pick<
   ExistingShareholderProps,
   "id" | "type" | "name" | "shares"
 >;
+
 export type SAFEState = Pick<
   SAFEProps,
   "id" | "type" | "name" | "investment" | "cap" | "discount" | "conversionType" 
@@ -37,7 +35,7 @@ export interface IConversionStateData {
 export type ConversionStore = ReturnType<typeof createConversionStore>;
 
 export interface IConversionState extends IConversionStateData {
-  onAddRow: (type: "safe" | "series" | "common") => void;
+  onAddRow: (type: CapTableRowType.Common | CapTableRowType.Safe | CapTableRowType.Series) => void;
   onDeleteRow: (id: string) => void;
   onUpdateRow: (data: IRowState) => void;
   onValueChange: (
@@ -112,12 +110,12 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             ...state.rowData,
             {
               id: idx,
-              type: "safe",
               name: getRandomSeed(state.rowData),
               investment: 0,
               cap: 0,
               discount: 0,
               conversionType: "post",
+              type: CapTableRowType.Safe,
             },
           ],
         }));
@@ -128,9 +126,10 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             ...state.rowData,
             {
               id: idx,
-              type: "common",
               name: getRandomFounder(state.rowData),
               shares: 0,
+              type: CapTableRowType.Common,
+              commonType: CommonRowType.Shareholder,
             },
           ],
         }));
@@ -165,7 +164,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
     },
 
     onMoveRow: (rowId: string, afterId: string) => {
-      console.log("moving", rowId, afterId);
       const updatedRows = [...get().rowData];
       const rowIndex = updatedRows.findIndex((row) => row.id === rowId);
       const afterIndex = updatedRows.findIndex((row) => row.id === afterId);
@@ -218,7 +216,6 @@ export const createConversionStore = (initialState: IConversionStateData) =>
         },
         togglepriceRounds: () => {
           set((state) => {
-            console.log(state.pricedRounds);
             return {
               ...state,
               pricedRounds: state.pricedRounds === 0 ? 1 : 0,
@@ -227,54 +224,3 @@ export const createConversionStore = (initialState: IConversionStateData) =>
 
         },
   }));
-
-export const getPricedConversion = createSelector(
-  (state: IConversionStateData) => state.rowData,
-  (state: IConversionStateData) => state.preMoney,
-  (state: IConversionStateData) => state.targetOptionsPool,
-  (state: IConversionStateData) => state.unusedOptions,
-  (
-    rowData,
-    preMoney,
-    targetOptionsPool,
-    unusedOptions,
-  ): BestFit => {
-    const commonStock = (
-      rowData.filter(
-        (row) => row.type === "common",
-      ) as ExistingShareholderProps[]
-    )
-      .map((row) => row.shares)
-      .reduce((acc, val) => acc + val, 0);
-
-    const totalShares = commonStock;
-    const safeInvestors = rowData.filter((row) => row.type === "safe") as SAFEProps[];
-    const pricedConversion = fitConversion(
-      stringToNumber(preMoney),
-      totalShares,
-      (safeInvestors).map(
-        (row) => {
-          // Handles MFN and YC MFN safes, finds the best cap
-          const calculatedCap = getCapForSafe(row, safeInvestors);
-          // We have numerous conversion types, but we need to boil it down to pre or post
-          // The YC7P and YCMFN are both post-money safes
-          // Just set the conversion type to post if it's not pre
-          const conversionType = row.conversionType === "pre" ? "pre" : "post"
-          return {
-            investment: stringToNumber(row.investment),
-            cap: calculatedCap,
-            discount: stringToNumber(row.discount) / 100,
-            conversionType,
-          };
-        },
-      ),
-      stringToNumber(unusedOptions),
-      stringToNumber(targetOptionsPool) / 100,
-      (rowData.filter((row) => row.type === "series") as SeriesProps[]).map(
-        (row) => row.investment,
-      ),
-      { roundShares: true, roundPPSPlaces: 8 },
-    );
-    return pricedConversion;
-  },
-);

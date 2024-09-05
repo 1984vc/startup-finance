@@ -15,9 +15,11 @@ export const formatUSDWithCommas = (value: number | string) => {
   if (typeof value === "string") {
     value = stringToNumber(value);
   }
+  const maximumFractionDigits = value < 1000 ? 2 : 0
   return value.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
+    maximumFractionDigits,
   });
 };
 

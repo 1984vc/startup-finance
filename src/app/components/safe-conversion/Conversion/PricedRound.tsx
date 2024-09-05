@@ -1,10 +1,10 @@
-import { formatNumberWithCommas } from "@/utils/numberFormatting";
-import { BestFit } from "@library/safe_conversion";
+import { formatNumberWithCommas } from "@library/utils/numberFormatting";
+import { BestFit } from "@library/conversion-solver";
 import QuestionMarkTooltipComponent from "@/components/tooltip/QuestionMarkTooltip";
-import { CapTableRow } from "./CapTableResults";
+import { CapTableOwnershipError } from "@library/cap-table";
 
 export type OwnershipPctNotes = {
-  error?: "TBD" | "Error";
+  error?: CapTableOwnershipError["type"];
   explanation?: string;
 };
 
@@ -14,7 +14,6 @@ interface PricedRoundData {
   totalSeriesInvestment: number;
   totalShares: number;
   newSharesIssued: number;
-  totalPct: number;
   totalInvestedToDate: number;
   pricedConversion: BestFit;
   totalRoundDilution: number;
@@ -23,7 +22,6 @@ interface PricedRoundData {
 export interface PricedRoundPropsData {
   current: PricedRoundData;
   previous: PricedRoundData;
-  capTable: CapTableRow[];
   preMoneyChange: number;
   investmentChange: number;
   targetOptionsChange: number;
@@ -115,7 +113,7 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
             PPS
           </dt>
           <dd className="order-first text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
-            ${current.pricedConversion.pps}
+            ${current.pricedConversion.pps.toFixed(5)}
           </dd>
         </div>
         <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
@@ -175,45 +173,6 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
           </dd>
         </div>
 
-        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
-          <div className="absolute text-nt84bluedarker dark:text-nt84lightblue top-0 right-0 p-2">
-            <QuestionMarkTooltipComponent>
-              The number of outstanding shares after the round multiplied by the PPS.
-            </QuestionMarkTooltipComponent>
-          </div>
-          <div className="absolute text-nt84bluedarker bottom-0 left-0 p-2 text-xl">
-              <button
-                className="px-2 mr-2 text-nt84blue dark:text-gray-200"
-                name="decrement"
-                onClick={() => decrement("preMoney")}
-              >
-                -
-              </button>
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-200 bottom-0 z-10 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            {changes.postMoney !== 0
-              ? ` (${changes.postMoney > 0 ? "+" : ""
-              }$${formatNumberWithCommas(changes.postMoney)})`
-              : ""}
-          </div>
-          <div className="absolute text-nt84bluedarker bottom-0 right-0 p-2 text-xl">
-              <button
-                className="px-2 mr-2 text-nt84blue dark:text-gray-200"
-                name="increment"
-                onClick={() => increment("preMoney")}
-              >
-                +
-              </button>
-          </div>
-          <dt className="text-sm font-semibold leading-6 text-gray-600 dark:text-gray-200">
-            Post Money
-          </dt>
-          <dd className="order-first text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
-            <span className="text-xl p-0 m-0">
-              ${formatNumberWithCommas(current.postMoney)}
-            </span>
-          </dd>
-        </div>
         <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
           <div className="absolute text-nt84bluedarker bottom-0 left-0 p-2 text-xl">
               <button
@@ -285,6 +244,43 @@ const PricedRound: React.FC<PricedRoundProps> = (props) => {
           </dd>
         </div>
         { /* End Investment */ }
+
+        { /* PostMoney */ }
+        <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">
+          <div className="absolute text-nt84bluedarker bottom-0 left-0 p-2 text-xl">
+              <button
+                className="px-2 mr-2 text-nt84blue dark:text-gray-200"
+                name="decrement"
+                onClick={() => decrement("preMoney")}
+              >
+                -
+              </button>
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-200 bottom-0 z-10 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            {changes.postMoney !== 0
+              ? ` (${changes.postMoney > 0 ? "+" : ""
+              }$${formatNumberWithCommas(changes.postMoney)})`
+              : ""}
+          </div>
+          <div className="absolute text-nt84bluedarker bottom-0 right-0 p-2 text-xl">
+              <button
+                className="px-2 mr-2 text-nt84blue dark:text-gray-200"
+                name="increment"
+                onClick={() => increment("preMoney")}
+              >
+                +
+              </button>
+          </div>
+          <dt className="text-sm font-semibold leading-6 text-gray-600 dark:text-gray-200">
+            Post Money
+          </dt>
+          <dd className="order-first text-xl font-semibold tracking-tight text-gray-900 dark:text-gray-200">
+            <span className="text-xl p-0 m-0">
+              ${formatNumberWithCommas(current.postMoney)}
+            </span>
+          </dd>
+        </div>
+        { /* End PostMoney */ }
 
         { /* Target Options */ }
         <div className="flex flex-col bg-gray-100 p-8 text-center  relative dark:bg-nt84blue dark:text-gray-100">

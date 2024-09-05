@@ -3,6 +3,7 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   modulePathIgnorePatterns: ["build"],
+  testPathIgnorePatterns:["src/library/__tests__/cap-table/utils.ts"],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/app/$1',
     '^@library/(.*)$': '<rootDir>/src/library/$1',

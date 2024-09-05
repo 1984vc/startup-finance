@@ -1,7 +1,6 @@
 import { createSelector } from "reselect";
 import { IConversionStateData } from "../ConversionState";
 
-// Determine if we have an error that keeps us from calculating the cap table
 export const getSerializedSelector = createSelector(
   (state: IConversionStateData) => state,
   (state): IConversionStateData => {

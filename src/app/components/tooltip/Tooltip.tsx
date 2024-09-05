@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Tooltip } from "react-tooltip";
 
-const ToolipComponent: React.FC<{
+const TooltipComponent: React.FC<{
   content: string;
   children: React.ReactNode;
 }> = ({ content, children: children }) => {
@@ -11,13 +11,16 @@ const ToolipComponent: React.FC<{
       <span
         className="inline"
         data-tooltip-id={id.current}
-        data-tooltip-content={content}
       >
         {children}
       </span>
-      <Tooltip id={id.current} place="top" />
+      <Tooltip id={id.current} place="top" clickable>
+        <div className="max-w-72">
+          {content}
+        </div>
+      </Tooltip>
     </span>
   );
 };
 
-export default ToolipComponent;
+export default TooltipComponent;

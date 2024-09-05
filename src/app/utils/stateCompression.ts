@@ -1,8 +1,32 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
+import { CapTableRowType } from "@library/cap-table";
 import { compressToBase64, decompressFromBase64 } from "lz-string";
 
 // Allow for future changes to state compression and rehydration
 const VERSION_MAGIC_CODE = "AA";
+
+// We removed the `ycmfn` and `yc7p` conversion types
+const migrateState = (state: IConversionStateData): IConversionStateData => {
+  const rowData = state.rowData.map((row) => {
+    if (row.type === CapTableRowType.Safe) {
+      let conversionType = row.conversionType;
+      if (conversionType === "ycmfn") {
+        conversionType = "mfn";
+      } else if (conversionType === "yc7p") {
+        conversionType = "post";
+      }
+      return {
+        ...row,
+        conversionType,
+      };
+    }
+    return row
+  })
+  return {
+    ...state,
+    rowData,
+  };
+}
 
 const encodeURLSafeBase64 = (str: string): string => {
   // Replace characters that are not URL safe
@@ -35,5 +59,5 @@ export const decompressState = (str: string): IConversionStateData => {
   const stateBuffer = decompressFromBase64(b64str);
   const stateObj = JSON.parse(stateBuffer.toString());
   // Ensure that our old state data is still compatible
-  return stateObj as IConversionStateData;
+  return migrateState(stateObj as IConversionStateData);
 };

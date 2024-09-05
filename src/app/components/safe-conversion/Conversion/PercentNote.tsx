@@ -1,25 +1,39 @@
-import ToolipComponent from "@/components/tooltip/Tooltip";
-import { OwnershipPctNotes } from "./PricedRound";
+import TooltipComponent from "@/components/tooltip/Tooltip";
+import { CapTableOwnershipError } from "@library/cap-table";
 
 interface PercentNoteProps {
   pct: number;
-  note?: OwnershipPctNotes;
+  note?: string;
+  error?: CapTableOwnershipError["type"];
 }
 
-const PercentNote: React.FC<PercentNoteProps> = ({ pct, note }) => {
-    if (note && note.error === "TBD") {
+const PercentNote: React.FC<PercentNoteProps> = ({ pct, note, error}) => {
+    if (error === "caveat") {
       return (
-        <ToolipComponent content={note.explanation ?? ""}>
-          {pct.toFixed(2)}%
-          <sup>*</sup>
-        </ToolipComponent>
+        <TooltipComponent content={note ?? ""}>
+          { pct.toFixed(2) }%
+          { note && 
+            <sup>*</sup>
+          }
+        </TooltipComponent>
+      )
+    } else if (error === "tbd") {
+      return (
+        <TooltipComponent content={note ?? ""}>
+          TBD
+          { note && 
+            <sup>*</sup>
+          }
+        </TooltipComponent>
       );
-    } else if (note && note.error === "Error") {
+    } else if (error === "error") {
       return (
-        <ToolipComponent content={note.explanation ?? ""}>
+        <TooltipComponent content={note ?? ""}>
           Error
-          <sup>*</sup>
-        </ToolipComponent>
+          { note && 
+            <sup>*</sup>
+          }
+        </TooltipComponent>
       );
     }
     return pct.toFixed(2) + "%";

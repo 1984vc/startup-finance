@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { formatNumberWithCommas } from "@/utils/numberFormatting";
+import { formatNumberWithCommas } from "@library/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { Bars4Icon, XCircleIcon } from "@heroicons/react/24/outline";
-import { OwnershipPctNotes } from "./PricedRound";
 import PercentNote from "./PercentNote";
+import { SafeCapTableRow } from "@library/cap-table";
+import TooltipComponent from "@/components/tooltip/Tooltip";
 
-export interface SAFEProps {
+export type SAFEProps = SafeCapTableRow & {
   id: string;
-  type: "safe";
   name: string;
-  investment: number;
-  cap: number;
-  discount: number;
   // Legacy where we used to allow specific version of SAFE
   conversionType: "post" | "pre" | "mfn" | "yc7p" | "ycmfn";
-  ownership: {
-    shares?: number
-    percent: number;
-    note?: OwnershipPctNotes
-    pps?: number
-  } [];
+  sideLetters?: ['mfn'];
   allowDelete?: boolean;
-  shares?: number;
   disabledFields?: string[];
 }
 
@@ -77,17 +68,14 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
   }
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>): void => {
-    console.log("drag start", data.name, " - ", data.id);
     event.dataTransfer.setData('text/plain', data.id)
     onDragStart(event, data.id);
   }
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>): void => {
     event.preventDefault();
-    console.log("drag over", data.name, " - ", data.id);
     onDragOver(event, data.id);
   };
-
 
   return (
     <div
@@ -143,7 +131,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         />
       )}
       {data.disabledFields?.includes("cap") ? (
-        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(Math.round(data.cap))}</div>
+        <div className="w-36 px-3 border-b py-2 border-gray-300 dark:border-gray-700">${formatNumberWithCommas(Math.round(data.cap ?? 0))}</div>
       ) : (
       <CurrencyInput
         type="text"
@@ -177,7 +165,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         allowDecimals={false}
       />
       )}
-      {data.discount > 99 && <p className="text-red-500">Invalid discount</p>}
+      {(data.discount ?? 0) > 99 && <p className="text-red-500">Invalid discount</p>}
       <select
         name="conversionType"
         value={conversionType()}
@@ -189,7 +177,7 @@ const SAFEInputRow: React.FC<SAFEInputRowProps> = ({
         <option value="mfn">Uncapped MFN</option>
       </select>
       <div className="w-24 border-b py-2 border-gray-300 dark:border-gray-700">
-        <PercentNote pct={data.ownership[0].percent} note={data.ownership[0].note} />
+        <PercentNote pct={data.ownershipPct ?? 0} note={data.ownershipError?.reason} error={data.ownershipError?.type} />
       </div>
     </div>
   );
@@ -239,11 +227,13 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
   return (
     <div className="not-prose">
       <div className="flex items-center space-x-4 mb-4">
-        <div className="w-6"> </div>
+        <div className="w-16"> </div>
         <div className="w-48">Name</div>
         <div className="w-36">Investment</div>
         <div className="w-36">Cap</div>
-        <div className="w-28">Discount</div>
+        <div className="w-28"><TooltipComponent
+          content="Discount to the price of the next round when available (typically 0%-25%).  Note that the actual Post Money Safe uses a Discount Rate which is (1 - Discount). So if the Safe has a Discount Rate of 80% then the Discount is 20% and you should enter 20%"
+          >Discount<sup>?</sup></TooltipComponent></div>
         <div className="w-36">Type</div>
         <div className="w-24">Ownership %</div>
       </div>

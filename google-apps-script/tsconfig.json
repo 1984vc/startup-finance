@@ -13,15 +13,18 @@
     ],
     "types": [
       "google-apps-script"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@library/*": ["../src/library/*"],
+    }
   },
   "include": [
-    "../src/library"
+    "./src/index.ts"
   ],
   "exclude": [
-    "../src/library/__tests__"
   ],
   "files": [
-    "../src/library/index.ts"
+    "./src/index.ts"
   ]
 }
