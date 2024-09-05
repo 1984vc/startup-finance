@@ -29,7 +29,7 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
     }
   })
 
-  const safeCapTable: SafeCapTableRow[] = safeNotes.map((safe, idx) => {
+    const pps = pricedConversion.ppss[idx] || 0;
     const pps = pricedConversion.ppss[idx];
     const shares = roundShares(safe.investment / pps, pricedConversion.roundingStrategy);
     const ownershipPct = shares / totalShares;
