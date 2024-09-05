@@ -12,8 +12,8 @@ export const getSeriesPropsSelector = createSelector(
     if (!pricedConversion) throw new Error("Priced conversion not found");
 
     return rows.map((row) => {
-      const shares = Math.floor(row.investment / pricedConversion.pps) * 100;
-      const ownershipPct = shares / pricedConversion.totalShares;
+      const shares = Math.floor(row.investment / pricedConversion.pps);
+      const ownershipPct = shares / pricedConversion.totalShares * 100;
       return {
         id: row.id,
         type: CapTableRowType.Series,
