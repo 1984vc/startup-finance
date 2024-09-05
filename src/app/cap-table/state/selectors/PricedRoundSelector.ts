@@ -3,7 +3,7 @@ import { ExistingShareholderState, IConversionStateData, IRowState, SAFEState } 
 import { buildPricedRoundCapTable, CapTableRowType, CommonRowType, CommonStockholder, SAFENote, SeriesInvestor } from "@library/cap-table";
 import { CapTableProps } from "@/components/safe-conversion/Conversion/CapTableResults";
 import { BestFit, fitConversion } from "@library/conversion-solver";
-import { stringToNumber } from "@/utils/numberFormatting";
+import { stringToNumber } from "@library/utils/numberFormatting";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { getCapForSafe } from "@library/safe-calcs";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";

@@ -26,5 +26,5 @@
       "@library/*": ["./src/library/*"],
     }
   },
-  "include": ["src"]
+  "include": ["src", "google-apps-script/src/index.ts"]
 }

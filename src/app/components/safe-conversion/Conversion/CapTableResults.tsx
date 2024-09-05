@@ -1,4 +1,4 @@
-import { formatNumberWithCommas } from "@/utils/numberFormatting";
+import { formatNumberWithCommas } from "@library/utils/numberFormatting";
 import { CapTableRow, TotalCapTableRow } from "@library/cap-table";
 
 export type CapTableProps = {

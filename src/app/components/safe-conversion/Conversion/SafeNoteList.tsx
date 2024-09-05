@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { formatNumberWithCommas } from "@/utils/numberFormatting";
+import { formatNumberWithCommas } from "@library/utils/numberFormatting";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { Bars4Icon, XCircleIcon } from "@heroicons/react/24/outline";

@@ -8,7 +8,7 @@ import {
 import ExisingShareholderList from "@/components/safe-conversion/Conversion/ExistingShareholders";
 import PricedRound from "@/components/safe-conversion/Conversion/PricedRound";
 import SeriesInvestorList from "@/components/safe-conversion/Conversion/SeriesInvestorList";
-import { stringToNumber } from "@/utils/numberFormatting";
+import { stringToNumber } from "@library/utils/numberFormatting";
 import { getSAFERowPropsSelector } from "@/cap-table/state/selectors/SAFEPropsSelector";
 import { getSeriesPropsSelector } from "@/cap-table/state/selectors/SeriesPropsSelector";
 import SafeNoteList from "@/components/safe-conversion/Conversion/SafeNoteList";

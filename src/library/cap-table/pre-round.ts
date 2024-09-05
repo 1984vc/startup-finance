@@ -3,7 +3,7 @@ import { checkSafeNotesForErrors, populateSafeCaps } from "@library/safe-calcs";
 import { RoundingStrategy, roundShares } from "@library/utils/rounding";
 import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, StakeHolder, CapTableRowType } from ".";
 import { buildErrorPreRoundCapTable, buildTBDPreRoundCapTable } from "./error";
-import { formatUSDWithCommas } from "@/utils/numberFormatting";
+import { formatUSDWithCommas } from "@library/utils/numberFormatting";
 
 // Builds a preRound cap table assuming there are no refreshed options
 // Needs to handle 3 possible states:

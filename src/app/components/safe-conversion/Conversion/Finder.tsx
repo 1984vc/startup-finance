@@ -3,7 +3,7 @@ import { ClockIcon } from "@heroicons/react/24/outline";
 import { getRecentStates } from "@/cap-table/state/localstorage";
 import { compressState } from "@/utils/stateCompression";
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
-import { shortenedUSD } from "@/utils/numberFormatting";
+import { shortenedUSD } from "@library/utils/numberFormatting";
 
 // Get a list of recent states from local storage
 // Also allow for a reset of the recent states
