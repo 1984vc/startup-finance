@@ -12,14 +12,13 @@ type CapTableRowItemProps = {
   change?: number
   ownershipError?: string;
   ownershipNotes?: string;
-  idx: number;
 }
 
 const roundTo = (num: number, decimal: number): number => {
   return Math.round(num * Math.pow(10, decimal)) / Math.pow(10, decimal);
 };
 
-const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, idx}) => {
+const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change }) => {
   const investment = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.investment : null
   const pps = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.pps : null
 
@@ -115,7 +114,6 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
                 key={`captablerow-${idx}`}
                 shareholder={shareholder}
                 change={changes[idx]}
-                idx={idx}
               />
             ))}
             <tr className="h-4">
