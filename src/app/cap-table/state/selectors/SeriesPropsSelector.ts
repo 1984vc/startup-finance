@@ -8,24 +8,20 @@ export const getSeriesPropsSelector = createSelector(
   getPricedConversion,
   (state: IConversionStateData) => state.rowData,
   (pricedConversion, rowData): SeriesProps[] => {
-    const rows = rowData.filter((row) => row.type === "series");
-    const seriesOwnershipPct = rows.map((data) => {
-      if (!pricedConversion) return [0, 0];
-      const shares = Math.floor(data.investment / pricedConversion.pps);
-      return [shares, (shares / pricedConversion.totalShares) * 100, pricedConversion.pps];
-    });
+    const rows = rowData.filter((row) => row.type === CapTableRowType.Series);
+    if (!pricedConversion) throw new Error("Priced conversion not found");
 
-    return rows.map((row, idx) => {
+    return rows.map((row) => {
+      const shares = Math.floor(row.investment / pricedConversion.pps) * 100;
+      const ownershipPct = shares / pricedConversion.totalShares;
       return {
         id: row.id,
         type: CapTableRowType.Series,
         name: row.name,
         investment: row.investment,
-        ownership: [{
-          shares: seriesOwnershipPct[idx][0] ?? 0,
-          percent: seriesOwnershipPct[idx][1] ?? 0,
-          pps: seriesOwnershipPct[idx][2] ?? 0,
-        }],
+        shares,
+        ownershipPct,
+        pps: pricedConversion.pps,
         allowDelete: rows.length > 1,
       };
     });

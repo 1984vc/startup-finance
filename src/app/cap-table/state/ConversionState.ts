@@ -103,7 +103,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
 
     onAddRow: (type: "safe" | "series" | "common") => {
       const idx = getNextIdx(get().rowData);
-      if (type === "safe") {
+      if (type === CapTableRowType.Safe) {
         set((state) => ({
           ...state,
           rowData: [
@@ -119,7 +119,7 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             },
           ],
         }));
-      } else if (type === "common") {
+      } else if (type === CapTableRowType.Common) {
         set((state) => ({
           ...state,
           rowData: [
@@ -133,14 +133,14 @@ export const createConversionStore = (initialState: IConversionStateData) =>
             },
           ],
         }));
-      } else if (type === "series") {
+      } else if (type === CapTableRowType.Series) {
         set((state) => ({
           ...state,
           rowData: [
             ...state.rowData,
             {
               id: idx,
-              type: "series",
+              type: CapTableRowType.Series,
               name: getRandomInvestor(state.rowData),
               investment: 0,
             },
