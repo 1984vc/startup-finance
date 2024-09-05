@@ -2,19 +2,12 @@ import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { SeriesCapTableRow } from "@library/cap-table";
 
-export interface SeriesProps {
+export type SeriesProps = SeriesCapTableRow & {
   id: string;
-  type: "series";
   name: string;
   investment: number;
-  ownership: {
-    shares?: number;
-    percent: number;
-    pps: number;
-    error?: string | undefined;
-    reason?: string | undefined;
-  }[];
   allowDelete?: boolean;
 }
 
@@ -78,7 +71,7 @@ const SeriesInvestorRow: React.FC<SeriesRowProps> = ({
         prefix="$"
         decimalScale={0}
       />
-      <div className="w-24 text-right">{data.ownership[0].percent.toFixed(2)}%</div>
+      <div className="w-24 text-right">{data.ownershipPct.toFixed(2)}%</div>
     </div>
   );
 };

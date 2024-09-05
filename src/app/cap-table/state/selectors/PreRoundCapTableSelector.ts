@@ -14,7 +14,7 @@ export const getPreRoundCapTable = createSelector(
     rowData,
     unusedOptions
   ): CapTableProps => {
-    const commonStock: CommonStockholder[] = (rowData.filter((row) => row.type === "common") as ExistingShareholderState[]).map(
+    const commonStock: CommonStockholder[] = (rowData.filter((row) => row.type === CapTableRowType.Common) as ExistingShareholderState[]).map(
       (row) => {
         return {
           name: row.name ?? "",
@@ -31,7 +31,7 @@ export const getPreRoundCapTable = createSelector(
       commonType: CommonRowType.UnusedOptions
     })
 
-    const safeNotes: SAFENote[] = (rowData.filter((row) => row.type === "safe") as SAFEState[]).map(
+    const safeNotes: SAFENote[] = (rowData.filter((row) => row.type === CapTableRowType.Safe) as SAFEState[]).map(
       (row) => {
         const conversionType = row.conversionType === "mfn" ? "post" : row.conversionType === 'post' ? "post" : "pre";
         return {
@@ -52,7 +52,7 @@ export const getPreRoundCapTable = createSelector(
       totalRow: total,
       changes: [],
       rows: [...common, ...safes].map((row) => {
-        if (row.type === 'common') {
+        if (row.type === CapTableRowType.Common) {
           return {
             id: row.id ?? "",
             name: row.name ?? "",

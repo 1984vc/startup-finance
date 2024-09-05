@@ -6,8 +6,8 @@ import QuestionMarkTooltipComponent from "@/components/tooltip/QuestionMarkToolt
 import { CommonCapTableRow } from "@library/cap-table";
 
 export type ExistingShareholderProps = CommonCapTableRow & {
+  // We need to ensure we can identify the row when updating or deleting
   id: string;
-  allowDelete?: boolean;
 }
 
 interface ExistingShareholderRowProps {

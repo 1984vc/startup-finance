@@ -1,5 +1,5 @@
 import { formatNumberWithCommas } from "@library/utils/numberFormatting";
-import { CapTableRow, TotalCapTableRow } from "@library/cap-table";
+import { CapTableRow, CapTableRowType, TotalCapTableRow } from "@library/cap-table";
 
 export type CapTableProps = {
   rows: CapTableRow[];
@@ -19,8 +19,8 @@ const roundTo = (num: number, decimal: number): number => {
 };
 
 const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change }) => {
-  const investment = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.investment : null
-  const pps = (shareholder.type === "safe" || shareholder.type === "series") ? shareholder.pps : null
+  const investment = (shareholder.type === CapTableRowType.Safe || shareholder.type === CapTableRowType.Series) ? shareholder.investment : null
+  const pps = (shareholder.type === CapTableRowType.Safe || shareholder.type === CapTableRowType.Series) ? shareholder.pps : null
 
   const hasChanges = change !== undefined
   const changePct = roundTo((change ?? 0) * 100, 2)

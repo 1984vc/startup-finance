@@ -1,6 +1,6 @@
 import { BestFit } from "@library/conversion-solver";
 import { roundShares } from "@library/utils/rounding";
-import { StakeHolder, CommonCapTableRow, SafeCapTableRow, SeriesCapTableRow, RefreshedOptionsCapTableRow, TotalCapTableRow, CapTableOwnershipError, CommonStockholder, SAFENote, SeriesInvestor, CapTableRowType } from ".";
+import { StakeHolder, CommonCapTableRow, SafeCapTableRow, SeriesCapTableRow, RefreshedOptionsCapTableRow, TotalCapTableRow, CapTableOwnershipError, CommonStockholder, SAFENote, SeriesInvestor, CapTableRowType, CommonRowType } from ".";
 
 
 export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders: StakeHolder[]): 
@@ -12,9 +12,9 @@ export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders
     total: TotalCapTableRow,
     error?: CapTableOwnershipError
   } => {
-  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common" && stakeHolder.commonType !== 'unusedOptions') as CommonStockholder[];
-  const safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[];
-  const seriesInvestors = stakeHolders.filter((stakeHolder) => stakeHolder.type === "series") as SeriesInvestor[];
+  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Common && stakeHolder.commonType !== CommonRowType.UnusedOptions) as CommonStockholder[];
+  const safeNotes = stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Safe) as SAFENote[];
+  const seriesInvestors = stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Series) as SeriesInvestor[];
   const totalShares = pricedConversion.totalShares;
 
   const totalInvestment = [...seriesInvestors, ...safeNotes].reduce((acc, investor) => acc + investor.investment, 0);

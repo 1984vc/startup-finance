@@ -17,7 +17,7 @@ export type ResultSelectorState = IConversionStateData & {
 
 const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFENote | SeriesInvestor)[] => {
 
-    const commonStock: CommonStockholder[] = (rowData.filter((row) => row.type === "common") as ExistingShareholderState[]).map(
+    const commonStock: CommonStockholder[] = (rowData.filter((row) => row.type === CapTableRowType.Common) as ExistingShareholderState[]).map(
       (row) => {
         return {
           id: row.id,
@@ -29,7 +29,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
       }
     );
 
-    const safeNotes: SAFENote[] = (rowData.filter((row) => row.type === "safe") as SAFEState[]).map(
+    const safeNotes: SAFENote[] = (rowData.filter((row) => row.type === CapTableRowType.Safe) as SAFEState[]).map(
       (row) => {
         const conversionType = row.conversionType === "mfn" ? "post" : row.conversionType === 'post' ? "post" : "pre";
         return {
@@ -45,7 +45,7 @@ const rowDataToStakeholders = (rowData: IRowState[]): (CommonStockholder | SAFEN
       }
     );
 
-    const seriesInvestors: SeriesInvestor[] = rowData.filter((row) => row.type === "series").map(
+    const seriesInvestors: SeriesInvestor[] = rowData.filter((row) => row.type === CapTableRowType.Series).map(
       (row) => {
         return {
           id: row.id,
@@ -77,14 +77,14 @@ export const getPricedConversion = createSelector(
     }
     const commonStock = (
       rowData.filter(
-        (row) => row.type === "common",
+        (row) => row.type === CapTableRowType.Common,
       ) as ExistingShareholderState[]
     )
       .map((row) => row.shares)
       .reduce((acc, val) => acc + val, 0);
 
     const totalShares = commonStock;
-    const safeInvestors = rowData.filter((row) => row.type === "safe") as SAFEProps[];
+    const safeInvestors = rowData.filter((row) => row.type === CapTableRowType.Safe) as SAFEProps[];
     const pricedConversion = fitConversion(
       stringToNumber(preMoney),
       totalShares,
@@ -107,7 +107,7 @@ export const getPricedConversion = createSelector(
       ),
       stringToNumber(unusedOptions),
       stringToNumber(targetOptionsPool) / 100,
-      (rowData.filter((row) => row.type === "series") as SeriesProps[]).map(
+      (rowData.filter((row) => row.type === CapTableRowType.Series) as SeriesProps[]).map(
         (row) => row.investment,
       ),
       { roundShares: true, roundPPSPlaces: 8 },
@@ -152,13 +152,13 @@ export const getPricedRoundData = createSelector(
 
       // Get the Series Investments and distribute the investmentChange over the series investors pro rata
       const initialSeriesInvestment = rowData
-        .filter((row) => row.type === "series")
+        .filter((row) => row.type === CapTableRowType.Series)
         .map((row) => row.investment)
         .reduce((acc, val) => acc + val, 0);
 
       // Pro rata the investment change over the series investors
       const seriesInvestmentChanges = rowData.map((row) => {
-        if (row.type === "series") {
+        if (row.type === CapTableRowType.Series) {
           return investmentChange * (row.investment / initialSeriesInvestment);
         }
         return 0;
@@ -166,7 +166,7 @@ export const getPricedRoundData = createSelector(
 
       // Update the series investments with the above pro rata changes
       updatedRows = rowData.map((row, idx) => {
-        if (row.type === "series") {
+        if (row.type === CapTableRowType.Series) {
           return {
             ...row,
             investment: row.investment + seriesInvestmentChanges[idx],
@@ -231,7 +231,7 @@ export const getPricedRoundCapTableSelector = createSelector(
       totalRow: total,
       changes: ownershipChanges,
       rows: capTableRows.map((row) => {
-        if (row.type === 'safe') {
+        if (row.type === CapTableRowType.Safe) {
           return {
             name: row.name ?? "",
             shares: row.shares,
@@ -243,7 +243,7 @@ export const getPricedRoundCapTableSelector = createSelector(
             ownershipPct: (row.ownershipPct ?? 0) * 100,
           }
         }
-        if (row.type === 'series') {
+        if (row.type === CapTableRowType.Series) {
           const pps = row.pps
           const investment = row.investment
           return {
@@ -255,7 +255,7 @@ export const getPricedRoundCapTableSelector = createSelector(
             ownershipPct: (row.ownershipPct ?? 0) * 100,
           }
         }
-        if (row.type === 'common') {
+        if (row.type === CapTableRowType.Common) {
           return {
             name: row.name ?? "",
             shares: row.shares,
@@ -264,7 +264,7 @@ export const getPricedRoundCapTableSelector = createSelector(
             commonType: row.commonType,
           }
         }
-        if (row.type === 'refreshedOptions') {
+        if (row.type === CapTableRowType.RefreshedOptions) {
           return {
             name: row.name ?? "",
             shares: row.shares,

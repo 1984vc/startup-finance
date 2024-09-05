@@ -11,13 +11,13 @@ import { formatUSDWithCommas } from "@library/utils/numberFormatting";
 // 2. Round entirely TBD because no max cap
 // 3. Error due to some non-sensical input (investment exceeds cap)
 export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roundingStrategy: RoundingStrategy = DEFAULT_ROUNDING_STRATEGY): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow} => {
-  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common") as CommonStockholder[];
+  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Common) as CommonStockholder[];
 
   // The premoney shares are used to determine the pre-money safe conversions (SAFE cap / PreMoneyShares)
   const preMoneyShares = commonShareholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
 
   // Handle any MFN side-letters and find the following best cap
-  const safeNotes = populateSafeCaps(stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[])
+  const safeNotes = populateSafeCaps(stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Safe) as SAFENote[])
 
   // Handle Error, just stop here and generate an error cap table
   if (safeNotes.some((safeNote) => safeNote.cap !== 0 && safeNote.cap <= safeNote.investment)) {
@@ -161,8 +161,8 @@ export const buildEstimatedPreRoundCapTable = (stakeHolders: StakeHolder[], roun
 
 // Build a pre-round cap table once we have a pricedRound to convert at
 export const buildPreRoundCapTable = (pricedConversion: BestFit, stakeHolders: StakeHolder[]): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow} => {
-  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === "common") as CommonStockholder[];
-  const safeNotes = populateSafeCaps(stakeHolders.filter((stakeHolder) => stakeHolder.type === "safe") as SAFENote[])
+  const commonShareholders = stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Common) as CommonStockholder[];
+  const safeNotes = populateSafeCaps(stakeHolders.filter((stakeHolder) => stakeHolder.type === CapTableRowType.Safe) as SAFENote[])
   const totalShares = pricedConversion.totalShares - pricedConversion.seriesShares - pricedConversion.additionalOptions;
 
   const totalInvestment = [...safeNotes].reduce((acc, investor) => acc + investor.investment, 0);

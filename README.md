@@ -52,6 +52,11 @@ If you're more comforable with a spreadsheet, we offer this script as a Google A
 1. Run the development server - `yarn dev`
 1. Visit the localhost server at http://localhost:3000/startup-finance/safe-conversion
 
+### Library
+
+The majority of the calculations and core work happen in the library. If you have issues with the underlying math and calculation,
+it's likely in the library. Please write a test showing the issue along with a proposed fix.
+
 ### Testing / Linting / Staging
 
 This library is tested using Jest, which you can run with `yarn test`
