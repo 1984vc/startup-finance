@@ -37,7 +37,7 @@ const getMFNCapAfter = (rows: SAFENote[], idx: number): number => {
 export const getCapForSafe = (idx: number, safes: SAFENote[]): number => {
   const safe = safes[idx];
   if (safe.conversionType === "mfn" || safe.conversionType === "ycmfn" || safe.sideLetters?.includes("mfn")) {
-    return getMFNCapAter(safes, idx);
+    return getMFNCapAfter(safes, idx);
   }
   return safe.cap;
 };
