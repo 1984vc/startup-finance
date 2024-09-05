@@ -35,7 +35,7 @@ const CapTableRowItem: React.FC<CapTableRowItemProps> = ({shareholder, change, i
   }
 
   return (
-    <tr className="" key={`shareholder-${idx}`}>
+    <tr className="">
       <td className="py-3 px-2 pb-1 text-left border-b border-gray-300 dark:border-gray-700">
         {shareholder.name}
       </td>
@@ -112,6 +112,7 @@ export const CapTableResults: React.FC<CapTableProps> = (props) => {
           <tbody className="not-prose font-bold">
             {rows.map((shareholder, idx) => (
               <CapTableRowItem
+                key={`captablerow-${idx}`}
                 shareholder={shareholder}
                 change={changes[idx]}
                 idx={idx}

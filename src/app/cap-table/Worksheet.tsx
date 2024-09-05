@@ -23,6 +23,7 @@ import { getCommonOnlyCapTable } from "./state/selectors/CommonOnlyCapTableSelec
 import { getPreRoundCapTable } from "./state/selectors/PreRoundCapTableSelector";
 import { getPricedConversion, getPricedRoundCapTableSelector, getPricedRoundOverviewSelector } from "./state/selectors/PricedRoundSelector";
 import TooltipComponent from "@/components/tooltip/Tooltip";
+import { CapTableRowType } from "@library/cap-table";
 
 type WorksheetProps = {
   conversionState: IConversionState;
@@ -105,7 +106,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
       <div>
         <ExisingShareholderList
           rows={getCommonOnlyCapTable(conversionState)}
-          onAddRow={() => onAddRow("common")}
+          onAddRow={() => onAddRow(CapTableRowType.Common)}
           onDelete={onDeleteRow}
           onUpdate={(data) => {
             if (data.id === "UnusedOptionsPool") {
@@ -120,7 +121,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
       <div>
         <SafeNoteList
           rows={getSAFERowPropsSelector(conversionState)}
-          onAddRow={() => onAddRow("safe")}
+          onAddRow={() => onAddRow(CapTableRowType.Safe)}
           onDelete={onDeleteRow}
           onUpdate={onUpdateRow}
           onMoveRow={onMoveRow}
@@ -218,7 +219,7 @@ const Worksheet: React.FC<WorksheetProps> = ({conversionState, currentStateId, l
           <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
             <SeriesInvestorList
               rows={getSeriesPropsSelector(conversionState)}
-              onAddRow={() => onAddRow("series")}
+              onAddRow={() => onAddRow(CapTableRowType.Series)}
               onDelete={onDeleteRow}
               onUpdate={onUpdateRow}
             />
