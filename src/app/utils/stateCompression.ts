@@ -1,5 +1,5 @@
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
-import { CapTableRowType } from "@library/cap-table";
+import { CapTableRowType } from "@library/cap-table/types";
 import { compressToBase64, decompressFromBase64 } from "lz-string";
 
 // Allow for future changes to state compression and rehydration

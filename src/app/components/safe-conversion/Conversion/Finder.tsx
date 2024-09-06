@@ -4,7 +4,7 @@ import { getRecentStates } from "@/cap-table/state/localstorage";
 import { compressState } from "@/utils/stateCompression";
 import { IConversionStateData } from "@/cap-table/state/ConversionState";
 import { shortenedUSD } from "@library/utils/numberFormatting";
-import { CapTableRowType } from "@library/cap-table";
+import { CapTableRowType } from "@library/cap-table/types";
 
 // Get a list of recent states from local storage
 // Also allow for a reset of the recent states

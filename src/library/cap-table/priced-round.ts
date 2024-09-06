@@ -1,6 +1,6 @@
 import { BestFit } from "@library/conversion-solver";
 import { roundShares } from "@library/utils/rounding";
-import { StakeHolder, CommonCapTableRow, SafeCapTableRow, SeriesCapTableRow, RefreshedOptionsCapTableRow, TotalCapTableRow, CapTableOwnershipError, CommonStockholder, SAFENote, SeriesInvestor, CapTableRowType, CommonRowType } from ".";
+import { StakeHolder, CommonCapTableRow, SafeCapTableRow, SeriesCapTableRow, RefreshedOptionsCapTableRow, TotalCapTableRow, CapTableOwnershipError, CommonStockholder, SAFENote, SeriesInvestor, CapTableRowType, CommonRowType } from "./types";
 
 
 export const buildPricedRoundCapTable = (pricedConversion: BestFit, stakeHolders: StakeHolder[]): 

@@ -2,7 +2,7 @@ import React from "react";
 import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { XCircleIcon } from "@heroicons/react/24/outline";
-import { SeriesCapTableRow } from "@library/cap-table";
+import { SeriesCapTableRow } from "@library/cap-table/types";
 
 export type SeriesProps = SeriesCapTableRow & {
   id: string;

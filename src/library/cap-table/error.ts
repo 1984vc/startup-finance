@@ -1,4 +1,4 @@
-import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, CapTableOwnershipError, CapTableRowType } from ".";
+import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, CapTableOwnershipError, CapTableRowType } from "./types";
 
 export const buildTBDPreRoundCapTable = (safeNotes: SAFENote[], common: CommonStockholder[]): {common: CommonCapTableRow[], safes: SafeCapTableRow[], total: TotalCapTableRow} => {
   const totalInvestment = safeNotes.reduce((acc, investor) => acc + investor.investment, 0);

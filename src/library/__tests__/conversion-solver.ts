@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { CapTableRowType, SAFENote } from "@library/cap-table";
+import { CapTableRowType, SAFENote } from "@library/cap-table/types";
 import { fitConversion } from "@library/conversion-solver";
 
 describe("converting safe investments with existing common stock", () => {

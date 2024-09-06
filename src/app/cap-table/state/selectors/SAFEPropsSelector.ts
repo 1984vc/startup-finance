@@ -5,7 +5,7 @@ import {
 } from "../ConversionState";
 import { SAFEProps } from "@/components/safe-conversion/Conversion/SafeNoteList";
 import { getPreRoundCapTable } from "./PreRoundCapTableSelector";
-import { CapTableRowType } from "@library/cap-table";
+import { CapTableRowType } from "@library/cap-table/types";
 
 const determineRowDisabledFields = (row: SAFEState) => {
   if (row.conversionType === "mfn") return ["cap"]

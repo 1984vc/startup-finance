@@ -14,7 +14,7 @@ describe("SAFE Props selector behaviour", () => {
     );
     expect(safeNotes[0].ownershipPct?.toFixed(2)).toEqual("7.00");
   });
-  test("Handle special SAFE notes and their disabled fields", () => {
+  test("Handle special SAFEs and their disabled fields", () => {
     const store = createConversionStore(fixtureData as IConversionStateData);
     const safeNotes = getSAFERowPropsSelector(
       store.getState(),

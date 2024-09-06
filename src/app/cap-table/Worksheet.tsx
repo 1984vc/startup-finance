@@ -23,7 +23,7 @@ import { getCommonOnlyCapTable } from "./state/selectors/CommonOnlyCapTableSelec
 import { getPreRoundCapTable } from "./state/selectors/PreRoundCapTableSelector";
 import { getPricedConversion, getPricedRoundCapTableSelector, getPricedRoundOverviewSelector } from "./state/selectors/PricedRoundSelector";
 import TooltipComponent from "@/components/tooltip/Tooltip";
-import { CapTableRowType } from "@library/cap-table";
+import { CapTableRowType } from "@library/cap-table/types";
 
 type WorksheetProps = {
   conversionState: IConversionState;

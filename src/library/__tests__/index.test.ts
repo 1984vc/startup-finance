@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@jest/globals";
-import { SAFE_CONVERSION } from "../index";
+import { SAFE_CONVERSION } from "../../../google-apps-script/src/index";
 
 describe("converting safe investments with existing common stock", () => {
   test("matches our Google Sheet", () => {

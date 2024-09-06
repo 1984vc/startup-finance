@@ -3,7 +3,7 @@ import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import QuestionMarkTooltipComponent from "@/components/tooltip/QuestionMarkTooltip";
-import { CommonCapTableRow } from "@library/cap-table";
+import { CommonCapTableRow } from "@library/cap-table/types";
 
 export type ExistingShareholderProps = CommonCapTableRow & {
   // We need to ensure we can identify the row when updating or deleting

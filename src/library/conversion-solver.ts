@@ -1,4 +1,4 @@
-import { SAFENote } from "./cap-table";
+import { SAFENote } from "./cap-table/types";
 import { sumSafeConvertedShares, safeConvert } from "./safe-calcs";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 

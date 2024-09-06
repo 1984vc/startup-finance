@@ -1,5 +1,5 @@
 import { expect } from "@jest/globals";
-import { CapTableRow, TotalCapTableRow, SafeCapTableRow, SeriesCapTableRow, CapTableRowType } from "@library/cap-table";
+import { CapTableRow, TotalCapTableRow, CapTableRowType, SafeCapTableRow, SeriesCapTableRow } from "@library/cap-table/types";
 import { roundToPlaces } from "@library/utils/rounding";
 
 export const crossCheckCapTableResults = (rows: CapTableRow[], total: TotalCapTableRow) => {

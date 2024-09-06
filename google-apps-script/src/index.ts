@@ -1,35 +1,12 @@
 // You can access any of the global GAS objects in this file. You can also
 // import local files or external dependencies:
+import { SAFENote, CapTableRowType } from "@library/cap-table/types";
 import {
   DEFAULT_ROUNDING_STRATEGY,
   fitConversion,
 } from "@library/conversion-solver";
 import { RoundingStrategy } from "@library/utils/rounding";
 
-export enum CapTableRowType {
-  Common = "common",
-  Safe = "safe",
-  Series = "series",
-  Total = "total",
-  RefreshedOptions = "refreshedOptions",
-}
-
-export type BaseStake = {
-  id?: string;
-  name?: string;
-  shares?: number;
-  type: CapTableRowType.Common | CapTableRowType.Safe | CapTableRowType.Series;
-}
-
-export type SAFENote = BaseStake & {
-  investment: number;
-  cap: number;
-  discount: number;
-  type: CapTableRowType.Safe;
-  // TODO: Pro-Rata is not implemented yet
-  sideLetters?: ("mfn" | "pro-rata")[];
-  conversionType: "pre" | "post" | "mfn" | "yc7p" | "ycmfn";
-}
 
 type SAFE_CONVERSION_RESULT = [
   ["Result", string],

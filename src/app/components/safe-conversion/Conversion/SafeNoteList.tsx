@@ -4,7 +4,7 @@ import CurrencyInput from "react-currency-input-field";
 import { RowsProps } from "./PropTypes";
 import { Bars4Icon, XCircleIcon } from "@heroicons/react/24/outline";
 import PercentNote from "./PercentNote";
-import { SafeCapTableRow } from "@library/cap-table";
+import { SafeCapTableRow } from "@library/cap-table/types";
 import TooltipComponent from "@/components/tooltip/Tooltip";
 
 export type SAFEProps = SafeCapTableRow & {

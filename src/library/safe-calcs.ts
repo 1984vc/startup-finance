@@ -1,4 +1,4 @@
-import { CapTableOwnershipError, SAFENote } from "./cap-table";
+import { CapTableOwnershipError, SAFENote } from "./cap-table/types";
 import { RoundingStrategy, roundPPSToPlaces, roundShares } from "./utils/rounding";
 
 const isMFN = (safe: SAFENote): boolean => {

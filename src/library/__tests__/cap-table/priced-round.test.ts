@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@jest/globals";
-import { buildPricedRoundCapTable, CapTableRowType, CommonRowType, CommonStockholder, SAFENote, SeriesInvestor } from "@library/cap-table";
+import { buildPricedRoundCapTable } from "@library/cap-table";
 import { DEFAULT_ROUNDING_STRATEGY, fitConversion } from "@library/conversion-solver";
 import { crossCheckCapTableResults } from "./utils";
+import { CommonStockholder, CapTableRowType, CommonRowType, SAFENote, SeriesInvestor } from "@library/cap-table/types";
 
 const commonFixture: CommonStockholder[] = [
   {

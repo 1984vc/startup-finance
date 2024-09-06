@@ -4,7 +4,7 @@ import {
   IConversionStateData,
 } from "@/cap-table/state/ConversionState";
 import fixtureData from "./fixtures/state_fixtures.json";
-import { CapTableRowType } from "@library/cap-table";
+import { CapTableRowType } from "@library/cap-table/types";
 
 describe("Basic ConversionState", () => {
   test("that it passes a sanity check", () => {

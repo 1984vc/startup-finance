@@ -1,7 +1,7 @@
 import { BestFit, DEFAULT_ROUNDING_STRATEGY } from "@library/conversion-solver";
 import { checkSafeNotesForErrors, populateSafeCaps } from "@library/safe-calcs";
 import { RoundingStrategy, roundShares } from "@library/utils/rounding";
-import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, StakeHolder, CapTableRowType } from ".";
+import { SAFENote, CommonStockholder, CommonCapTableRow, SafeCapTableRow, TotalCapTableRow, StakeHolder, CapTableRowType } from "./types";
 import { buildErrorPreRoundCapTable, buildTBDPreRoundCapTable } from "./error";
 import { formatUSDWithCommas } from "@library/utils/numberFormatting";
 

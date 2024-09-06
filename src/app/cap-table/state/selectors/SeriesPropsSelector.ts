@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 import { IConversionStateData } from "../ConversionState";
 import { SeriesProps } from "@/components/safe-conversion/Conversion/SeriesInvestorList";
 import { getPricedConversion } from "./PricedRoundSelector";
-import { CapTableRowType } from "@library/cap-table";
+import { CapTableRowType } from "@library/cap-table/types";
 
 export const getSeriesPropsSelector = createSelector(
   getPricedConversion,
