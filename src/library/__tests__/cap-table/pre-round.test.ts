@@ -61,7 +61,7 @@ const safeFixtureWithPreMoney: SAFENote[] = [
   },
 ]
 
-describe("Building an estimated pre-round cap table with common shareholders and SAFE notes", () => {
+describe("Building an estimated pre-round cap table with common shareholders and SAFEs", () => {
   test("Sanity check our baseline", () => {
     const {common, safes, total} = buildEstimatedPreRoundCapTable([...commonFixture, ...safeFixture]);
     expect(common.length).toEqual(4);

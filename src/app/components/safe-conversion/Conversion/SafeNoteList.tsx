@@ -254,7 +254,7 @@ const SafeNoteList: React.FC<RowsProps<SAFEProps>> = ({
         onClick={onAddRow}
         className="ml-10 px-4 py-2  bg-nt84blue text-white hover:bg-nt84bluedarker focus:outline-none focus:ring-blue-500"
       >
-        Add another SAFE note
+        Add another SAFE
       </button>
     </div>
   );

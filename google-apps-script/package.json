@@ -10,12 +10,14 @@
     "login": "clasp login"
   },
   "license": "GPL",
-  "dependencies": {},
+  "dependencies": {
+    "tsconfig-paths-webpack-plugin": "^4.1.0"
+  },
   "devDependencies": {
+    "@google/clasp": "^2.4.2",
     "@types/google-apps-script": "^1.0.83",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
     "@typescript-eslint/parser": "^8.4.0",
-    "@google/clasp": "^2.4.2",
     "eslint": "^9.9.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-googleappsscript": "^1.0.5",

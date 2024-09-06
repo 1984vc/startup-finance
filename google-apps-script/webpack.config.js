@@ -1,7 +1,9 @@
 const GasPlugin = require("gas-webpack-plugin");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const webpack = require("webpack");
+const path = require("path");
 
-const entry = "./build/index.js";
+const entry = "./build/google-apps-script/src/index.js";
 const { version } = require("./package.json");
 
 module.exports = {
@@ -13,12 +15,19 @@ module.exports = {
     path: __dirname,
     filename: "Code.js",
   },
+  resolve: {
+    extensions: ['.js'], // Add more as needed
+    plugins: [new TsconfigPathsPlugin({ })],
+    alias: {
+      '@library': path.resolve(__dirname, 'build/src/library') // Map alias to compiled path
+    }
+  },
   plugins: [
     new GasPlugin({
       autoGlobalExportsFiles: [entry],
     }),
     new webpack.DefinePlugin({
-      "process.env.VERSION": JSON.stringify(version),
+      "global.process.env.VERSION": JSON.stringify(version),
     }),
   ],
   devtool: false,

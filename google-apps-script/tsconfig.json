@@ -24,7 +24,4 @@
   ],
   "exclude": [
   ],
-  "files": [
-    "./src/index.ts"
-  ]
 }

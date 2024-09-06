@@ -105,7 +105,7 @@ export type RefreshedOptionsCapTableRow = BaseCapTableRow & {
 
 export type CapTableRow = TotalCapTableRow | SafeCapTableRow | SeriesCapTableRow | CommonCapTableRow | RefreshedOptionsCapTableRow;
 
-// Very basic implementation of the ownership calculation before any rounds, including SAFE Notes
+// Very basic implementation of the ownership calculation before any rounds, including SAFEs
 export const buildExistingShareholderCapTable = (commonStockholders: CommonStockholder[]): CommonCapTableRow[] => {
   const totalCommonShares = commonStockholders.reduce((acc, stockholder) => acc + stockholder.shares, 0);
   return commonStockholders.map((stockholder) => {
